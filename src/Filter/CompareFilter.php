@@ -9,6 +9,10 @@ use Yiisoft\Data\Reader\Filter\FilterInterface;
 abstract class CompareFilter implements FilterInterface
 {
     protected string $_column;
+
+    /**
+     * @var bool|float|int|string|array|null
+     */
     protected $_value;
 
     /**
@@ -17,6 +21,9 @@ abstract class CompareFilter implements FilterInterface
     protected bool $_ignoreNull = false;
 
 
+    /**
+     * @param mixed $value
+     */
     public function __construct(string $column, $value, ?string $table = null)
     {
         $this->_value = $value;
@@ -28,7 +35,7 @@ abstract class CompareFilter implements FilterInterface
         }
     }
 
-    public function withIgnoreNull(bool $ignoreNull = false)
+    public function withIgnoreNull(bool $ignoreNull = false): self
     {
         $new = clone $this;
         $new->_ignoreNull = $ignoreNull;

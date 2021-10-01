@@ -14,7 +14,7 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\DataDb\Processor\All;
 use Yiisoft\DataDb\Processor\Equals;
 use Yiisoft\DataDb\Processor\QueryProcessorInterface;
-use Yiisoft\DataDb\Query\Query;
+use Yiisoft\Db\Query\Query;
 
 class QueryDataReader implements DataReaderInterface
 {
@@ -47,6 +47,9 @@ class QueryDataReader implements DataReaderInterface
         $this->_data = null;
     }
 
+    /**
+     * @psalm-return Generator<TValue>
+     */
     public function getIterator(): Generator
     {
         $query = $this->prepareQuery();
@@ -108,6 +111,9 @@ class QueryDataReader implements DataReaderInterface
     }
 
 
+    /**
+     * @psalm-mutation-free
+     */
     public function withOffset(int $offset): self
     {
         $new = clone $this;
@@ -116,6 +122,9 @@ class QueryDataReader implements DataReaderInterface
         return $new;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function withLimit(int $limit): self
     {
         if ($limit < 0) {
@@ -128,6 +137,9 @@ class QueryDataReader implements DataReaderInterface
         return $new;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function withSort(?Sort $sort): self
     {
         $new = clone $this;
@@ -136,6 +148,9 @@ class QueryDataReader implements DataReaderInterface
         return $new;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function withFilter(FilterInterface $filter): self
     {
         $new = clone $this;
