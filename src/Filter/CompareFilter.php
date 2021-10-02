@@ -11,7 +11,7 @@ abstract class CompareFilter implements FilterInterface
     protected string $_column;
 
     /**
-     * @var bool|float|int|string|array|null
+     * @var array|bool|float|int|string|null
      */
     protected $_value;
 
