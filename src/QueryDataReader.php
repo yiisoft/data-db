@@ -37,7 +37,6 @@ class QueryDataReader implements DataReaderInterface
 
     private array $filterProcessors = [];
 
-
     public function __construct(Query $query)
     {
         $this->query = $query;
@@ -90,12 +89,10 @@ class QueryDataReader implements DataReaderInterface
             $query->offset($this->offset);
         }
 
-        if ($this->sort && $order = $this->sort->getOrder())
-        {
-            foreach ($order as $name => $direction)
-            {
+        if ($this->sort && $order = $this->sort->getOrder()) {
+            foreach ($order as $name => $direction) {
                 $query->addOrderBy([
-                    $name => $direction === 'desc' ? SORT_DESC : SORT_ASC
+                    $name => $direction === 'desc' ? SORT_DESC : SORT_ASC,
                 ]);
             }
         }
@@ -175,8 +172,7 @@ class QueryDataReader implements DataReaderInterface
     {
         $new = clone $this;
 
-        foreach ($filterProcessors as $filterProcessor)
-        {
+        foreach ($filterProcessors as $filterProcessor) {
             if ($filterProcessor instanceof QueryProcessorInterface) {
                 /** @psalm-suppress ImpureMethodCall */
                 $new->filterProcessors[$filterProcessor->getOperator()] = $filterProcessor;
