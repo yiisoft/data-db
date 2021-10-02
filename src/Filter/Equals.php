@@ -6,9 +6,6 @@ namespace Yiisoft\DataDb\Filter;
 
 use Yiisoft\Data\Reader\Filter\Equals as FilterEquals;
 
-/**
- *
- */
 class Equals extends CompareFilter
 {
     public static function getOperator(): string

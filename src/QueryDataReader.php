@@ -31,7 +31,6 @@ class QueryDataReader implements DataReaderInterface
 
     private array $filterProcessors = [];
 
-
     public function __construct(Query $query)
     {
         $this->_query = $query;
@@ -106,7 +105,6 @@ class QueryDataReader implements DataReaderInterface
 
         return $this->filterProcessors[$operation]->apply($query, $this->filter);
     }
-
 
     public function withOffset(int $offset): self
     {

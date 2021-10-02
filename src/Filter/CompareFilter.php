@@ -16,7 +16,6 @@ abstract class CompareFilter implements FilterInterface
     */
     protected bool $_ignoreNull = false;
 
-
     public function __construct(string $column, $value, ?string $table = null)
     {
         $this->_value = $value;
