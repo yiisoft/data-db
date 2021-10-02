@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataDb\Filter;
+namespace Yiisoft\Data\Db\Filter;
 
 use Yiisoft\Data\Reader\Filter\Equals as FilterEquals;
 
@@ -18,7 +18,7 @@ class Equals extends CompareFilter
 
     public function toArray(): array
     {
-        if ($this->_value === null && $this->_ignoreNull) {
+        if ($this->value === null && $this->ignoreNull) {
             return [];
         }
 

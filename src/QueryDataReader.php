@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataDb;
+namespace Yiisoft\Data\Db;
 
 use Generator;
 use InvalidArgumentException;
@@ -11,14 +11,20 @@ use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\DataDb\Processor\All;
-use Yiisoft\DataDb\Processor\Equals;
-use Yiisoft\DataDb\Processor\QueryProcessorInterface;
+use Yiisoft\Data\Db\Processor\All;
+use Yiisoft\Data\Db\Processor\Equals;
+use Yiisoft\Data\Db\Processor\QueryProcessorInterface;
 use Yiisoft\Db\Query\Query;
 
+/**
+ * @template TKey as array-key
+ * @template TValue
+ *
+ * @implements DataReaderInterface<TKey, TValue>
+ */
 class QueryDataReader implements DataReaderInterface
 {
-    private Query $_query;
+    private Query $query;
 
     private ?Sort $sort = null;
     private ?FilterInterface $filter = null;
@@ -26,15 +32,15 @@ class QueryDataReader implements DataReaderInterface
     private int $limit = 0;
     private int $offset = 0;
 
-    private ?int $_count = null;
-    private ?array $_data = null;
+    private ?int $count = null;
+    private ?array $data = null;
 
     private array $filterProcessors = [];
 
 
     public function __construct(Query $query)
     {
-        $this->_query = $query;
+        $this->query = $query;
 
         $this->filterProcessors = $this->withFilterProcessors(
             new All(),
@@ -44,7 +50,7 @@ class QueryDataReader implements DataReaderInterface
 
     public function __clone()
     {
-        $this->_data = null;
+        $this->data = null;
     }
 
     /**
@@ -61,21 +67,21 @@ class QueryDataReader implements DataReaderInterface
 
     public function count(): int
     {
-        if ($this->_count === null) {
+        if ($this->count === null) {
             $query = $this->prepareQuery();
             $query->offset(null);
             $query->limit(null);
             $query->orderBy('');
 
-            $this->_count = $query->count();
+            $this->count = $query->count();
         }
 
-        return $this->_count;
+        return $this->count;
     }
 
     private function prepareQuery(): Query
     {
-        $query = $this->applyFilter(clone $this->_query);
+        $query = $this->applyFilter(clone $this->query);
 
         if ($this->limit) {
             $query->limit($this->limit);
@@ -85,9 +91,13 @@ class QueryDataReader implements DataReaderInterface
             $query->offset($this->offset);
         }
 
-        if ($this->sort && $order = $this->sort->getOrder()) {
-            foreach ($order as $name => $direction) {
-                $query->addOrderBy([$name => $direction === 'desc' ? SORT_DESC : SORT_ASC]);
+        if ($this->sort && $order = $this->sort->getOrder())
+        {
+            foreach ($order as $name => $direction)
+            {
+                $query->addOrderBy([
+                    $name => $direction === 'desc' ? SORT_DESC : SORT_ASC
+                ]);
             }
         }
 
@@ -104,7 +114,7 @@ class QueryDataReader implements DataReaderInterface
         $processor = $this->filterProcessors[$operation] ?? null;
 
         if (!isset($this->filterProcessors[$operation])) {
-            throw new RuntimeException('Operation "%s" is not supported', $operation);
+            throw new RuntimeException(sprintf('Operation "%s" is not supported', $operation));
         }
 
         return $this->filterProcessors[$operation]->apply($query, $this->filter);
@@ -154,18 +164,23 @@ class QueryDataReader implements DataReaderInterface
     public function withFilter(FilterInterface $filter): self
     {
         $new = clone $this;
-        $new->_count = null;
+        $new->count = null;
         $new->filter = $filter;
 
         return $new;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function withFilterProcessors(FilterProcessorInterface ...$filterProcessors): self
     {
         $new = clone $this;
 
-        foreach ($filterProcessors as $filterProcessor) {
+        foreach ($filterProcessors as $filterProcessor)
+        {
             if ($filterProcessor instanceof QueryProcessorInterface) {
+                /** @psalm-suppress ImpureMethodCall */
                 $new->filterProcessors[$filterProcessor->getOperator()] = $filterProcessor;
             }
         }
@@ -180,15 +195,18 @@ class QueryDataReader implements DataReaderInterface
 
     public function read(): array
     {
-        if ($this->_data === null) {
-            $this->_data = $this->prepareQuery()->all();
+        if ($this->data === null) {
+            $this->data = $this->prepareQuery()->all();
         }
 
-        return $this->_data;
+        return $this->data;
     }
 
+    /**
+     * @return mixed
+     */
     public function readOne()
     {
-        return $this->withLimit(1)->prepareQuery()->findOne();
+        return $this->withLimit(1)->prepareQuery()->one();
     }
 }

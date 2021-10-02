@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataDb\Filter;
+namespace Yiisoft\Data\Db\Filter;
 
 use Yiisoft\Data\Reader\Filter\All as FilterAll;
 

@@ -40,12 +40,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Yiisoft\\DataDb\\": "src"
+            "Yiisoft\\Data\\Db\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Yiisoft\\DataDb\\Tests\\": "tests"
+            "Yiisoft\\Data\\Db\\Tests\\": "tests"
         }
     },
     "extra": {

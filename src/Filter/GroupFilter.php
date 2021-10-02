@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataDb\Filter;
+namespace Yiisoft\Data\Db\Filter;
 
 use Yiisoft\Data\Reader\Filter\FilterInterface;
 
 abstract class GroupFilter implements FilterInterface
 {
-    protected array $_filters;
+    protected array $filters;
 
     public function __construct(FilterInterface ...$filters)
     {
-        $this->_filters = $filters;
+        $this->filters = $filters;
     }
 
     public function toArray(): array
     {
         $array = [static::getOperator()];
 
-        foreach ($this->_filters as $filter) {
+        foreach ($this->filters as $filter) {
             $arr = $filter->toArray();
 
             if (count($arr)) {

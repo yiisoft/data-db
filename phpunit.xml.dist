@@ -16,7 +16,7 @@
     </php>
 
     <testsuites>
-        <testsuite name="DataDb">
+        <testsuite name="Data-Db">
             <directory>./tests</directory>
         </testsuite>
     </testsuites>
