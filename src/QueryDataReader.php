@@ -41,7 +41,6 @@ class QueryDataReader implements DataReaderInterface
     public function __construct(Query $query)
     {
         $this->query = $query;
-
         $this->filterProcessors = $this->withFilterProcessors(
             new All(),
             new Equals()
@@ -119,7 +118,6 @@ class QueryDataReader implements DataReaderInterface
 
         return $this->filterProcessors[$operation]->apply($query, $this->filter);
     }
-
 
     /**
      * @psalm-mutation-free

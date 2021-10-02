@@ -20,7 +20,6 @@ abstract class CompareFilter implements FilterInterface
     */
     protected bool $ignoreNull = false;
 
-
     /**
      * @param mixed $value
      */
@@ -39,7 +38,6 @@ abstract class CompareFilter implements FilterInterface
     {
         $new = clone $this;
         $new->ignoreNull = $ignoreNull;
-
         return $new;
     }
 
