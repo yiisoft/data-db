@@ -28,7 +28,9 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": "^7.4|^8.0"
+        "php": "^7.4|^8.0",
+        "yiisoft/db": "^3.0@dev",
+        "yiisoft/data": "^3.0@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
@@ -38,12 +40,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Yiisoft\\_____\\": "src"
+            "Yiisoft\\DataDb\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Yiisoft\\_____\\Tests\\": "tests"
+            "Yiisoft\\DataDb\\Tests\\": "tests"
         }
     },
     "extra": {
