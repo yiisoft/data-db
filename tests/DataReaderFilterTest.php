@@ -13,7 +13,7 @@ use Yiisoft\DataDb\Processor\All as ProcessorAll;
 use Yiisoft\DataDb\Processor\Equals as ProcessorEquals;
 use Yiisoft\DataDb\Processor\QueryProcessorInterface;
 
-class DataReaderFilterTest extends TestCase
+class DataReaderTest extends TestCase
 {
     public function testInterface()
     {
