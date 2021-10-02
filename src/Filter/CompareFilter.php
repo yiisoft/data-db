@@ -20,7 +20,6 @@ abstract class CompareFilter implements FilterInterface
     */
     protected bool $_ignoreNull = false;
 
-
     /**
      * @param mixed $value
      */
