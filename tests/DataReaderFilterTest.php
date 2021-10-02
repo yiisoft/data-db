@@ -3,15 +3,15 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataDb\Tests;
+namespace Yiisoft\Data\Db\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
-use Yiisoft\DataDb\Filter\All as FilterAll;
-use Yiisoft\DataDb\Filter\Equals as FilterEquals;
-use Yiisoft\DataDb\Processor\All as ProcessorAll;
-use Yiisoft\DataDb\Processor\Equals as ProcessorEquals;
-use Yiisoft\DataDb\Processor\QueryProcessorInterface;
+use Yiisoft\Data\Db\Filter\All as FilterAll;
+use Yiisoft\Data\Db\Filter\Equals as FilterEquals;
+use Yiisoft\Data\Db\Processor\All as ProcessorAll;
+use Yiisoft\Data\Db\Processor\Equals as ProcessorEquals;
+use Yiisoft\Data\Db\Processor\QueryProcessorInterface;
 
 class DataReaderFilterTest extends TestCase
 {
