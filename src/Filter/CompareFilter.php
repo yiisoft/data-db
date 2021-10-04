@@ -48,7 +48,12 @@ abstract class CompareFilter implements FilterInterface
 
     public function toArray(): array
     {
-        if ($this->value === null) {
+        if ($this->value === null)
+        {
+            if ($this->ignoreNull) {
+                return [];
+            }
+
             return ['IS', $this->column, null];
         }
 
