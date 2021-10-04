@@ -2,7 +2,7 @@
     <a href="https://github.com/yiisoft" target="_blank">
         <img src="https://yiisoft.github.io/docs/images/yii_logo.svg" height="100px">
     </a>
-    <h1 align="center">Yii _____</h1>
+    <h1 align="center">Yii Data DB</h1>
     <br>
 </p>
 
@@ -15,7 +15,7 @@
 [![static analysis](https://github.com/yiisoft/_____/workflows/static%20analysis/badge.svg)](https://github.com/yiisoft/_____/actions?query=workflow%3A%22static+analysis%22)
 [![type-coverage](https://shepherd.dev/github/yiisoft/_____/coverage.svg)](https://shepherd.dev/github/yiisoft/_____)
 
-The package ...
+The package provides `Yiisoft\Db\Query\Query` bindings for generic data abstractions.
 
 ## Requirements
 
@@ -26,10 +26,84 @@ The package ...
 The package could be installed with composer:
 
 ```shell
-composer require yiisoft/_____ --prefer-dist
+composer require yiisoft/data-db --prefer-dist
 ```
 
 ## General usage
+
+```php
+use Yiisoft\Data\Db\Filter\All;
+use Yiisoft\Data\Db\Filter\Equals;
+use Yiisoft\Data\Db\QueryDataReader;
+
+$typeId    = filter_input(INPUT_GET, 'type_id', FILTER_VALIDATE_INT);
+$countryId = filter_input(INPUT_GET, 'country_id', FILTER_VALIDATE_INT);
+$parentId  = filter_input(INPUT_GET, 'parent_id', FILTER_VALIDATE_INT);
+
+// OR
+// $typeId    = $_GET['type_id'] ?? null;
+// $countryId = $_GET['country_id'] ?? null;
+// $parentId  = $_GET['parent_id'] ?? null;
+
+// OR
+// $params = $request->getQueryParams();
+// $typeId    = $params['type_id'] ?? null;
+// $countryId = $params['country_id'] ?? null;
+// $parentId  = $params['parent_id'] ?? null;
+
+// OR same with ArrayHelper::getValue();
+
+
+$query = $arFactory->createQueryTo(AR::class);
+
+$filter = new All(
+    (new Equals('type_id', $typeId)),
+    (new Equals('country_id', $countryId)),
+    (new Equals('parent_id', $parentId))
+);
+
+$dataReader = (new QueryDataReader($query))
+            ->withFilter($filter);
+```
+
+If $typeId, $countryId and $parentId equals NULL that generate SQL like:
+
+```shell
+SELECT AR::tableName().* FROM AR::tableName() WHERE type_id IS NULL AND country_id IS NULL AND parent_id IS NULL
+```
+
+If we want ignore not existing arguments (i.e. not set in $_GET/queryParams), we can use withIgnoreNull(true) method:
+
+```php
+$typeId    = 1;
+$countryId = null;
+$parentId  = null;
+
+$filter = new All(
+    (new Equals('type_id', $typeId))->withIgnoreNull(true),
+    (new Equals('country_id', $countryId))->withIgnoreNull(true),
+    (new Equals('parent_id', $parentId))->withIgnoreNull(true)
+);
+
+$dataReader = (new QueryDataReader($query))
+            ->withFilter($filter);
+
+```
+
+That generate SQL like:
+
+```shell
+SELECT AR::tableName().* FROM AR::tableName() WHERE type_id = 1
+```
+
+If query joins several tables with same column name, pass table name as 3-th filter arguments
+
+```php
+$equalsTableOne = (new Equals('id', 1, 'table_one'))->withIgnoreNull(true);
+$equalsTableTwo = (new Equals('id', 100, 'table_two'))->withIgnoreNull(true);
+```
+
+Others filters/processors will be added at the nearest time.
 
 ## Testing
 
