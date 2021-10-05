@@ -15,7 +15,7 @@
 [![static analysis](https://github.com/yiisoft/_____/workflows/static%20analysis/badge.svg)](https://github.com/yiisoft/_____/actions?query=workflow%3A%22static+analysis%22)
 [![type-coverage](https://shepherd.dev/github/yiisoft/_____/coverage.svg)](https://shepherd.dev/github/yiisoft/_____)
 
-The package provides generic data abstractions for ```php Yiisoft\Db\Query\Query``` or inherited from it
+The package provides `Yiisoft\Db\Query\Query` bindings for generic data abstractions.
 
 ## Requirements
 
@@ -54,7 +54,7 @@ $parentId  = filter_input(INPUT_GET, 'parent_id', FILTER_VALIDATE_INT);
 // OR same with ArrayHelper::getValue();
 
 
-$query = $arFactory->createAR(AR::class)->instantiateQuery(AR::class);
+$query = $arFactory->createQueryTo(AR::class);
 
 $filter = new All(
     (new Equals('type_id', $typeId)),

@@ -1,9 +1,11 @@
 {
     "name": "yiisoft/data-db",
     "type": "library",
-    "description": "Data providers for queries compatible with yiisoft/data",
+    "description": "Database query adapater for yiisoft/data data providers",
     "keywords": [
-        "db data provider"
+        "db",
+        "data provider",
+        "database"
     ],
     "homepage": "https://www.yiiframework.com/",
     "license": "BSD-3-Clause",
