@@ -12,13 +12,4 @@ class Equals extends CompareFilter
     {
         return FilterEquals::getOperator();
     }
-
-    public function toArray(): array
-    {
-        if ($this->value === null && $this->ignoreNull) {
-            return [];
-        }
-
-        return parent::toArray();
-    }
 }

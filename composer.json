@@ -1,9 +1,11 @@
 {
-    "name": "yiisoft/replace-with-package-name",
+    "name": "yiisoft/data-db",
     "type": "library",
-    "description": "_____",
+    "description": "Database query adapater for yiisoft/data data providers",
     "keywords": [
-        "_____"
+        "db",
+        "data provider",
+        "database"
     ],
     "homepage": "https://www.yiiframework.com/",
     "license": "BSD-3-Clause",
