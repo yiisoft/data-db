@@ -4,25 +4,12 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Processor;
 
-use Yiisoft\Data\Reader\Filter\Equals as FilterEquals;
-use Yiisoft\Data\Reader\Filter\FilterInterface;
-use Yiisoft\Db\Query\Query;
+use Yiisoft\Data\Db\Filter\Equals as FilterEquals;
 
-class Equals implements QueryProcessorInterface
+class Equals extends CompareProcessor
 {
     public function getOperator(): string
     {
         return FilterEquals::getOperator();
-    }
-
-    public function apply(Query $query, FilterInterface $filter): Query
-    {
-        $array = $filter->toArray();
-
-        if (count($array) === 0) {
-            return $query;
-        }
-
-        return $query->andWhere($array);
     }
 }
