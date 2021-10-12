@@ -34,7 +34,7 @@ class DataReaderFilterTest extends TestCase
         FilterGreaterThan::class,
         FilterGreaterThanOrEqual::class,
         FilterLessThan::class,
-        FilterLessThanOrEqual::class
+        FilterLessThanOrEqual::class,
     ];
 
     public function testInterface()
