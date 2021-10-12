@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Filter;
 
-use Yiisoft\Data\Reader\Filter\All as FilterAll;
+use Yiisoft\Data\Reader\Filter\Any as FilterAny;
 
-final class All extends GroupFilter
+final class Any extends GroupFilter
 {
     public static function getOperator(): string
     {
-        return FilterAll::getOperator();
+        return FilterAny::getOperator();
     }
 }

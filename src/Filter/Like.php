@@ -21,18 +21,50 @@ class Like extends CompareFilter
         return FilterLike::getOperator();
     }
 
-    public function withStart(bool $start = true): self
+    public function withStart(): self
     {
+        if ($this->start === true) {
+            return $this;
+        }
+
         $new = clone $this;
-        $new->start = $start;
+        $new->start = true;
 
         return $new;
     }
 
-    public function withEnd(bool $end = true): self
+    public function withoutStart(): self
     {
+        if ($this->start === false) {
+            return $this;
+        }
+
         $new = clone $this;
-        $new->end = $end;
+        $new->start = false;
+
+        return $new;
+    }
+
+    public function withEnd(): self
+    {
+        if ($this->end === true) {
+            return $this;
+        }
+
+        $new = clone $this;
+        $new->end = true;
+
+        return $new;
+    }
+
+    public function withoutEnd(): self
+    {
+        if ($this->end === false) {
+            return $this;
+        }
+
+        $new = clone $this;
+        $new->end = false;
 
         return $new;
     }
