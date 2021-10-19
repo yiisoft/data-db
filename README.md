@@ -6,14 +6,14 @@
     <br>
 </p>
 
-[![Latest Stable Version](https://poser.pugx.org/yiisoft/_____/v/stable.png)](https://packagist.org/packages/yiisoft/_____)
-[![Total Downloads](https://poser.pugx.org/yiisoft/_____/downloads.png)](https://packagist.org/packages/yiisoft/_____)
-[![Build status](https://github.com/yiisoft/_____/workflows/build/badge.svg)](https://github.com/yiisoft/_____/actions?query=workflow%3Abuild)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/yiisoft/_____/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/yiisoft/_____/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/yiisoft/_____/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/yiisoft/_____/?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/yiisoft/data-db/v/stable.png)](https://packagist.org/packages/yiisoft/data-db)
+[![Total Downloads](https://poser.pugx.org/yiisoft/data-db/downloads.png)](https://packagist.org/packages/yiisoft/data-db)
+[![Build status](https://github.com/yiisoft/data-db/workflows/build/badge.svg)](https://github.com/yiisoft/data-db/actions?query=workflow%3Abuild)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/yiisoft/data-db/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/yiisoft/data-db/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/yiisoft/data-db/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/yiisoft/data-db/?branch=master)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyiisoft%2F_____%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/yiisoft/_____/master)
-[![static analysis](https://github.com/yiisoft/_____/workflows/static%20analysis/badge.svg)](https://github.com/yiisoft/_____/actions?query=workflow%3A%22static+analysis%22)
-[![type-coverage](https://shepherd.dev/github/yiisoft/_____/coverage.svg)](https://shepherd.dev/github/yiisoft/_____)
+[![static analysis](https://github.com/yiisoft/data-db/workflows/static%20analysis/badge.svg)](https://github.com/yiisoft/data-db/actions?query=workflow%3A%22static+analysis%22)
+[![type-coverage](https://shepherd.dev/github/yiisoft/data-db/coverage.svg)](https://shepherd.dev/github/yiisoft/data-db)
 
 The package provides `Yiisoft\Db\Query\Query` bindings for generic data abstractions.
 

@@ -7,14 +7,23 @@ namespace Yiisoft\Data\Db;
 use Generator;
 use InvalidArgumentException;
 use RuntimeException;
+use Yiisoft\Data\Db\Processor\All;
+use Yiisoft\Data\Db\Processor\Any;
+use Yiisoft\Data\Db\Processor\Equals;
+use Yiisoft\Data\Db\Processor\Exists;
+use Yiisoft\Data\Db\Processor\GreaterThan;
+use Yiisoft\Data\Db\Processor\GreaterThanOrEqual;
+use Yiisoft\Data\Db\Processor\In;
+use Yiisoft\Data\Db\Processor\LessThan;
+use Yiisoft\Data\Db\Processor\LessThanOrEqual;
+use Yiisoft\Data\Db\Processor\Like;
+use Yiisoft\Data\Db\Processor\QueryProcessorInterface;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Data\Db\Processor\All;
-use Yiisoft\Data\Db\Processor\Equals;
-use Yiisoft\Data\Db\Processor\QueryProcessorInterface;
 use Yiisoft\Db\Query\Query;
+use function sprintf;
 
 /**
  * @template TKey as array-key
@@ -42,7 +51,15 @@ class QueryDataReader implements DataReaderInterface
         $this->query = $query;
         $this->filterProcessors = $this->withFilterProcessors(
             new All(),
-            new Equals()
+            new Any(),
+            new Equals(),
+            new GreaterThan(),
+            new GreaterThanOrEqual(),
+            new LessThan(),
+            new LessThanOrEqual(),
+            new Like(),
+            new In(),
+            new Exists()
         )->filterProcessors;
     }
 
