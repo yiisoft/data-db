@@ -16,6 +16,7 @@ use Yiisoft\Data\Db\Filter\LessThan as FilterLessThan;
 use Yiisoft\Data\Db\Filter\LessThanOrEqual as FilterLessThanOrEqual;
 use Yiisoft\Data\Db\Filter\Like as FilterLike;
 use Yiisoft\Data\Db\Filter\In as FilterIn;
+use Yiisoft\Data\Db\Filter\Not as FilterNot;
 use Yiisoft\Data\Db\Processor\All as ProcessorAll;
 use Yiisoft\Data\Db\Processor\Any as ProcessorAny;
 use Yiisoft\Data\Db\Processor\Equals as ProcessorEquals;
@@ -76,26 +77,26 @@ class DataReaderFilterTest extends TestCase
         $processorIn = new ProcessorIn();
 
         //Filters
-        $this->assertEquals($filterEquals instanceof FilterInterface, true);
-        $this->assertEquals($filterAll instanceof FilterInterface, true);
-        $this->assertEquals($filterAny instanceof FilterInterface, true);
-        $this->assertEquals($filterGreaterThan instanceof FilterInterface, true);
-        $this->assertEquals($filterGreaterThanOrEqual instanceof FilterInterface, true);
-        $this->assertEquals($filterLessThan instanceof FilterInterface, true);
-        $this->assertEquals($filterLessThanOrEqual instanceof FilterInterface, true);
-        $this->assertEquals($filterLike instanceof FilterInterface, true);
-        $this->assertEquals($filterIn instanceof FilterInterface, true);
+        $this->assertTrue($filterEquals instanceof FilterInterface);
+        $this->assertTrue($filterAll instanceof FilterInterface);
+        $this->assertTrue($filterAny instanceof FilterInterface);
+        $this->assertTrue($filterGreaterThan instanceof FilterInterface);
+        $this->assertTrue($filterGreaterThanOrEqual instanceof FilterInterface);
+        $this->assertTrue($filterLessThan instanceof FilterInterface);
+        $this->assertTrue($filterLessThanOrEqual instanceof FilterInterface);
+        $this->assertTrue($filterLike instanceof FilterInterface);
+        $this->assertTrue($filterIn instanceof FilterInterface);
 
         //Processors
-        $this->assertEquals($processorAll instanceof QueryProcessorInterface, true);
-        $this->assertEquals($processorAny instanceof QueryProcessorInterface, true);
-        $this->assertEquals($processorEquals instanceof QueryProcessorInterface, true);
-        $this->assertEquals($processorGreaterThan instanceof QueryProcessorInterface, true);
-        $this->assertEquals($processortGreaterThanOrEqual instanceof QueryProcessorInterface, true);
-        $this->assertEquals($processorLessThan instanceof QueryProcessorInterface, true);
-        $this->assertEquals($processorLessThanOrEqual instanceof QueryProcessorInterface, true);
-        $this->assertEquals($processorLike instanceof QueryProcessorInterface, true);
-        $this->assertEquals($processorIn instanceof QueryProcessorInterface, true);
+        $this->assertTrue($processorAll instanceof QueryProcessorInterface);
+        $this->assertTrue($processorAny instanceof QueryProcessorInterface);
+        $this->assertTrue($processorEquals instanceof QueryProcessorInterface);
+        $this->assertTrue($processorGreaterThan instanceof QueryProcessorInterface);
+        $this->assertTrue($processortGreaterThanOrEqual instanceof QueryProcessorInterface);
+        $this->assertTrue($processorLessThan instanceof QueryProcessorInterface);
+        $this->assertTrue($processorLessThanOrEqual instanceof QueryProcessorInterface);
+        $this->assertTrue($processorLike instanceof QueryProcessorInterface);
+        $this->assertTrue($processorIn instanceof QueryProcessorInterface);
     }
 
     public function testWithNull()
@@ -109,8 +110,8 @@ class DataReaderFilterTest extends TestCase
             $filters[] = $filter;
             $nullFilters[] = $nullFilter;
 
-            $this->assertEquals([$filter::getOperator(), 'test', 1], $filter->toArray());
-            $this->assertEquals(['IS', 'test', null], $nullFilter->toArray());
+            $this->assertSame([$filter::getOperator(), 'test', 1], $filter->toArray());
+            $this->assertSame(['IS', 'test', null], $nullFilter->toArray());
         }
 
         $filterAll = new FilterAll(...$filters);
@@ -131,8 +132,8 @@ class DataReaderFilterTest extends TestCase
             $filters[] = $filter;
             $nullFilters[] = $nullFilter;
 
-            $this->assertEquals([$filter::getOperator(), 'test', 1], $filter->toArray());
-            $this->assertEquals([], $nullFilter->toArray());
+            $this->assertSame([$filter::getOperator(), 'test', 1], $filter->toArray());
+            $this->assertSame([], $nullFilter->toArray());
         }
 
         $filterAll = new FilterAll(...$filters);
@@ -149,10 +150,10 @@ class DataReaderFilterTest extends TestCase
         $startLike = (new FilterLike('foo', 'bar'))->withoutEnd();
         $equalLike = (new FilterLike('foo', 'bar'))->withoutEnd()->withoutStart();
 
-        $this->assertEquals([FilterLike::getOperator(), 'foo', 'bar'], $like->toArray());
-        $this->assertEquals([FilterLike::getOperator(), 'foo', '%bar', false], $endLike->toArray());
-        $this->assertEquals([FilterLike::getOperator(), 'foo', 'bar%', false], $startLike->toArray());
-        $this->assertEquals([FilterLike::getOperator(), 'foo', 'bar', false], $equalLike->toArray());
+        $this->assertSame([FilterLike::getOperator(), 'foo', 'bar'], $like->toArray());
+        $this->assertSame([FilterLike::getOperator(), 'foo', 'bar%', false], $endLike->toArray());
+        $this->assertSame([FilterLike::getOperator(), 'foo', '%bar', false], $startLike->toArray());
+        $this->assertSame([FilterLike::getOperator(), 'foo', 'bar', false], $equalLike->toArray());
     }
 
     public function testInFilter()
@@ -162,9 +163,16 @@ class DataReaderFilterTest extends TestCase
         $filterInNull = new FilterIn('column', null);
         $filterInIgnoreNull = (new FilterIn('column', null))->withIgnoreNull(true);
 
-        $this->assertEquals([FilterIn::getOperator(), 'column', [1, 2, 3]], $filterIn->toArray());
-        $this->assertEquals(['IS', 'column', null], $filterInNull->toArray());
-        $this->assertEquals([], $filterInIgnoreNull->toArray());
-        $this->assertEquals($filterIn->toArray(), $equalsIn->toArray());
+        $this->assertSame([FilterIn::getOperator(), 'column', [1, 2, 3]], $filterIn->toArray());
+        $this->assertSame(['IS', 'column', null], $filterInNull->toArray());
+        $this->assertSame([], $filterInIgnoreNull->toArray());
+        $this->assertSame($filterIn->toArray(), $equalsIn->toArray());
+    }
+
+    public function testNotFilter()
+    {
+        $notNull = new FilterNot(new FilterEquals('column', null));
+
+        $this->assertSame([$notNull::getOperator(), ['column' => null]], $notNull->toArray());
     }
 }

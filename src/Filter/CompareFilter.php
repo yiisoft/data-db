@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Filter;
 
+use InvalidArgumentException;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
+use Yiisoft\Db\Expression\ExpressionInterface;
 
 abstract class CompareFilter implements FilterInterface
 {
-    protected string $column;
+    /**
+     * @var string|ExpressionInterface
+     */
+    protected $column;
 
     /**
      * @var array|bool|float|int|string|null
@@ -21,16 +26,23 @@ abstract class CompareFilter implements FilterInterface
     protected bool $ignoreNull = false;
 
     /**
+     * @param mixed $column
      * @param mixed $value
      */
-    public function __construct(string $column, $value, ?string $table = null)
+    public function __construct($column, $value, ?string $table = null)
     {
         $this->value = $value;
 
-        if ($table) {
-            $this->column = $table . '.' . $column;
-        } else {
+        if ($column instanceof ExpressionInterface) {
             $this->column = $column;
+        } elseif (is_string($column)) {
+            if ($table) {
+                $this->column = $table . '.' . $column;
+            } else {
+                $this->column = $column;
+            }
+        } else {
+            throw new InvalidArgumentException('Column must be string or instance of "' . ExpressionInterface::class . '". "' . \gettype($column) .' given"');
         }
     }
 

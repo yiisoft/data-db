@@ -79,7 +79,7 @@ class Like extends CompareFilter
             return [self::getOperator(), $this->column, $this->value, false];
         }
 
-        $value = $this->start ? $this->value . '%' : '%' . $this->value;
+        $value = $this->start ? '%' . $this->value : $this->value . '%';
 
         return [self::getOperator(), $this->column, $value, false];
     }
