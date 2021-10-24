@@ -5,16 +5,24 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Filter;
 
 use Yiisoft\Db\Query\Query;
+use Yiisoft\Data\Reader\Filter\FilterInterface;
 
-final class Exists extends CompareFilter
+final class Exists implements FilterInterface
 {
-    public function __construct(string $column, ?Query $value, ?string $table = null)
+    private Query $query;
+
+    public function __construct(Query $query)
     {
-        parent::__construct($column, $value, $table);
+        $this->query = $query;
     }
 
     public static function getOperator(): string
     {
         return 'exists';
+    }
+
+    public function toArray(): array
+    {
+        return [self::getOperator(), $this->query];
     }
 }

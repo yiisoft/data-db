@@ -21,6 +21,16 @@ class Like extends CompareFilter
         return FilterLike::getOperator();
     }
 
+    public function withBoth(): self
+    {
+        return $this->withStart()->withEnd();
+    }
+
+    public function withoutBoth(): self
+    {
+        return $this->withoutStart()->withoutEnd();
+    }
+
     public function withStart(): self
     {
         if ($this->start === true) {
@@ -76,11 +86,11 @@ class Like extends CompareFilter
         }
 
         if (!$this->start && !$this->end) {
-            return [self::getOperator(), $this->column, $this->value, false];
+            return [static::getOperator(), $this->column, $this->value, false];
         }
 
-        $value = $this->start ? $this->value . '%' : '%' . $this->value;
+        $value = $this->start ? '%' . $this->value : $this->value . '%';
 
-        return [self::getOperator(), $this->column, $value, false];
+        return [static::getOperator(), $this->column, $value, false];
     }
 }
