@@ -14,7 +14,7 @@ final class Between extends CompareFilter
     public function __construct($column, ?array $value, ?string $table = null)
     {
         if (is_array($value) && count($value) !== 2) {
-            throw new InvalidArgumentException('Value must be an array with 2 elements');
+            throw new InvalidArgumentException('Value must be a [from, to] array.');
         }
 
         parent::__construct($column, $value, $table);
