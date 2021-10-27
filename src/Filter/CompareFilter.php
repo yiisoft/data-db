@@ -43,7 +43,7 @@ abstract class CompareFilter implements FilterInterface
             }
         } else {
             $type = \is_object($column) ? \get_class($column) : \gettype($column);
-            throw new InvalidArgumentException('Column must be string or instance of "' . ExpressionInterface::class . '". "' . $type  .'" given.');
+            throw new InvalidArgumentException('Column must be string or instance of "' . ExpressionInterface::class . '". "' . $type . '" given.');
         }
     }
 
