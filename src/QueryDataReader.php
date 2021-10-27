@@ -17,6 +17,10 @@ use Yiisoft\Data\Db\Processor\In;
 use Yiisoft\Data\Db\Processor\LessThan;
 use Yiisoft\Data\Db\Processor\LessThanOrEqual;
 use Yiisoft\Data\Db\Processor\Like;
+use Yiisoft\Data\Db\Processor\ILike;
+use Yiisoft\Data\Db\Processor\NotEquals;
+use Yiisoft\Data\Db\Processor\Not;
+use Yiisoft\Data\Db\Processor\Between;
 use Yiisoft\Data\Db\Processor\QueryProcessorInterface;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
@@ -58,8 +62,12 @@ class QueryDataReader implements DataReaderInterface
             new LessThan(),
             new LessThanOrEqual(),
             new Like(),
+            new ILike(),
             new In(),
-            new Exists()
+            new Exists(),
+            new NotEquals(),
+            new Not(),
+            new Between()
         )->filterProcessors;
     }
 

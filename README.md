@@ -103,7 +103,47 @@ $equalsTableOne = (new Equals('id', 1, 'table_one'))->withIgnoreNull(true);
 $equalsTableTwo = (new Equals('id', 100, 'table_two'))->withIgnoreNull(true);
 ```
 
-Others filters/processors will be added at the nearest time.
+## Current filters/processors
+### Compare
+* Equals - =
+* NotEquals - !=
+* GreaterThan - >
+* GreaterThanOrEqual - >=
+* In
+* LessThan - <
+* LessThanOrEqual - <=
+* Not
+* Like\ILIke
+* Exists
+* Between
+
+#### Filter "Like" or "ILike"
+This filters has methods `withBoth`, `withoutBoth`, `withStart`, `withoutStart`, `withEnd`, `withoutEnd`
+```php
+
+$filter = new Like('column', 'value');
+$dataReader = (new QueryDataReader($query))->withFilter($filter);
+//column LIKE '%value%'
+
+$filter = (new Like('column', 'value'))->withoutStart();
+$dataReader = (new QueryDataReader($query))->withFilter($filter);
+//column LIKE 'value%'
+
+$filter = (new Like('column', 'value'))->withoutEnd();
+$dataReader = (new QueryDataReader($query))->withFilter($filter);
+//column LIKE '%value'
+
+```
+
+#### FIlter "Exists"
+Takes only one argument with type of`Yiisoft\Db\Query\Query`
+
+#### Filter "Not"
+Takes only one argument with type of`Yiisoft\Data\Reader\Filter\FilterInterface`
+
+### Group
+* All - and
+* Any - or
 
 ## Testing
 
