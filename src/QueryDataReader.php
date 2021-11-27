@@ -48,7 +48,7 @@ class QueryDataReader implements DataReaderInterface
     private ?int $count = null;
     private ?array $data = null;
 
-    private array $filterProcessors = [];
+    protected array $filterProcessors = [];
 
     public function __construct(Query $query)
     {
@@ -193,7 +193,7 @@ class QueryDataReader implements DataReaderInterface
     /**
      * @psalm-mutation-free
      */
-    public function withFilterProcessors(FilterProcessorInterface ...$filterProcessors): self
+    public function withFilterProcessors(FilterProcessorInterface ...$filterProcessors): static
     {
         $new = clone $this;
 
