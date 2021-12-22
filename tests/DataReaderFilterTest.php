@@ -28,6 +28,7 @@ use Yiisoft\Data\Db\Processor\LessThanOrEqual as ProcessorLessThanOrEqual;
 use Yiisoft\Data\Db\Processor\Like as ProcessorLike;
 use Yiisoft\Data\Db\Processor\In as ProcessorIn;
 use Yiisoft\Data\Db\Processor\QueryProcessorInterface;
+use Yiisoft\Data\Db\Filter\Between as FilterBetween;
 
 class DataReaderFilterTest extends TestCase
 {
@@ -185,5 +186,16 @@ class DataReaderFilterTest extends TestCase
         $notNull = new FilterNot(new FilterEquals('column', null));
 
         $this->assertSame(['IS not', 'column', null], $notNull->toArray());
+    }
+
+    public function testBetweenFilter()
+    {
+        $startEnd = new FilterBetween('column', [100, 200]);
+        $start = new FilterBetween('column', [150, null]);
+        $end = new FilterBetween('column', [null, 300]);
+
+        $this->assertSame([FilterBetween::getOperator(), 'column', 100, 200], $startEnd->toArray());
+        $this->assertSame([FilterGreaterThanOrEqual::getOperator(), 'column', 150], $start->toArray());
+        $this->assertSame([FilterLessThanOrEqual::getOperator(), 'column', 300], $end->toArray());
     }
 }

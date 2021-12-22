@@ -30,7 +30,7 @@ final class Between extends CompareFilter
      */
     private static function isEmpty($value): bool
     {
-        return $value !== null && $value !== '';
+        return $value === null || $value === '';
     }
 
     public function toArray(): array
@@ -39,16 +39,18 @@ final class Between extends CompareFilter
             $value = $this->value;
             $start = array_shift($value);
             $end = array_pop($value);
+            $isStartEmpty = self::isEmpty($start);
+            $isEndEmpty = self::isEmpty($end);
 
-            if (!self::isEmpty($start) && !self::isEmpty($end)) {
+            if (!$isStartEmpty && !$isEndEmpty) {
                 return [self::getOperator(), $this->column, $start, $end];
             }
 
-            if (!self::isEmpty($start)) {
+            if (!$isStartEmpty) {
                 return [GreaterThanOrEqual::getOperator(), $this->column, $start];
             }
 
-            if (!self::isEmpty($end)) {
+            if (!$isEndEmpty) {
                 return [LessThanOrEqual::getOperator(), $this->column, $end];
             }
 
