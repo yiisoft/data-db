@@ -146,7 +146,7 @@ class QueryDataReader implements DataReaderInterface
     /**
      * @psalm-mutation-free
      */
-    public function withOffset(int $offset): static
+    public function withOffset(int $offset): self
     {
         $new = clone $this;
         $new->offset = $offset;
@@ -157,7 +157,7 @@ class QueryDataReader implements DataReaderInterface
     /**
      * @psalm-mutation-free
      */
-    public function withLimit(int $limit): static
+    public function withLimit(int $limit): self
     {
         if ($limit < 0) {
             throw new InvalidArgumentException('$limit must not be less than 0.');
@@ -172,7 +172,7 @@ class QueryDataReader implements DataReaderInterface
     /**
      * @psalm-mutation-free
      */
-    public function withSort(?Sort $sort): static
+    public function withSort(?Sort $sort): self
     {
         $new = clone $this;
         $new->sort = $sort;
@@ -183,7 +183,7 @@ class QueryDataReader implements DataReaderInterface
     /**
      * @psalm-mutation-free
      */
-    public function withFilter(FilterInterface $filter): static
+    public function withFilter(FilterInterface $filter): self
     {
         $new = clone $this;
         $new->count = null;
@@ -195,7 +195,7 @@ class QueryDataReader implements DataReaderInterface
     /**
      * @psalm-mutation-free
      */
-    public function withFilterProcessors(FilterProcessorInterface ...$filterProcessors): static
+    public function withFilterProcessors(FilterProcessorInterface ...$filterProcessors): self
     {
         $new = clone $this;
 
