@@ -20,9 +20,6 @@ abstract class CompareFilter implements FilterInterface
      */
     protected $value;
 
-    /**
-    * @var bool
-    */
     protected bool $ignoreNull = false;
 
     /**
@@ -47,7 +44,7 @@ abstract class CompareFilter implements FilterInterface
         }
     }
 
-    public function withIgnoreNull(bool $ignoreNull = false): self
+    public function withIgnoreNull(bool $ignoreNull = true): self
     {
         $new = clone $this;
         $new->ignoreNull = $ignoreNull;
@@ -62,11 +59,7 @@ abstract class CompareFilter implements FilterInterface
     public function toArray(): array
     {
         if ($this->value === null) {
-            if ($this->ignoreNull) {
-                return [];
-            }
-
-            return ['IS', $this->column, null];
+            return $this->ignoreNull ? [] : ['IS', $this->column, null];
         }
 
         return [static::getOperator(), $this->column , $this->value];

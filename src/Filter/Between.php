@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Filter;
 
 use InvalidArgumentException;
+use Yiisoft\Data\Db\DateTimeTrait;
 
 final class Between extends CompareFilter
 {
+    use DateTimeTrait;
+
     /**
      * @param mixed $column
      */
@@ -37,8 +40,8 @@ final class Between extends CompareFilter
     {
         if (is_array($this->value)) {
             $value = $this->value;
-            $start = array_shift($value);
-            $end = array_pop($value);
+            $start = $this->dateTimeFormat(array_shift($value));
+            $end = $this->dateTimeFormat(array_pop($value));
             $isStartEmpty = self::isEmpty($start);
             $isEndEmpty = self::isEmpty($end);
 

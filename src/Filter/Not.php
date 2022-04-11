@@ -33,7 +33,9 @@ final class Not implements FilterInterface
             case 'IS':
                 $array[0] .= ' ' . self::getOperator();
                 break;
-            case Exists::getOperator(): case In::getOperator(): case Between::getOperator():
+            case Exists::getOperator():
+            case In::getOperator():
+            case Between::getOperator():
                 $array[0] = self::getOperator() . ' ' . $array[0];
                 break;
             default:

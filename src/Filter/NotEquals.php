@@ -21,12 +21,8 @@ final class NotEquals extends CompareFilter
                 return [];
             }
 
-            if (is_string($this->column)) {
-                return ['NOT', [$this->column => null]];
-            }
-
-            if ($this->column instanceof Stringable) {
-                return ['NOT', [$this->column->__toString() => null]];
+            if (is_string($this->column) || $this->column instanceof Stringable) {
+                return ['NOT', [(string) $this->column => null]];
             }
 
             throw new RuntimeException();

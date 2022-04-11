@@ -9,24 +9,25 @@ use InvalidArgumentException;
 use RuntimeException;
 use Yiisoft\Data\Db\Processor\All;
 use Yiisoft\Data\Db\Processor\Any;
+use Yiisoft\Data\Db\Processor\Between;
 use Yiisoft\Data\Db\Processor\Equals;
 use Yiisoft\Data\Db\Processor\Exists;
 use Yiisoft\Data\Db\Processor\GreaterThan;
 use Yiisoft\Data\Db\Processor\GreaterThanOrEqual;
+use Yiisoft\Data\Db\Processor\ILike;
 use Yiisoft\Data\Db\Processor\In;
 use Yiisoft\Data\Db\Processor\LessThan;
 use Yiisoft\Data\Db\Processor\LessThanOrEqual;
 use Yiisoft\Data\Db\Processor\Like;
-use Yiisoft\Data\Db\Processor\ILike;
-use Yiisoft\Data\Db\Processor\NotEquals;
 use Yiisoft\Data\Db\Processor\Not;
-use Yiisoft\Data\Db\Processor\Between;
+use Yiisoft\Data\Db\Processor\NotEquals;
 use Yiisoft\Data\Db\Processor\QueryProcessorInterface;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Db\Query\Query;
+use Yiisoft\Db\Query\QueryInterface;
 use function sprintf;
 
 /**
@@ -37,20 +38,16 @@ use function sprintf;
  */
 class QueryDataReader implements DataReaderInterface
 {
-    private Query $query;
-
+    private QueryInterface $query;
     private ?Sort $sort = null;
     private ?FilterInterface $filter = null;
-
     private int $limit = 0;
     private int $offset = 0;
-
     private ?int $count = null;
     private ?array $data = null;
-
     protected array $filterProcessors = [];
 
-    public function __construct(Query $query)
+    public function __construct(QueryInterface $query)
     {
         $this->query = $query;
         $this->filterProcessors = $this->withFilterProcessors(
@@ -81,14 +78,18 @@ class QueryDataReader implements DataReaderInterface
      */
     public function getIterator(): Generator
     {
-        $query = $this->prepareQuery();
-
-        foreach ($query->each() as $row) {
-            yield $row;
+        if ($this->query instanceof Query) {
+            $query = $this->prepareQuery();
+            /** @var Query $query */
+            foreach ($query->each() as $row) {
+                yield $row;
+            }
+        } else {
+            yield from $this->read();
         }
     }
 
-    public function count(): int
+    public function count(string $q = '*'): int
     {
         if ($this->count === null) {
             $query = $this->prepareQuery();
@@ -96,13 +97,14 @@ class QueryDataReader implements DataReaderInterface
             $query->limit(null);
             $query->orderBy('');
 
-            $this->count = $query->count();
+            $count = $query->count($q);
+            $this->count = is_bool($count) ? 0 : (int) $count;
         }
 
         return $this->count;
     }
 
-    private function prepareQuery(): Query
+    private function prepareQuery(): QueryInterface
     {
         $query = $this->applyFilter(clone $this->query);
 
@@ -125,7 +127,7 @@ class QueryDataReader implements DataReaderInterface
         return $query;
     }
 
-    protected function applyFilter(Query $query): Query
+    protected function applyFilter(QueryInterface $query): QueryInterface
     {
         if ($this->filter === null) {
             return $query;
@@ -144,7 +146,7 @@ class QueryDataReader implements DataReaderInterface
     /**
      * @psalm-mutation-free
      */
-    public function withOffset(int $offset): self
+    public function withOffset(int $offset): static
     {
         $new = clone $this;
         $new->offset = $offset;
@@ -155,7 +157,7 @@ class QueryDataReader implements DataReaderInterface
     /**
      * @psalm-mutation-free
      */
-    public function withLimit(int $limit): self
+    public function withLimit(int $limit): static
     {
         if ($limit < 0) {
             throw new InvalidArgumentException('$limit must not be less than 0.');
@@ -170,7 +172,7 @@ class QueryDataReader implements DataReaderInterface
     /**
      * @psalm-mutation-free
      */
-    public function withSort(?Sort $sort): self
+    public function withSort(?Sort $sort): static
     {
         $new = clone $this;
         $new->sort = $sort;
@@ -181,7 +183,7 @@ class QueryDataReader implements DataReaderInterface
     /**
      * @psalm-mutation-free
      */
-    public function withFilter(FilterInterface $filter): self
+    public function withFilter(FilterInterface $filter): static
     {
         $new = clone $this;
         $new->count = null;
@@ -201,6 +203,8 @@ class QueryDataReader implements DataReaderInterface
             if ($filterProcessor instanceof QueryProcessorInterface) {
                 /** @psalm-suppress ImpureMethodCall */
                 $new->filterProcessors[$filterProcessor->getOperator()] = $filterProcessor;
+            } else {
+                throw new InvalidArgumentException('Only ' . QueryProcessorInterface::class . ' instance allowed.');
             }
         }
 

@@ -23,7 +23,7 @@ abstract class GroupFilter implements FilterInterface
             $arr = $filter->toArray();
 
             if (count($arr)) {
-                $array[] = $filter->toArray();
+                $array[] = $arr;
             }
         }
 
