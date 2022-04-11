@@ -76,11 +76,13 @@ class Like extends CompareFilter
             return parent::toArray();
         }
 
+        $value = $this->formatValue($this->value);
+
         if (!$this->start && !$this->end) {
-            return [static::getOperator(), $this->column, $this->value, false];
+            return [static::getOperator(), $this->column, $value, false];
         }
 
-        $value = $this->start ? '%' . $this->value : $this->value . '%';
+        $value = $this->start ? '%' . $value : $value . '%';
 
         return [static::getOperator(), $this->column, $value, false];
     }

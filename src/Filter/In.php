@@ -13,12 +13,13 @@ use function is_array;
 final class In extends CompareFilter
 {
     /**
+     * @param mixed $column
      * @param mixed $value
      */
-    public function __construct(string $column, $value, ?string $table = null)
+    public function __construct($column, $value, ?string $table = null)
     {
         if ($value !== null && !is_array($value) && !is_a($value, QueryInterface::class)) {
-            throw new InvalidArgumentException('value must be null, array or ' . QueryInterface::class . ' instance');
+            throw new InvalidArgumentException('Value must be null, array or ' . QueryInterface::class . ' instance.');
         }
 
         parent::__construct($column, $value, $table);

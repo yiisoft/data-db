@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Filter;
 
-use Yiisoft\Db\Query\Query;
+use Yiisoft\Db\Query\QueryInterface;
 use Yiisoft\Data\Reader\Filter\Equals as FilterEquals;
 
 final class Equals extends CompareFilter
@@ -16,8 +16,8 @@ final class Equals extends CompareFilter
 
     public function toArray(): array
     {
-        if (is_array($this->value) || $this->value instanceof Query) {
-            return [In::getOperator(), $this->column, $this->value];
+        if (is_array($this->value) || $this->value instanceof QueryInterface) {
+            return (new In($this->column, $this->value))->toArray();
         }
 
         return parent::toArray();

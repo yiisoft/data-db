@@ -28,6 +28,8 @@ final class NotEquals extends CompareFilter
             throw new RuntimeException();
         }
 
-        return [self::getOperator(), $this->column, $this->value];
+        $value = $this->formatValue($this->value);
+
+        return [self::getOperator(), $this->column, $value];
     }
 }

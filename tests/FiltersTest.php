@@ -4,38 +4,36 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Tests;
 
+use DateTime;
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Data\Db\Filter\All as FilterAll;
 use Yiisoft\Data\Db\Filter\Any as FilterAny;
+use Yiisoft\Data\Db\Filter\Between as FilterBetween;
+use Yiisoft\Data\Db\Filter\CompareFilter;
 use Yiisoft\Data\Db\Filter\Equals as FilterEquals;
-use Yiisoft\Data\Db\Filter\NotEquals as FilterNotEquals;
 use Yiisoft\Data\Db\Filter\GreaterThan as FilterGreaterThan;
 use Yiisoft\Data\Db\Filter\GreaterThanOrEqual as FilterGreaterThanOrEqual;
+use Yiisoft\Data\Db\Filter\GroupFilter;
+use Yiisoft\Data\Db\Filter\ILike as FilterILike;
+use Yiisoft\Data\Db\Filter\In as FilterIn;
 use Yiisoft\Data\Db\Filter\LessThan as FilterLessThan;
 use Yiisoft\Data\Db\Filter\LessThanOrEqual as FilterLessThanOrEqual;
 use Yiisoft\Data\Db\Filter\Like as FilterLike;
-use Yiisoft\Data\Db\Filter\ILike as FilterILike;
-use Yiisoft\Data\Db\Filter\In as FilterIn;
 use Yiisoft\Data\Db\Filter\Not as FilterNot;
-use Yiisoft\Data\Db\Processor\All as ProcessorAll;
-use Yiisoft\Data\Db\Processor\Any as ProcessorAny;
-use Yiisoft\Data\Db\Processor\Equals as ProcessorEquals;
-use Yiisoft\Data\Db\Processor\GreaterThan as ProcessorGreaterThan;
-use Yiisoft\Data\Db\Processor\GreaterThanOrEqual as ProcessorGreaterThanOrEqual;
-use Yiisoft\Data\Db\Processor\LessThan as ProcessorLessThan;
-use Yiisoft\Data\Db\Processor\LessThanOrEqual as ProcessorLessThanOrEqual;
-use Yiisoft\Data\Db\Processor\Like as ProcessorLike;
-use Yiisoft\Data\Db\Processor\In as ProcessorIn;
-use Yiisoft\Data\Db\Processor\QueryProcessorInterface;
-use Yiisoft\Data\Db\Filter\Between as FilterBetween;
-use Yiisoft\Data\Db\Filter\GroupFilter;
+use Yiisoft\Data\Db\Filter\NotEquals as FilterNotEquals;
+use Yiisoft\Data\Reader\Filter\FilterInterface;
 
 final class FiltersTest extends TestCase
 {
+    public function setUp(): void
+    {
+        CompareFilter::$mainDateTimeFormat = 'Y-m-d H:i:s P';
+    }
+
     public function simpleDataProvider(): array
     {
         return [
+            //Equals
             [
                 new FilterEquals('equals', 1),
                 ['=', 'equals', 1],
@@ -44,6 +42,11 @@ final class FiltersTest extends TestCase
                 new FilterEquals('equals', [1, 2, 3]),
                 ['in', 'equals', [1, 2, 3]],
             ],
+            [
+                new FilterEquals('column', new DateTime('2011-01-01T15:03:01.012345Z')),
+                ['=', 'column', '2011-01-01 15:03:01 +00:00'],
+            ],
+            //Between
             [
                 new FilterBetween('column', [100, 300]),
                 ['between', 'column', 100, 300],
@@ -57,8 +60,17 @@ final class FiltersTest extends TestCase
                 ['<=', 'column', 250],
             ],
             [
+                new FilterBetween('column', [new DateTime('2011-01-01T15:00:01'), new DateTime('2011-01-01T15:10:01')]),
+                ['between', 'column', '2011-01-01 15:00:01 +00:00', '2011-01-01 15:10:01 +00:00'],
+            ],
+            //GreaterThan
+            [
                 new FilterGreaterThan('column', 1000),
                 ['>', 'column', 1000],
+            ],
+            [
+                new FilterGreaterThan('column', new DateTime('2011-01-01T15:00:01')),
+                ['>', 'column', '2011-01-01 15:00:01 +00:00'],
             ],
             [
                 new FilterGreaterThanOrEqual('column', 3.5),
@@ -175,6 +187,8 @@ final class FiltersTest extends TestCase
 
     public function groupDataProvider(): array
     {
+        CompareFilter::$mainDateTimeFormat = 'Y-m-d H:i:s P';
+
         $filters = array_column($this->simpleDataProvider(), 0);
         $nullFilters = array_column($this->nullDataProvider(), 0);
         $map = array_map(static fn ($filter) => $filter->toArray(), $filters);

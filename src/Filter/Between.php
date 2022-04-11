@@ -9,8 +9,6 @@ use Yiisoft\Data\Db\DateTimeTrait;
 
 final class Between extends CompareFilter
 {
-    use DateTimeTrait;
-
     /**
      * @param mixed $column
      */
@@ -40,21 +38,26 @@ final class Between extends CompareFilter
     {
         if (is_array($this->value)) {
             $value = $this->value;
-            $start = $this->dateTimeFormat(array_shift($value));
-            $end = $this->dateTimeFormat(array_pop($value));
+            $start = array_shift($value);
+            $end = array_pop($value);
             $isStartEmpty = self::isEmpty($start);
             $isEndEmpty = self::isEmpty($end);
 
             if (!$isStartEmpty && !$isEndEmpty) {
-                return [self::getOperator(), $this->column, $start, $end];
+                return [
+                    self::getOperator(),
+                    $this->column,
+                    $this->formatValue($start),
+                    $this->formatValue($end),
+                ];
             }
 
             if (!$isStartEmpty) {
-                return [GreaterThanOrEqual::getOperator(), $this->column, $start];
+                return (new GreaterThanOrEqual($this->column, $start))->toArray();
             }
 
             if (!$isEndEmpty) {
-                return [LessThanOrEqual::getOperator(), $this->column, $end];
+                return (new LessThanOrEqual($this->column, $end))->toArray();
             }
 
             return [];

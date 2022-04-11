@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Filter;
 
+use DateTimeInterface;
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Db\Expression\ExpressionInterface;
 
 abstract class CompareFilter implements FilterInterface
 {
+    public static string $mainDateTimeFormat = 'Y-m-d H:i:s';
+
     /**
      * @var ExpressionInterface|string
      */
@@ -21,6 +24,7 @@ abstract class CompareFilter implements FilterInterface
     protected $value;
 
     protected bool $ignoreNull = false;
+    protected ?string $dateTimeFormat = null;
 
     /**
      * @param mixed $column
@@ -48,12 +52,42 @@ abstract class CompareFilter implements FilterInterface
     {
         $new = clone $this;
         $new->ignoreNull = $ignoreNull;
+
         return $new;
     }
 
-    public function getIgnoreNull(): bool
+    public function withDateTimeFormat(?string $format): self
     {
-        return $this->ignoreNull;
+        $new = clone $this;
+        $new->dateTimeFormat = $format;
+
+        return $new;
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return mixed
+     */
+    protected function formatValue($value)
+    {
+        $format = $this->dateTimeFormat ?? self::$mainDateTimeFormat;
+
+        if ($format && $value instanceof DateTimeInterface) {
+            return $value->format($format);
+        }
+
+        return $value;
+    }
+
+    /**
+     * @psalm-param array<int, mixed> $values
+     *
+     * @return array
+     */
+    protected function formatValueMultiple(array $values): array
+    {
+        return array_map([$this, 'formatValue'], $values);
     }
 
     public function toArray(): array
@@ -62,6 +96,12 @@ abstract class CompareFilter implements FilterInterface
             return $this->ignoreNull ? [] : ['IS', $this->column, null];
         }
 
-        return [static::getOperator(), $this->column , $this->value];
+        if (is_array($this->value)) {
+            $value = $this->formatValueMultiple($this->value);
+        } else {
+            $value = $this->formatValue($this->value);
+        }
+
+        return [static::getOperator(), $this->column , $value];
     }
 }
