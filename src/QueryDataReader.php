@@ -16,6 +16,7 @@ use Yiisoft\Data\Db\Processor\GreaterThan;
 use Yiisoft\Data\Db\Processor\GreaterThanOrEqual;
 use Yiisoft\Data\Db\Processor\ILike;
 use Yiisoft\Data\Db\Processor\In;
+use Yiisoft\Data\Db\Processor\IsNull;
 use Yiisoft\Data\Db\Processor\LessThan;
 use Yiisoft\Data\Db\Processor\LessThanOrEqual;
 use Yiisoft\Data\Db\Processor\Like;
@@ -64,7 +65,8 @@ class QueryDataReader implements DataReaderInterface
             new Exists(),
             new NotEquals(),
             new Not(),
-            new Between()
+            new Between(),
+            new IsNull()
         )->filterProcessors;
     }
 
@@ -79,7 +81,7 @@ class QueryDataReader implements DataReaderInterface
     public function getIterator(): Generator
     {
         if ($this->query instanceof Query) {
-            $query = $this->prepareQuery();
+            $query = $this->getPreparedQuery();
             /** @var Query $query */
             foreach ($query->each() as $row) {
                 yield $row;
@@ -92,7 +94,7 @@ class QueryDataReader implements DataReaderInterface
     public function count(string $q = '*'): int
     {
         if ($this->count === null) {
-            $query = $this->prepareQuery();
+            $query = $this->getPreparedQuery();
             $query->offset(null);
             $query->limit(null);
             $query->orderBy('');
@@ -104,7 +106,7 @@ class QueryDataReader implements DataReaderInterface
         return $this->count;
     }
 
-    private function prepareQuery(): QueryInterface
+    public function getPreparedQuery(): QueryInterface
     {
         $query = $this->applyFilter(clone $this->query);
 
@@ -136,11 +138,11 @@ class QueryDataReader implements DataReaderInterface
         $operation = $this->filter::getOperator();
         $processor = $this->filterProcessors[$operation] ?? null;
 
-        if (!isset($this->filterProcessors[$operation])) {
+        if ($processor === null) {
             throw new RuntimeException(sprintf('Operation "%s" is not supported', $operation));
         }
 
-        return $this->filterProcessors[$operation]->apply($query, $this->filter);
+        return $processor->apply($query, $this->filter);
     }
 
     /**
@@ -220,7 +222,7 @@ class QueryDataReader implements DataReaderInterface
     {
         if ($this->data === null) {
             $this->data = $this
-                ->prepareQuery()
+                ->getPreparedQuery()
                 ->all();
         }
 
@@ -234,7 +236,7 @@ class QueryDataReader implements DataReaderInterface
     {
         return $this
             ->withLimit(1)
-            ->prepareQuery()
+            ->getPreparedQuery()
             ->one();
     }
 }

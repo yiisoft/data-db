@@ -25,7 +25,7 @@ use Yiisoft\Data\Reader\Filter\FilterInterface;
 
 final class FiltersTest extends TestCase
 {
-    public function setUp(): void
+    public static function setUpBeforeClass(): void
     {
         CompareFilter::$mainDateTimeFormat = 'Y-m-d H:i:s P';
     }
@@ -187,11 +187,9 @@ final class FiltersTest extends TestCase
 
     public function groupDataProvider(): array
     {
-        CompareFilter::$mainDateTimeFormat = 'Y-m-d H:i:s P';
-
         $filters = array_column($this->simpleDataProvider(), 0);
         $nullFilters = array_column($this->nullDataProvider(), 0);
-        $map = array_map(static fn ($filter) => $filter->toArray(), $filters);
+        $map = array_map(static fn ($filter) => $filter->withDateTimeFormat('Y-m-d H:i:s P')->toArray(), $filters);
         $nullMap = array_map(static fn ($filter) => $filter->withIgnoreNull(), $nullFilters);
 
         return [
@@ -227,7 +225,7 @@ final class FiltersTest extends TestCase
     /**
      * @dataProvider nullDataProvider
      */
-    public function testWithNull(FilterInterface $filter, array $expected = ['IS', 'column', null]): void
+    public function testWithNull(FilterInterface $filter, array $expected = ['is', 'column', null]): void
     {
         $this->assertSame($expected, $filter->toArray());
         $this->assertSame([], $filter->withIgnoreNull()->toArray());

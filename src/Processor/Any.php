@@ -8,7 +8,7 @@ use Yiisoft\Data\Db\Filter\Any as FilterAny;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Db\Query\QueryInterface;
 
-class Any implements QueryProcessorInterface
+final class Any implements QueryProcessorInterface
 {
     public function getOperator(): string
     {

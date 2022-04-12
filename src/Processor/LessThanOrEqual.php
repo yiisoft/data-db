@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Db\Processor;
 
 use Yiisoft\Data\Db\Filter\LessThanOrEqual as FilterLessThanOrEqual;
 
-class LessThanOrEqual extends CompareProcessor
+final class LessThanOrEqual extends CompareProcessor
 {
     public function getOperator(): string
     {

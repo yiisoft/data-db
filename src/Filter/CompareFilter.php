@@ -5,21 +5,17 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Filter;
 
 use DateTimeInterface;
-use InvalidArgumentException;
+use Yiisoft\Data\Db\ColumnFormatterTrait;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
-use Yiisoft\Db\Expression\ExpressionInterface;
 
 abstract class CompareFilter implements FilterInterface
 {
+    use ColumnFormatterTrait;
+
     public static string $mainDateTimeFormat = 'Y-m-d H:i:s';
 
     /**
-     * @var ExpressionInterface|string
-     */
-    protected $column;
-
-    /**
-     * @var array|bool|float|int|string|null
+     * @var mixed
      */
     protected $value;
 
@@ -33,19 +29,7 @@ abstract class CompareFilter implements FilterInterface
     public function __construct($column, $value, ?string $table = null)
     {
         $this->value = $value;
-
-        if ($column instanceof ExpressionInterface) {
-            $this->column = $column;
-        } elseif (is_string($column)) {
-            if ($table) {
-                $this->column = $table . '.' . $column;
-            } else {
-                $this->column = $column;
-            }
-        } else {
-            $type = \is_object($column) ? \get_class($column) : \gettype($column);
-            throw new InvalidArgumentException('Column must be string or instance of "' . ExpressionInterface::class . '". "' . $type . '" given.');
-        }
+        $this->setColumn($column, $table);
     }
 
     public function withIgnoreNull(bool $ignoreNull = true): self
@@ -85,7 +69,7 @@ abstract class CompareFilter implements FilterInterface
      *
      * @return array
      */
-    protected function formatValueMultiple(array $values): array
+    protected function formatValues(array $values): array
     {
         return array_map([$this, 'formatValue'], $values);
     }
@@ -93,11 +77,11 @@ abstract class CompareFilter implements FilterInterface
     public function toArray(): array
     {
         if ($this->value === null) {
-            return $this->ignoreNull ? [] : ['IS', $this->column, null];
+            return $this->ignoreNull ? [] : (new IsNull($this->column))->toArray();
         }
 
         if (is_array($this->value)) {
-            $value = $this->formatValueMultiple($this->value);
+            $value = $this->formatValues($this->value);
         } else {
             $value = $this->formatValue($this->value);
         }
