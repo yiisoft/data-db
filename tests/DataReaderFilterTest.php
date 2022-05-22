@@ -79,26 +79,26 @@ class DataReaderFilterTest extends TestCase
         $processorIn = new ProcessorIn();
 
         //Filters
-        $this->assertTrue($filterEquals instanceof FilterInterface);
-        $this->assertTrue($filterAll instanceof FilterInterface);
-        $this->assertTrue($filterAny instanceof FilterInterface);
-        $this->assertTrue($filterGreaterThan instanceof FilterInterface);
-        $this->assertTrue($filterGreaterThanOrEqual instanceof FilterInterface);
-        $this->assertTrue($filterLessThan instanceof FilterInterface);
-        $this->assertTrue($filterLessThanOrEqual instanceof FilterInterface);
-        $this->assertTrue($filterLike instanceof FilterInterface);
-        $this->assertTrue($filterIn instanceof FilterInterface);
+        $this->assertInstanceOf(FilterInterface::class, $filterEquals);
+        $this->assertInstanceOf(FilterInterface::class, $filterAll);
+        $this->assertInstanceOf(FilterInterface::class, $filterAny);
+        $this->assertInstanceOf(FilterInterface::class, $filterGreaterThan);
+        $this->assertInstanceOf(FilterInterface::class, $filterGreaterThanOrEqual);
+        $this->assertInstanceOf(FilterInterface::class, $filterLessThan);
+        $this->assertInstanceOf(FilterInterface::class, $filterLessThanOrEqual);
+        $this->assertInstanceOf(FilterInterface::class, $filterLike);
+        $this->assertInstanceOf(FilterInterface::class, $filterIn);
 
         //Processors
-        $this->assertTrue($processorAll instanceof QueryProcessorInterface);
-        $this->assertTrue($processorAny instanceof QueryProcessorInterface);
-        $this->assertTrue($processorEquals instanceof QueryProcessorInterface);
-        $this->assertTrue($processorGreaterThan instanceof QueryProcessorInterface);
-        $this->assertTrue($processortGreaterThanOrEqual instanceof QueryProcessorInterface);
-        $this->assertTrue($processorLessThan instanceof QueryProcessorInterface);
-        $this->assertTrue($processorLessThanOrEqual instanceof QueryProcessorInterface);
-        $this->assertTrue($processorLike instanceof QueryProcessorInterface);
-        $this->assertTrue($processorIn instanceof QueryProcessorInterface);
+        $this->assertInstanceOf(QueryProcessorInterface::class, $processorAll);
+        $this->assertInstanceOf(QueryProcessorInterface::class, $processorAny);
+        $this->assertInstanceOf(QueryProcessorInterface::class, $processorEquals);
+        $this->assertInstanceOf(QueryProcessorInterface::class, $processorGreaterThan);
+        $this->assertInstanceOf(QueryProcessorInterface::class, $processortGreaterThanOrEqual);
+        $this->assertInstanceOf(QueryProcessorInterface::class, $processorLessThan);
+        $this->assertInstanceOf(QueryProcessorInterface::class, $processorLessThanOrEqual);
+        $this->assertInstanceOf(QueryProcessorInterface::class, $processorLike);
+        $this->assertInstanceOf(QueryProcessorInterface::class, $processorIn);
     }
 
     public function testWithNull()
