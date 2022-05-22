@@ -215,7 +215,9 @@ class QueryDataReader implements DataReaderInterface
     public function read(): array
     {
         if ($this->data === null) {
-            $this->data = $this->prepareQuery()->all();
+            $this->data = $this
+                ->prepareQuery()
+                ->all();
         }
 
         return $this->data;
@@ -226,6 +228,9 @@ class QueryDataReader implements DataReaderInterface
      */
     public function readOne()
     {
-        return $this->withLimit(1)->prepareQuery()->one();
+        return $this
+            ->withLimit(1)
+            ->prepareQuery()
+            ->one();
     }
 }

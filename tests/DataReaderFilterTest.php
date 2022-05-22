@@ -150,7 +150,9 @@ class DataReaderFilterTest extends TestCase
         $like = new FilterLike('foo', 'bar');
         $endLike = (new FilterLike('foo', 'bar'))->withoutStart();
         $startLike = (new FilterLike('foo', 'bar'))->withoutEnd();
-        $equalLike = (new FilterLike('foo', 'bar'))->withoutEnd()->withoutStart();
+        $equalLike = (new FilterLike('foo', 'bar'))
+            ->withoutEnd()
+            ->withoutStart();
 
         $this->assertSame([FilterLike::getOperator(), 'foo', 'bar'], $like->toArray());
         $this->assertSame([FilterLike::getOperator(), 'foo', 'bar%', false], $endLike->toArray());
@@ -160,7 +162,9 @@ class DataReaderFilterTest extends TestCase
         $like = new FilterILike('foo', 'bar');
         $endLike = (new FilterILike('foo', 'bar'))->withoutStart();
         $startLike = (new FilterILike('foo', 'bar'))->withoutEnd();
-        $equalLike = (new FilterILike('foo', 'bar'))->withoutEnd()->withoutStart();
+        $equalLike = (new FilterILike('foo', 'bar'))
+            ->withoutEnd()
+            ->withoutStart();
 
         $this->assertSame([FilterILike::getOperator(), 'foo', 'bar'], $like->toArray());
         $this->assertSame([FilterILike::getOperator(), 'foo', 'bar%', false], $endLike->toArray());

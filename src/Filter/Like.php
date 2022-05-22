@@ -23,12 +23,16 @@ class Like extends CompareFilter
 
     public function withBoth(): self
     {
-        return $this->withStart()->withEnd();
+        return $this
+            ->withStart()
+            ->withEnd();
     }
 
     public function withoutBoth(): self
     {
-        return $this->withoutStart()->withoutEnd();
+        return $this
+            ->withoutStart()
+            ->withoutEnd();
     }
 
     public function withStart(): self
