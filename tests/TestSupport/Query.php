@@ -30,17 +30,19 @@ class Query implements QueryInterface
     private array $select = [];
     private ?int $offset = null;
     private ?int $limit = null;
+    private ?string $indexBy = null;
 
     public function all(): array
     {
         if ($this->offset === null && $this->limit === null) {
-            return self::DATA;
+            $data = self::DATA;
+        } else {
+            $offset = $this->offset ?? 0;
+            $limit = $this->limit ?? count(self::DATA);
+            $data = array_slice(self::DATA, $offset, $limit);
         }
 
-        $offset = $this->offset ?? 0;
-        $limit = $this->limit ?? count(self::DATA);
-
-        return array_slice(self::DATA, $offset, $limit);
+        return $this->indexBy ? array_column($data, null, $this->indexBy) : $data;
     }
 
     public function one()
@@ -60,6 +62,8 @@ class Query implements QueryInterface
 
     public function indexBy($column): self
     {
+        $this->indexBy = $column;
+
         return $this;
     }
 

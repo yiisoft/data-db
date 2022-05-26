@@ -23,6 +23,18 @@ final class DataReaderTest extends TestCase
         }
     }
 
+    public function testIndexBy(): void
+    {
+        $query = (new Query())->indexBy('id');
+        $all = $query->all();
+        $dataReader = new QueryDataReader($query);
+
+        foreach ($dataReader as $i => $row) {
+            $this->assertSame($all[$i], $row);
+            $this->assertSame($i, $row['id']);
+        }
+    }
+
     public function testOffset(): void
     {
         $query = new Query();
