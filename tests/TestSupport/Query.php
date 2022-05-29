@@ -15,7 +15,7 @@ class Query implements QueryInterface
         ],
         [
             'id' => 2,
-            'title' =>'title 2',
+            'title' => 'title 2',
         ],
         [
             'id' => 3,
