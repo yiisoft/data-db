@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Filter;
 
 use Yiisoft\Data\Reader\Filter\FilterInterface;
+use function count;
 
 abstract class GroupFilter implements FilterInterface
 {
@@ -22,8 +23,8 @@ abstract class GroupFilter implements FilterInterface
         foreach ($this->filters as $filter) {
             $arr = $filter->toArray();
 
-            if (count($arr)) {
-                $array[] = $filter->toArray();
+            if ($arr !== []) {
+                $array[] = $arr;
             }
         }
 

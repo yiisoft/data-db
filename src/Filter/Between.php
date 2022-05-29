@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Filter;
 
 use InvalidArgumentException;
+use function count;
 
 final class Between extends CompareFilter
 {
@@ -43,15 +44,20 @@ final class Between extends CompareFilter
             $isEndEmpty = self::isEmpty($end);
 
             if (!$isStartEmpty && !$isEndEmpty) {
-                return [self::getOperator(), $this->column, $start, $end];
+                return [
+                    self::getOperator(),
+                    $this->column,
+                    $this->formatValue($start),
+                    $this->formatValue($end),
+                ];
             }
 
             if (!$isStartEmpty) {
-                return [GreaterThanOrEqual::getOperator(), $this->column, $start];
+                return (new GreaterThanOrEqual($this->column, $start))->toArray();
             }
 
             if (!$isEndEmpty) {
-                return [LessThanOrEqual::getOperator(), $this->column, $end];
+                return (new LessThanOrEqual($this->column, $end))->toArray();
             }
 
             return [];

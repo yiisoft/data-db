@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Db\Processor;
 
 use Yiisoft\Data\Db\Filter\In as FilterIn;
 
-class In extends CompareProcessor
+final class In extends CompareProcessor
 {
     public function getOperator(): string
     {

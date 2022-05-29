@@ -30,10 +30,12 @@ final class Not implements FilterInterface
         }
 
         switch ($array[0]) {
-            case 'IS':
+            case IsNull::getOperator():
                 $array[0] .= ' ' . self::getOperator();
                 break;
-            case Exists::getOperator(): case In::getOperator(): case Between::getOperator():
+            case In::getOperator():
+            case Exists::getOperator():
+            case Between::getOperator():
                 $array[0] = self::getOperator() . ' ' . $array[0];
                 break;
             default:

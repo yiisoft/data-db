@@ -11,7 +11,10 @@ class Like extends CompareFilter
     private bool $start = true;
     private bool $end = true;
 
-    public function __construct(string $column, ?string $value, ?string $table = null)
+    /**
+    * @param mixed $column
+    */
+    public function __construct($column, ?string $value, ?string $table = null)
     {
         parent::__construct($column, $value, $table);
     }
@@ -37,10 +40,6 @@ class Like extends CompareFilter
 
     public function withStart(): self
     {
-        if ($this->start === true) {
-            return $this;
-        }
-
         $new = clone $this;
         $new->start = true;
 
@@ -49,10 +48,6 @@ class Like extends CompareFilter
 
     public function withoutStart(): self
     {
-        if ($this->start === false) {
-            return $this;
-        }
-
         $new = clone $this;
         $new->start = false;
 
@@ -61,10 +56,6 @@ class Like extends CompareFilter
 
     public function withEnd(): self
     {
-        if ($this->end === true) {
-            return $this;
-        }
-
         $new = clone $this;
         $new->end = true;
 
@@ -73,10 +64,6 @@ class Like extends CompareFilter
 
     public function withoutEnd(): self
     {
-        if ($this->end === false) {
-            return $this;
-        }
-
         $new = clone $this;
         $new->end = false;
 
@@ -89,11 +76,13 @@ class Like extends CompareFilter
             return parent::toArray();
         }
 
+        $value = $this->formatValue($this->value);
+
         if (!$this->start && !$this->end) {
-            return [static::getOperator(), $this->column, $this->value, false];
+            return [static::getOperator(), $this->column, $value, false];
         }
 
-        $value = $this->start ? '%' . $this->value : $this->value . '%';
+        $value = $this->start ? '%' . $value : $value . '%';
 
         return [static::getOperator(), $this->column, $value, false];
     }

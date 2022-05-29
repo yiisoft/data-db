@@ -6,16 +6,16 @@ namespace Yiisoft\Data\Db\Processor;
 
 use Yiisoft\Data\Db\Filter\All as FilterAll;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
-use Yiisoft\Db\Query\Query;
+use Yiisoft\Db\Query\QueryInterface;
 
-class All implements QueryProcessorInterface
+final class All implements QueryProcessorInterface
 {
     public function getOperator(): string
     {
         return FilterAll::getOperator();
     }
 
-    public function apply(Query $query, FilterInterface $filter): Query
+    public function apply(QueryInterface $query, FilterInterface $filter): QueryInterface
     {
         return $query->andWhere($filter->toArray());
     }
