@@ -49,8 +49,12 @@ final class DataReaderTest extends TestCase
     public function testLimit(): void
     {
         $query = new Query();
-        $dataReader = (new QueryDataReader($query))->withOffset(1)->withLimit(1);
-        $query->offset(1)->limit(1);
+        $dataReader = (new QueryDataReader($query))
+            ->withOffset(1)
+            ->withLimit(1);
+        $query
+            ->offset(1)
+            ->limit(1);
 
         $this->assertSame(2, $query->one()['id']);
         $this->assertSame($query->one(), $dataReader->readOne());

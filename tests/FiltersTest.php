@@ -189,7 +189,9 @@ final class FiltersTest extends TestCase
     {
         $filters = array_column($this->simpleDataProvider(), 0);
         $nullFilters = array_column($this->nullDataProvider(), 0);
-        $map = array_map(static fn ($filter) => $filter->withDateTimeFormat('Y-m-d H:i:s P')->toArray(), $filters);
+        $map = array_map(static fn ($filter) => $filter
+            ->withDateTimeFormat('Y-m-d H:i:s P')
+            ->toArray(), $filters);
         $nullMap = array_map(static fn ($filter) => $filter->withIgnoreNull(), $nullFilters);
 
         return [
@@ -228,7 +230,9 @@ final class FiltersTest extends TestCase
     public function testWithNull(FilterInterface $filter, array $expected = ['is', 'column', null]): void
     {
         $this->assertSame($expected, $filter->toArray());
-        $this->assertSame([], $filter->withIgnoreNull()->toArray());
+        $this->assertSame([], $filter
+            ->withIgnoreNull()
+            ->toArray());
     }
 
     /**
