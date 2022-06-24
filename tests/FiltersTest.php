@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Tests;
 
 use DateTime;
+use DateTimeZone;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Db\Filter\All as FilterAll;
 use Yiisoft\Data\Db\Filter\Any as FilterAny;
@@ -32,6 +33,7 @@ final class FiltersTest extends TestCase
 
     public function simpleDataProvider(): array
     {
+        $utcTimeZone = new DateTimeZone('UTC');
         return [
             //Equals
             [
@@ -60,7 +62,10 @@ final class FiltersTest extends TestCase
                 ['<=', 'column', 250],
             ],
             [
-                new FilterBetween('column', [new DateTime('2011-01-01T15:00:01'), new DateTime('2011-01-01T15:10:01')]),
+                new FilterBetween('column', [
+                    new DateTime('2011-01-01T15:00:01', $utcTimeZone),
+                    new DateTime('2011-01-01T15:10:01', $utcTimeZone)
+                ]),
                 ['between', 'column', '2011-01-01 15:00:01 +00:00', '2011-01-01 15:10:01 +00:00'],
             ],
             //GreaterThan
@@ -69,7 +74,7 @@ final class FiltersTest extends TestCase
                 ['>', 'column', 1000],
             ],
             [
-                new FilterGreaterThan('column', new DateTime('2011-01-01T15:00:01')),
+                new FilterGreaterThan('column', new DateTime('2011-01-01T15:00:01', $utcTimeZone)),
                 ['>', 'column', '2011-01-01 15:00:01 +00:00'],
             ],
             [

@@ -99,8 +99,7 @@ class QueryDataReader implements DataReaderInterface
             $query->limit(null);
             $query->orderBy('');
 
-            $count = $query->count($q);
-            $this->count = is_bool($count) ? 0 : (int) $count;
+            $this->count = (int) $query->count($q);
         }
 
         return $this->count;
