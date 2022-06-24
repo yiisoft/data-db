@@ -19,7 +19,7 @@ The package provides `Yiisoft\Db\Query\Query` bindings for generic data abstract
 
 ## Requirements
 
-- PHP 7.4 or higher.
+- PHP 8.0 or higher.
 
 ## Installation
 
