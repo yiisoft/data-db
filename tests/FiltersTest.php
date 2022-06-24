@@ -64,7 +64,7 @@ final class FiltersTest extends TestCase
             [
                 new FilterBetween('column', [
                     new DateTime('2011-01-01T15:00:01', $utcTimeZone),
-                    new DateTime('2011-01-01T15:10:01', $utcTimeZone)
+                    new DateTime('2011-01-01T15:10:01', $utcTimeZone),
                 ]),
                 ['between', 'column', '2011-01-01 15:00:01 +00:00', '2011-01-01 15:10:01 +00:00'],
             ],
