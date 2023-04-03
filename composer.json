@@ -31,7 +31,7 @@
     "prefer-stable": true,
     "require": {
         "php": "^7.4|^8.0",
-        "yiisoft/db": "^3.0@dev",
+        "yiisoft/db": "^9999999-dev@dev",
         "yiisoft/data": "^1.0"
     },
     "require-dev": {
