@@ -28,7 +28,7 @@
         }
     ],
     "require": {
-        "php": "^7.4|^8.0",
+        "php": "^8.0",
         "yiisoft/db": "^1.0",
         "yiisoft/data": "^1.0"
     },

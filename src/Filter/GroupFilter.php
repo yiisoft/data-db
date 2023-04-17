@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Filter;
 
-use Yiisoft\Data\Reader\Filter\FilterInterface;
-
+use Yiisoft\Data\Reader\FilterInterface;
 use function count;
 
 abstract class GroupFilter implements FilterInterface
@@ -17,12 +16,12 @@ abstract class GroupFilter implements FilterInterface
         $this->filters = $filters;
     }
 
-    public function toArray(): array
+    public function toCriteriaArray(): array
     {
         $array = [static::getOperator()];
 
         foreach ($this->filters as $filter) {
-            $arr = $filter->toArray();
+            $arr = $filter->toCriteriaArray();
 
             if ($arr !== []) {
                 $array[] = $arr;

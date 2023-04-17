@@ -6,49 +6,50 @@ namespace Yiisoft\Data\Db\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Db\QueryDataReader;
-use Yiisoft\Data\Db\Tests\TestSupport\Query;
+use Yiisoft\Data\Db\Tests\Support\TestTrait;
+use Yiisoft\Db\Query\Query;
 
 final class DataReaderTest extends TestCase
 {
+    use TestTrait;
+
     public function testDataReader(): void
     {
-        $query = new Query();
-        $all = $query->all();
+        $db = $this->getConnection(true);
+
+        $query = (new Query($db))
+            ->from('customer');
         $dataReader = new QueryDataReader($query);
 
-        $this->assertSame($query->count(), $dataReader->count());
-
-        foreach ($dataReader as $i => $row) {
-            $this->assertSame($all[$i], $row);
-        }
-    }
-
-    public function testIndexBy(): void
-    {
-        $query = (new Query())->indexBy('id');
-        $all = $query->all();
-        $dataReader = new QueryDataReader($query);
-
-        foreach ($dataReader as $i => $row) {
-            $this->assertSame($all[$i], $row);
-            $this->assertSame($i, $row['id']);
-        }
+        $this->assertSame(
+            $query->createCommand()->getRawSql(),
+            $dataReader->getPreparedQuery()->createCommand()->getRawSql()
+        );
     }
 
     public function testOffset(): void
     {
-        $query = new Query();
-        $dataReader = (new QueryDataReader($query))->withOffset(2);
+        $db = $this->getConnection(true);
+
+        $query = (new Query($db))
+            ->from('customer');
+        $dataReader = (new QueryDataReader($query))
+            ->withOffset(2);
         $query->offset(2);
 
-        $this->assertSame(3, $query->one()['id']);
-        $this->assertSame($query->one(), $dataReader->readOne());
-        $this->assertSame($query->count(), count($dataReader->read()));
+        $actual = $dataReader->getPreparedQuery()->createCommand()->getRawSql();
+        $expected = $query->createCommand()->getRawSql();
+
+        $this->assertSame($expected, $actual);
+        $this->assertStringContainsStringIgnoringCase('OFFSET 2', $actual);
     }
 
     public function testLimit(): void
     {
-        $query = new Query();
+        $db = $this->getConnection(true);
+
+        $query = (new Query($db))
+            ->from('customer');
         $dataReader = (new QueryDataReader($query))
             ->withOffset(1)
             ->withLimit(1);
@@ -56,8 +57,11 @@ final class DataReaderTest extends TestCase
             ->offset(1)
             ->limit(1);
 
-        $this->assertSame(2, $query->one()['id']);
-        $this->assertSame($query->one(), $dataReader->readOne());
-        $this->assertSame($query->count(), count($dataReader->read()));
+        $actual = $dataReader->getPreparedQuery()->createCommand()->getRawSql();
+        $expected = $query->createCommand()->getRawSql();
+
+        $this->assertSame($expected, $actual);
+        $this->assertStringContainsStringIgnoringCase('LIMIT 1', $actual);
+        $this->assertStringContainsStringIgnoringCase('OFFSET 1', $actual);
     }
 }

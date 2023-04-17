@@ -5,15 +5,12 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Filter;
 
 use InvalidArgumentException;
-
+use Yiisoft\Db\Expression\ExpressionInterface;
 use function count;
 
 final class Between extends CompareFilter
 {
-    /**
-     * @param mixed $column
-     */
-    public function __construct($column, ?array $value, ?string $table = null)
+    public function __construct(string|ExpressionInterface $column, ?array $value, ?string $table = null)
     {
         if (is_array($value) && count($value) !== 2) {
             throw new InvalidArgumentException('Value must be a [from, to] array.');
@@ -29,18 +26,19 @@ final class Between extends CompareFilter
 
     /**
      * @param mixed $value
+     * @return bool
      */
-    private static function isEmpty($value): bool
+    private static function isEmpty(mixed $value): bool
     {
         return $value === null || $value === '';
     }
 
-    public function toArray(): array
+    public function toCriteriaArray(): array
     {
         if (is_array($this->value)) {
             $value = $this->value;
-            $start = array_shift($value);
-            $end = array_pop($value);
+            $start = $this->formatValue(array_shift($value));
+            $end = $this->formatValue(array_pop($value));
             $isStartEmpty = self::isEmpty($start);
             $isEndEmpty = self::isEmpty($end);
 
@@ -48,22 +46,22 @@ final class Between extends CompareFilter
                 return [
                     self::getOperator(),
                     $this->column,
-                    $this->formatValue($start),
-                    $this->formatValue($end),
+                    $start,
+                    $end,
                 ];
             }
 
             if (!$isStartEmpty) {
-                return (new GreaterThanOrEqual($this->column, $start))->toArray();
+                return (new GreaterThanOrEqual($this->column, $start))->toCriteriaArray();
             }
 
             if (!$isEndEmpty) {
-                return (new LessThanOrEqual($this->column, $end))->toArray();
+                return (new LessThanOrEqual($this->column, $end))->toCriteriaArray();
             }
 
             return [];
         }
 
-        return parent::toArray();
+        return parent::toCriteriaArray();
     }
 }
