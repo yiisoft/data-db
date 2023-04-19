@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Filter;
 
 use Yiisoft\Data\Reader\Filter\FilterInterface;
+
 use function count;
 
 abstract class GroupFilter implements FilterInterface
