@@ -83,7 +83,7 @@ final class QueryWithFiltersTest extends TestCase
             ],
             [
                 new FilterLessThanOrEqual('column', 100),
-                '[column] <= 100'
+                '[column] <= 100',
             ],
             [
                 new FilterIn('column', [10, 20.5, 30]),
@@ -117,7 +117,7 @@ final class QueryWithFiltersTest extends TestCase
             ],
             //Array Or FilterLike
             [
-                (new FilterOrLike('column', ['foo', 'bar'])),
+                new FilterOrLike('column', ['foo', 'bar']),
                 "[column] LIKE '%foo%' OR [column] LIKE '%bar%'",
             ],
         ];

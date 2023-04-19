@@ -26,7 +26,7 @@ final class Not implements FilterInterface
             LessThanOrEqual::getOperator() => '>',
             Like::getOperator() => 'NOT LIKE',
             ILike::getOperator() => 'NOT ILIKE',
-            Equals::getOperator() => '!='
+            Equals::getOperator() => '!=',
         ];
     }
 

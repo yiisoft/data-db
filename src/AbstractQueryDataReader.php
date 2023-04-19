@@ -99,7 +99,6 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface, Data
     }
 
     /**
-     * @return int
      * @throws \Throwable
      * @throws \Yiisoft\Db\Exception\Exception
      * @throws \Yiisoft\Db\Exception\InvalidConfigException

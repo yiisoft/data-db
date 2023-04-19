@@ -11,7 +11,7 @@ use Yiisoft\Db\Query\QueryInterface;
 final class In extends CompareFilter
 {
     /**
-     * @param string|ExpressionInterface $column
+     * @param ExpressionInterface|string $column
      * @param array|QueryInterface|null $value
      * @param string|null $table
      */

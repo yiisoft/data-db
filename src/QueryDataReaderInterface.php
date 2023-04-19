@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db;
 
-use Iterator;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\Query\QueryInterface;
 

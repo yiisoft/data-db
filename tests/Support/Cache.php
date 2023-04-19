@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Tests\Support;
 
 use Psr\SimpleCache\CacheInterface;
+
 use function array_key_exists;
 
 final class Cache implements CacheInterface

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Tests\Support;
 
 use Psr\SimpleCache\CacheInterface;
-use Yiisoft\Cache\File\FileCache;
 use Yiisoft\Db\Cache\SchemaCache;
 use Yiisoft\Db\Driver\Pdo\PdoConnectionInterface;
 use Yiisoft\Db\Exception\Exception;
 use Yiisoft\Db\Exception\InvalidConfigException;
+
 use function explode;
 use function file_get_contents;
 use function preg_replace;

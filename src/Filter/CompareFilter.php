@@ -21,7 +21,7 @@ abstract class CompareFilter implements FilterInterface
     protected ?string $dateTimeFormat = null;
 
     /**
-     * @param string|ExpressionInterface $column
+     * @param ExpressionInterface|string $column
      * @param mixed $value
      * @param string|null $table
      */

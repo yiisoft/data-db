@@ -7,6 +7,7 @@ namespace Yiisoft\Data\Db\Filter;
 use DateTimeInterface;
 use InvalidArgumentException;
 use Yiisoft\Db\Expression\ExpressionInterface;
+
 use function is_array;
 
 abstract class MatchFilter extends CompareFilter
@@ -15,8 +16,8 @@ abstract class MatchFilter extends CompareFilter
     private bool $end = true;
 
     /**
-     * @param string|ExpressionInterface $column
-     * @param string|int|float|DateTimeInterface|ExpressionInterface|array|null $value
+     * @param ExpressionInterface|string $column
+     * @param array|DateTimeInterface|ExpressionInterface|float|int|string|null $value
      * @param string|null $table
      */
     public function __construct(

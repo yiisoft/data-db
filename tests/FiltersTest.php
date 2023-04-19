@@ -22,6 +22,7 @@ use Yiisoft\Data\Db\Filter\Like as FilterLike;
 use Yiisoft\Data\Db\Filter\Not as FilterNot;
 use Yiisoft\Data\Db\Filter\NotEquals as FilterNotEquals;
 use Yiisoft\Data\Reader\FilterInterface;
+
 use function mb_strtoupper;
 
 final class FiltersTest extends TestCase
