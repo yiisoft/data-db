@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db;
 
+use Generator;
 use InvalidArgumentException;
 use RuntimeException;
-use Traversable;
 use Yiisoft\Data\Db\FilterHandler\AllHandler;
 use Yiisoft\Data\Db\FilterHandler\AnyHandler;
 use Yiisoft\Data\Db\FilterHandler\BetweenHandler;
@@ -25,13 +25,16 @@ use Yiisoft\Data\Db\FilterHandler\NotHandler;
 use Yiisoft\Data\Db\FilterHandler\OrILikeHandler;
 use Yiisoft\Data\Db\FilterHandler\OrLikeHandler;
 use Yiisoft\Data\Db\FilterHandler\QueryHandlerInterface;
+use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Db\Query\QueryInterface;
+
 use function array_shift;
 use function is_array;
 use function sprintf;
+
 use const SORT_ASC;
 use const SORT_DESC;
 
@@ -39,9 +42,9 @@ use const SORT_DESC;
  * @template TKey as array-key
  * @template TValue as array|object
  *
- * @implements QueryDataReaderInterface<TKey, TValue>
+ * @implements DataReaderInterface<TKey, TValue>
  */
-abstract class AbstractQueryDataReader implements QueryDataReaderInterface
+abstract class AbstractQueryDataReader implements QueryDataReaderInterface, DataReaderInterface
 {
     private QueryInterface $query;
     private ?Sort $sort = null;
@@ -90,12 +93,9 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
         $this->data = null;
     }
 
-    /**
-     * @psalm-return Traversable<array-key, TValue>
-     */
-    public function getIterator(): Traversable
+    public function getIterator(): Generator
     {
-        return $this->getPreparedQuery()->each($this->batchSize);
+        yield from $this->read();
     }
 
     /**
@@ -296,7 +296,8 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     }
 
     /**
-     * @return array
+     * @psalm-return array<TKey, TValue>
+     *
      * @throws \Throwable
      * @throws \Yiisoft\Db\Exception\Exception
      * @throws \Yiisoft\Db\Exception\InvalidConfigException
@@ -304,17 +305,13 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     public function read(): array
     {
         if ($this->data === null) {
-            $this->data = $this
-                ->getPreparedQuery()
-                ->all();
+            $this->data = $this->getPreparedQuery()->all();
         }
 
         return $this->data;
     }
 
     /**
-     * @return array|object|null
-     * @psalm-return TValue|null
      * @throws \Throwable
      * @throws \Yiisoft\Db\Exception\Exception
      * @throws \Yiisoft\Db\Exception\InvalidConfigException
@@ -323,12 +320,10 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     {
         if (is_array($this->data)) {
             $data = $this->data;
+
             return array_shift($data);
         }
 
-        return $this
-            ->withLimit(1)
-            ->getPreparedQuery()
-            ->one();
+        return $this->withLimit(1)->getIterator()->current();
     }
 }
