@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use Yiisoft\Data\Db\Filter\Like;
 
-final class LikeHandler extends CompareHandler
+final class LikeHandler extends AbstractHandler
 {
     public function getOperator(): string
     {

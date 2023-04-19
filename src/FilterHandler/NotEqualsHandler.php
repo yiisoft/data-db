@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use Yiisoft\Data\Db\Filter\NotEquals;
 
-final class NotEqualsHandler extends CompareHandler
+final class NotEqualsHandler extends AbstractHandler
 {
     public function getOperator(): string
     {

@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use Yiisoft\Data\Db\Filter\OrLike;
 
-final class OrLikeHandler extends CompareHandler
+final class OrLikeHandler extends AbstractHandler
 {
     public function getOperator(): string
     {

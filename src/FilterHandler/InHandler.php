@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use Yiisoft\Data\Db\Filter\In;
 
-final class InHandler extends CompareHandler
+final class InHandler extends AbstractHandler
 {
     public function getOperator(): string
     {
