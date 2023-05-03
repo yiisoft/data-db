@@ -29,6 +29,7 @@ use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Db\Query\QueryInterface;
+
 use function array_key_first;
 use function is_array;
 use function sprintf;
@@ -88,10 +89,11 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     }
 
     /**
-     * @return Generator
      * @throws \Throwable
      * @throws \Yiisoft\Db\Exception\Exception
      * @throws \Yiisoft\Db\Exception\InvalidConfigException
+     *
+     * @return Generator
      *
      * @psalm-return Generator<TKey, TValue, mixed, void>
      * @psalm-suppress InvalidReturnType

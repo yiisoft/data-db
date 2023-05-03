@@ -7,6 +7,7 @@ namespace Yiisoft\Data\Db\Filter;
 use InvalidArgumentException;
 use RuntimeException;
 use Yiisoft\Data\Reader\FilterInterface;
+
 use function array_shift;
 use function count;
 use function get_debug_type;
