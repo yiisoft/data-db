@@ -7,7 +7,7 @@ namespace Yiisoft\Data\Db\FilterHandler;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\Query\QueryInterface;
 
-abstract class CompareHandler implements QueryHandlerInterface
+abstract class AbstractHandler implements QueryHandlerInterface
 {
     public function applyFilter(QueryInterface $query, FilterInterface $filter): QueryInterface
     {
@@ -28,6 +28,6 @@ abstract class CompareHandler implements QueryHandlerInterface
             return $query;
         }
 
-        return $query->having($array);
+        return $query->andHaving($array);
     }
 }

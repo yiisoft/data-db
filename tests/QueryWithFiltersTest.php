@@ -6,17 +6,22 @@ namespace Yiisoft\Data\Db\Tests;
 
 use DateTime;
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Data\Db\Filter\Between as FilterBetween;
+use Yiisoft\Data\Db\Filter\All;
+use Yiisoft\Data\Db\Filter\Any;
+use Yiisoft\Data\Db\Filter\Between;
 use Yiisoft\Data\Db\Filter\CompareFilter;
-use Yiisoft\Data\Db\Filter\Equals as FilterEquals;
-use Yiisoft\Data\Db\Filter\GreaterThan as FilterGreaterThan;
-use Yiisoft\Data\Db\Filter\GreaterThanOrEqual as FilterGreaterThanOrEqual;
-use Yiisoft\Data\Db\Filter\In as FilterIn;
-use Yiisoft\Data\Db\Filter\LessThan as FilterLessThan;
-use Yiisoft\Data\Db\Filter\LessThanOrEqual as FilterLessThanOrEqual;
-use Yiisoft\Data\Db\Filter\Like as FilterLike;
-use Yiisoft\Data\Db\Filter\NotEquals as FilterNotEquals;
-use Yiisoft\Data\Db\Filter\OrLike as FilterOrLike;
+use Yiisoft\Data\Db\Filter\Equals;
+use Yiisoft\Data\Db\Filter\GreaterThan;
+use Yiisoft\Data\Db\Filter\GreaterThanOrEqual;
+use Yiisoft\Data\Db\Filter\GroupFilter;
+use Yiisoft\Data\Db\Filter\In;
+use Yiisoft\Data\Db\Filter\IsNull;
+use Yiisoft\Data\Db\Filter\LessThan;
+use Yiisoft\Data\Db\Filter\LessThanOrEqual;
+use Yiisoft\Data\Db\Filter\Like;
+use Yiisoft\Data\Db\Filter\Not;
+use Yiisoft\Data\Db\Filter\NotEquals;
+use Yiisoft\Data\Db\Filter\OrLike;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Db\Tests\Support\TestTrait;
 use Yiisoft\Db\Expression\Expression;
@@ -36,88 +41,88 @@ final class QueryWithFiltersTest extends TestCase
         return [
             //EqualsHandler
             [
-                new FilterEquals('equals', 1),
+                new Equals('equals', 1),
                 '[equals] = 1',
             ],
             [
-                new FilterEquals('equals', [1, 2, 3]),
+                new Equals('equals', [1, 2, 3]),
                 '[equals] IN (1, 2, 3)',
             ],
             [
-                new FilterEquals('column', new DateTime('2011-01-01T15:03:01.012345Z')),
+                new Equals('column', new DateTime('2011-01-01T15:03:01.012345Z')),
                 "[column] = '2011-01-01 15:03:01'",
             ],
             //BetweenHandler
             [
-                new FilterBetween('column', [100, 300]),
+                new Between('column', [100, 300]),
                 '[column] BETWEEN 100 AND 300',
             ],
             [
-                new FilterBetween('column', [100, null]),
+                new Between('column', [100, null]),
                 '[column] >= 100',
             ],
             [
-                new FilterBetween('column', [null, 250]),
+                new Between('column', [null, 250]),
                 '[column] <= 250',
             ],
             [
-                new FilterBetween('column', [new DateTime('2011-01-01T15:00:01'), new DateTime('2011-01-01T15:10:01')]),
+                new Between('column', [new DateTime('2011-01-01T15:00:01'), new DateTime('2011-01-01T15:10:01')]),
                 "[column] BETWEEN '2011-01-01 15:00:01' AND '2011-01-01 15:10:01'",
             ],
             //GreaterThanHandler
             [
-                new FilterGreaterThan('column', 1000),
+                new GreaterThan('column', 1000),
                 '[column] > 1000',
             ],
             [
-                new FilterGreaterThan('column', new DateTime('2011-01-01T15:00:01')),
+                new GreaterThan('column', new DateTime('2011-01-01T15:00:01')),
                 "[column] > '2011-01-01 15:00:01'",
             ],
             [
-                new FilterGreaterThanOrEqual('column', 3.5),
+                new GreaterThanOrEqual('column', 3.5),
                 '[column] >= 3.5',
             ],
             [
-                new FilterLessThan('column', 10.7),
+                new LessThan('column', 10.7),
                 '[column] < 10.7',
             ],
             [
-                new FilterLessThanOrEqual('column', 100),
+                new LessThanOrEqual('column', 100),
                 '[column] <= 100',
             ],
             [
-                new FilterIn('column', [10, 20.5, 30]),
+                new In('column', [10, 20.5, 30]),
                 '[column] IN (10, 20.5, 30)',
             ],
             //NotHandler equals
             [
-                new FilterNotEquals('column', 40),
+                new NotEquals('column', 40),
                 '[column] != 40',
             ],
             //LikeHandler
             [
-                new FilterLike('column', 'foo'),
+                new Like('column', 'foo'),
                 "[column] LIKE '%foo%'",
             ],
             [
-                (new FilterLike('column', 'foo'))->withoutStart(),
+                (new Like('column', 'foo'))->withoutStart(),
                 "[column] LIKE 'foo%'",
             ],
             [
-                (new FilterLike('column', 'foo'))->withoutEnd(),
+                (new Like('column', 'foo'))->withoutEnd(),
                 "[column] LIKE '%foo'",
             ],
             [
-                (new FilterLike('column', 'foo'))->withoutBoth(),
+                (new Like('column', 'foo'))->withoutBoth(),
                 "[column] LIKE 'foo'",
             ],
             [
-                new FilterLike('column', new Expression("CONCAT([[foo]] ->> 'bar', '%')")),
+                new Like('column', new Expression("CONCAT([[foo]] ->> 'bar', '%')")),
                 "[column] LIKE CONCAT([foo] ->> 'bar', '%')",
             ],
             //Array Or FilterLike
             [
-                new FilterOrLike('column', ['foo', 'bar']),
+                new OrLike('column', ['foo', 'bar']),
                 "[column] LIKE '%foo%' OR [column] LIKE '%bar%'",
             ],
         ];
@@ -160,6 +165,98 @@ final class QueryWithFiltersTest extends TestCase
         $this->assertSame(
             $dataReader->getPreparedQuery()->createCommand()->getRawSql(),
             $expected,
+        );
+    }
+
+    public function groupFilterDataProvider(): array
+    {
+        return [
+            [
+                new All(
+                    new IsNull('null_column'),
+                    new Equals('equals', 10),
+                    new Between('between', [10, 20]),
+                    new Any(
+                        new Equals('id', 8),
+                        new Like('name', 'foo')
+                    )
+                ),
+                "([null_column] IS NULL) AND ([equals] = 10) AND ([between] BETWEEN 10 AND 20) AND (([id] = 8) OR ([name] LIKE '%foo%'))",
+            ],
+            [
+                new Any(
+                    new GreaterThan('greater_than', 15),
+                    new LessThanOrEqual('less_than_or_equal', 10),
+                    new Not(new Equals('not_equals', 'test')),
+                    new All(
+                        new Equals('id', 8),
+                        new Like('name', 'bar')
+                    )
+                ),
+                "([greater_than] > 15) OR ([less_than_or_equal] <= 10) OR ([not_equals] != 'test') OR (([id] = 8) AND ([name] LIKE '%bar%'))",
+            ],
+            [
+                All::fromCriteriaArray([
+                    ['>', 'id', 88],
+                    [
+                        'or',
+                        ['=', 'state', 2],
+                        ['like', 'name', 'eva'],
+                    ],
+                ]),
+                "([id] > 88) AND (([state] = 2) OR ([name] LIKE '%eva%'))",
+            ],
+            [
+                Any::fromCriteriaArray([
+                    ['>', 'id', 88],
+                    [
+                        'and',
+                        ['=', 'state', 2],
+                        ['like', 'name', 'eva'],
+                    ],
+                ]),
+                "([id] > 88) OR (([state] = 2) AND ([name] LIKE '%eva%'))",
+            ],
+            [
+                (new Any())->withCriteriaArray([
+                    ['>', 'id', 88],
+                    [
+                        'or',
+                        ['=', 'state', 2],
+                        ['like', 'name', 'eva'],
+                    ],
+                ]),
+                "([id] > 88) OR (([state] = 2) OR ([name] LIKE '%eva%'))",
+            ],
+            [
+                (new All())->withCriteriaArray([
+                    ['>', 'id', 88],
+                    [
+                        'and',
+                        ['=', 'state', 2],
+                        ['like', 'name', 'eva'],
+                    ],
+                ]),
+                "([id] > 88) AND (([state] = 2) AND ([name] LIKE '%eva%'))",
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider groupFilterDataProvider
+     */
+    public function testGroupFilter(GroupFilter $filter, string $expected): void
+    {
+        $db = $this->getConnection();
+        $query = (new Query($db))
+            ->from('customer');
+
+        $dataReader = (new QueryDataReader($query))
+            ->withFilter($filter);
+
+        $this->assertStringEndsWith(
+            'WHERE ' . $expected,
+            $dataReader->getPreparedQuery()->createCommand()->getRawSql()
         );
     }
 }

@@ -25,26 +25,21 @@ use Yiisoft\Data\Db\FilterHandler\NotHandler;
 use Yiisoft\Data\Db\FilterHandler\OrILikeHandler;
 use Yiisoft\Data\Db\FilterHandler\OrLikeHandler;
 use Yiisoft\Data\Db\FilterHandler\QueryHandlerInterface;
-use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Db\Query\QueryInterface;
-
-use function array_shift;
+use function array_key_first;
 use function is_array;
 use function sprintf;
-
-use const SORT_ASC;
-use const SORT_DESC;
 
 /**
  * @template TKey as array-key
  * @template TValue as array|object
  *
- * @implements DataReaderInterface<TKey, TValue>
+ * @implements QueryDataReaderInterface<TKey, TValue>
  */
-abstract class AbstractQueryDataReader implements QueryDataReaderInterface, DataReaderInterface
+abstract class AbstractQueryDataReader implements QueryDataReaderInterface
 {
     private QueryInterface $query;
     private ?Sort $sort = null;
@@ -53,9 +48,13 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface, Data
     private int $limit = 0;
     private int $offset = 0;
     private ?int $count = null;
-    private ?array $data = null;
-    private int $batchSize = 100;
 
+    /**
+     * @var array[]|object[]|null
+     * @psalm-var array<TKey, TValue>|null
+     */
+    private ?array $data = null;
+    private ?int $batchSize = 100;
     private ?string $countParam = null;
 
     /**
@@ -88,14 +87,29 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface, Data
         );
     }
 
-    public function __clone()
-    {
-        $this->data = null;
-    }
-
+    /**
+     * @return Generator
+     * @throws \Throwable
+     * @throws \Yiisoft\Db\Exception\Exception
+     * @throws \Yiisoft\Db\Exception\InvalidConfigException
+     *
+     * @psalm-return Generator<TKey, TValue, mixed, void>
+     * @psalm-suppress InvalidReturnType
+     */
     public function getIterator(): Generator
     {
-        yield from $this->read();
+        if (is_array($this->data)) {
+            yield from $this->data;
+        } elseif ($this->batchSize === null) {
+            yield from $this->read();
+        } else {
+
+            $iterator = $this->getPreparedQuery()->each($this->batchSize);
+
+            foreach ($iterator as $index => $row) {
+                yield $index => $row;
+            }
+        }
     }
 
     /**
@@ -107,12 +121,17 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface, Data
     {
         if ($this->count === null) {
             $q = $this->countParam ?? '*';
-            $query = $this->getPreparedQuery();
-            $query->offset(null);
-            $query->limit(null);
-            $query->orderBy('');
 
-            $this->count = (int) $query->count($q);
+            if ($q === '*' && is_array($this->data) && !$this->limit && !$this->offset) {
+                $this->count = count($this->data);
+            } else {
+                $query = $this->getPreparedQuery();
+                $query->offset(null);
+                $query->limit(null);
+                $query->orderBy('');
+
+                $this->count = (int) $query->count($q);
+            }
         }
 
         return $this->count;
@@ -131,12 +150,8 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface, Data
             $query->offset($this->offset);
         }
 
-        if ($this->sort && $order = $this->sort->getOrder()) {
-            foreach ($order as $name => $direction) {
-                $query->addOrderBy([
-                    $name => $direction === 'desc' ? SORT_DESC : SORT_ASC,
-                ]);
-            }
+        if ($criteria = $this->sort?->getCriteria()) {
+            $query->addOrderBy($criteria);
         }
 
         return $query;
@@ -177,6 +192,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface, Data
     public function withOffset(int $offset): static
     {
         $new = clone $this;
+        $new->data = null;
         $new->offset = $offset;
 
         return $new;
@@ -192,6 +208,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface, Data
         }
 
         $new = clone $this;
+        $new->data = null;
         $new->limit = $limit;
 
         return $new;
@@ -216,6 +233,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface, Data
     public function withSort(?Sort $sort): static
     {
         $new = clone $this;
+        $new->data = null;
         $new->sort = $sort;
 
         return $new;
@@ -227,8 +245,8 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface, Data
     public function withFilter(FilterInterface $filter): static
     {
         $new = clone $this;
-        $new->count = null;
         $new->filter = $filter;
+        $new->count = $new->data = null;
 
         return $new;
     }
@@ -236,20 +254,16 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface, Data
     public function withHaving(?FilterInterface $having): static
     {
         $new = clone $this;
-        $new->count = null;
         $new->having = $having;
+        $new->count = $new->data = null;
 
         return $new;
     }
 
-    public function withBatchSize(int $batchSize): static
+    public function withBatchSize(?int $batchSize): static
     {
-        if ($batchSize < 1) {
-            throw new InvalidArgumentException('$batchSize must not be less than 1.');
-        }
-
-        if ($this->batchSize === $batchSize) {
-            return $this;
+        if ($batchSize !== null && $batchSize < 1) {
+            throw new InvalidArgumentException('$batchSize cannot be less than 1.');
         }
 
         $new = clone $this;
@@ -266,6 +280,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface, Data
     public function withFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
     {
         $new = clone $this;
+        $new->count = $new->data = null;
         $new->filterHandlers = array_merge(
             $this->filterHandlers,
             $this->prepareHandlers(...$filterHandlers)
@@ -314,13 +329,15 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface, Data
      * @throws \Throwable
      * @throws \Yiisoft\Db\Exception\Exception
      * @throws \Yiisoft\Db\Exception\InvalidConfigException
+     *
+     * @psalm-return TValue|null
      */
     public function readOne(): array|object|null
     {
         if (is_array($this->data)) {
-            $data = $this->data;
+            $key = array_key_first($this->data);
 
-            return array_shift($data);
+            return $key === null ? null : $this->data[$key];
         }
 
         return $this->withLimit(1)->getIterator()->current();
