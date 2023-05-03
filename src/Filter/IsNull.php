@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Filter;
 
 use Yiisoft\Data\Db\ColumnFormatterTrait;
+use Yiisoft\Data\Reader\Filter\EqualsNull;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\Expression\ExpressionInterface;
 
@@ -19,11 +20,11 @@ final class IsNull implements FilterInterface
 
     public static function getOperator(): string
     {
-        return 'is';
+        return EqualsNull::getOperator();
     }
 
     public function toCriteriaArray(): array
     {
-        return [self::getOperator(), $this->column, null];
+        return ['IS', $this->column, null];
     }
 }

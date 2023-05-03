@@ -6,28 +6,33 @@ namespace Yiisoft\Data\Db\Filter;
 
 use Yiisoft\Data\Reader\Filter\Not as FilterNot;
 use Yiisoft\Data\Reader\FilterInterface;
+use function array_key_first;
+use function strtoupper;
 
 final class Not implements FilterInterface
 {
     private FilterInterface $filter;
-    private array $operators = [];
+    private array $operators = [
+        'IS' => 'IS NOT',
+        'IN' => 'NOT IN',
+        'EXISTS' => 'NOT EXISTS',
+        'BETWEEN' => 'NOT BETWEEN',
+        'LIKE' => 'NOT LIKE',
+        'ILIKE' => 'NOT ILIKE',
+        '>' => '<=',
+        '>=' => '<',
+        '<' => '>=',
+        '<=' => '>',
+        '=' => '!='
+    ];
 
-    public function __construct(FilterInterface $filter)
+    public function __construct(FilterInterface $filter, ?array $operators = null)
     {
         $this->filter = $filter;
-        $this->operators = [
-            IsNull::getOperator() => 'IS NOT',
-            In::getOperator() => 'NOT IN',
-            Exists::getOperator() => 'NOT EXISTS',
-            Between::getOperator() => 'NOT BETWEEN',
-            GreaterThan::getOperator() => '<=',
-            GreaterThanOrEqual::getOperator() => '<',
-            LessThan::getOperator() => '>=',
-            LessThanOrEqual::getOperator() => '>',
-            Like::getOperator() => 'NOT LIKE',
-            ILike::getOperator() => 'NOT ILIKE',
-            Equals::getOperator() => '!=',
-        ];
+
+        if ($operators !== null) {
+            $this->operators = $operators;
+        }
     }
 
     public static function getOperator(): string
@@ -38,6 +43,7 @@ final class Not implements FilterInterface
     public function withOperator(string $operator, ?string $inverse): self
     {
         $new = clone $this;
+        $operator = strtoupper($operator);
 
         if ($inverse === null) {
             unset($new->operators[$operator]);
@@ -61,9 +67,10 @@ final class Not implements FilterInterface
             return [];
         }
 
-        $operator = $array[0];
+        $key = array_key_first($array);
+        $operator = is_string($array[$key]) ? strtoupper($array[$key]) : null;
 
-        if (isset($this->operators[$operator])) {
+        if ($operator !== null && isset($this->operators[$operator])) {
             $array[0] = $this->operators[$operator];
         } else {
             $array = [self::getOperator(), $array];

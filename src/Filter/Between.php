@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Filter;
 
 use InvalidArgumentException;
+use Yiisoft\Data\Reader\Filter\Between as BetweenFilter;
 use Yiisoft\Db\Expression\ExpressionInterface;
-
 use function count;
 
 final class Between extends CompareFilter
@@ -22,7 +22,7 @@ final class Between extends CompareFilter
 
     public static function getOperator(): string
     {
-        return 'between';
+        return BetweenFilter::getOperator();
     }
 
     /**

@@ -10,6 +10,7 @@ use RuntimeException;
 use Yiisoft\Data\Db\FilterHandler\AllHandler;
 use Yiisoft\Data\Db\FilterHandler\AnyHandler;
 use Yiisoft\Data\Db\FilterHandler\BetweenHandler;
+use Yiisoft\Data\Db\FilterHandler\EqualsEmptyHandler;
 use Yiisoft\Data\Db\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Db\FilterHandler\ExistsHandler;
 use Yiisoft\Data\Db\FilterHandler\GreaterThanHandler;
@@ -29,7 +30,6 @@ use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Db\Query\QueryInterface;
-
 use function array_key_first;
 use function is_array;
 use function sprintf;
@@ -84,7 +84,8 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
             new NotEqualsHandler(),
             new NotHandler(),
             new BetweenHandler(),
-            new IsNullHandler()
+            new IsNullHandler(),
+            new EqualsEmptyHandler()
         );
     }
 
@@ -105,7 +106,6 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
         } elseif ($this->batchSize === null) {
             yield from $this->read();
         } else {
-
             $iterator = $this->getPreparedQuery()->each($this->batchSize);
 
             foreach ($iterator as $index => $row) {
