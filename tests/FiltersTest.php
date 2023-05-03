@@ -232,9 +232,7 @@ final class FiltersTest extends TestCase
     public function testWithNull(FilterInterface $filter, array $expected = ['is', 'column', null]): void
     {
         $this->assertSame($expected, $filter->toCriteriaArray());
-        $this->assertSame([], $filter
-            ->withIgnoreNull()
-            ->toCriteriaArray());
+        $this->assertSame([], $filter->withIgnoreNull()->toCriteriaArray());
     }
 
     /**

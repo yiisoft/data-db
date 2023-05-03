@@ -105,7 +105,6 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
         } elseif ($this->batchSize === null) {
             yield from $this->read();
         } else {
-
             $iterator = $this->getPreparedQuery()->each($this->batchSize);
 
             foreach ($iterator as $index => $row) {
