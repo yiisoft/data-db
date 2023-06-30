@@ -5,15 +5,35 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Filter;
 
 use Yiisoft\Data\Reader\Filter\Not as FilterNot;
-use Yiisoft\Data\Reader\Filter\FilterInterface;
+use Yiisoft\Data\Reader\FilterInterface;
+
+use function array_key_first;
+use function strtoupper;
 
 final class Not implements FilterInterface
 {
     private FilterInterface $filter;
+    private array $operators = [
+        'IS' => 'IS NOT',
+        'IN' => 'NOT IN',
+        'EXISTS' => 'NOT EXISTS',
+        'BETWEEN' => 'NOT BETWEEN',
+        'LIKE' => 'NOT LIKE',
+        'ILIKE' => 'NOT ILIKE',
+        '>' => '<=',
+        '>=' => '<',
+        '<' => '>=',
+        '<=' => '>',
+        '=' => '!=',
+    ];
 
-    public function __construct(FilterInterface $filter)
+    public function __construct(FilterInterface $filter, ?array $operators = null)
     {
         $this->filter = $filter;
+
+        if ($operators !== null) {
+            $this->operators = $operators;
+        }
     }
 
     public static function getOperator(): string
@@ -21,25 +41,40 @@ final class Not implements FilterInterface
         return FilterNot::getOperator();
     }
 
-    public function toArray(): array
+    public function withOperator(string $operator, ?string $inverse): self
     {
-        $array = $this->filter->toArray();
+        $new = clone $this;
+        $operator = strtoupper($operator);
+
+        if ($inverse === null) {
+            unset($new->operators[$operator]);
+        } else {
+            $new->operators[$operator] = $inverse;
+        }
+
+        return $new;
+    }
+
+    public function withoutOperator(string $operator): self
+    {
+        return $this->withOperator($operator, null);
+    }
+
+    public function toCriteriaArray(): array
+    {
+        $array = $this->filter->toCriteriaArray();
 
         if ($array === []) {
             return [];
         }
 
-        switch ($array[0]) {
-            case IsNull::getOperator():
-                $array[0] .= ' ' . self::getOperator();
-                break;
-            case In::getOperator():
-            case Exists::getOperator():
-            case Between::getOperator():
-                $array[0] = self::getOperator() . ' ' . $array[0];
-                break;
-            default:
-                $array = [self::getOperator(), $array];
+        $key = array_key_first($array);
+        $operator = is_string($array[$key]) ? strtoupper($array[$key]) : null;
+
+        if ($operator !== null && isset($this->operators[$operator])) {
+            $array[0] = $this->operators[$operator];
+        } else {
+            $array = [self::getOperator(), $array];
         }
 
         return $array;
