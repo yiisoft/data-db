@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Filter;
 
-use Yiisoft\Db\Query\Query;
-use Yiisoft\Data\Reader\Filter\FilterInterface;
+use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Db\Query\QueryInterface;
 
 final class Exists implements FilterInterface
 {
-    private Query $query;
+    private QueryInterface $query;
 
-    public function __construct(Query $query)
+    public function __construct(QueryInterface $query)
     {
         $this->query = $query;
     }
@@ -21,7 +21,7 @@ final class Exists implements FilterInterface
         return 'exists';
     }
 
-    public function toArray(): array
+    public function toCriteriaArray(): array
     {
         return [self::getOperator(), $this->query];
     }
