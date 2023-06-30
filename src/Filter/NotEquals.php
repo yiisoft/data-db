@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Filter;
 
-use RuntimeException;
-use Stringable;
-
 final class NotEquals extends CompareFilter
 {
     public static function getOperator(): string
@@ -14,18 +11,16 @@ final class NotEquals extends CompareFilter
         return '!=';
     }
 
-    public function toArray(): array
+    public function toCriteriaArray(): array
     {
         if ($this->value === null) {
             if ($this->ignoreNull) {
                 return [];
             }
 
-            if (is_string($this->column) || $this->column instanceof Stringable) {
-                return ['NOT', [(string) $this->column => null]];
-            }
+            $isNull = new IsNull($this->column);
 
-            throw new RuntimeException();
+            return (new Not($isNull))->toCriteriaArray();
         }
 
         $value = $this->formatValue($this->value);

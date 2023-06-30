@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db;
 
+use ReflectionClass;
+
 trait ParameterizedTrait
 {
     private ?string $paramName = null;
 
-    public function withParamName(?string $name): self
+    public function withParamName(?string $name): static
     {
         $new = clone $this;
         $new->paramName = $name;
@@ -22,8 +24,6 @@ trait ParameterizedTrait
             return $this->paramName;
         }
 
-        $explode = explode('\\', __CLASS__);
-
-        return $explode[count($explode) - 1];
+        return (new ReflectionClass($this))->getShortName();
     }
 }
