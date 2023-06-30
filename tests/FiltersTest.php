@@ -23,6 +23,7 @@ use Yiisoft\Data\Db\Filter\Like;
 use Yiisoft\Data\Db\Filter\Not;
 use Yiisoft\Data\Db\Filter\NotEquals;
 use Yiisoft\Data\Reader\FilterInterface;
+
 use function mb_strtoupper;
 use function strtolower;
 
@@ -332,7 +333,6 @@ final class FiltersTest extends TestCase
     /**
      * @param EqualsEmpty $filter
      * @param array $expected
-     * @return void
      * @dataProvider equalsEmptyDataProvider
      */
     public function testEqualsEmpty(EqualsEmpty $filter, array $expected): void

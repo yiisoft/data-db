@@ -6,6 +6,7 @@ namespace Yiisoft\Data\Db\Filter;
 
 use Yiisoft\Data\Reader\Filter\Not as FilterNot;
 use Yiisoft\Data\Reader\FilterInterface;
+
 use function array_key_first;
 use function strtoupper;
 
@@ -23,7 +24,7 @@ final class Not implements FilterInterface
         '>=' => '<',
         '<' => '>=',
         '<=' => '>',
-        '=' => '!='
+        '=' => '!=',
     ];
 
     public function __construct(FilterInterface $filter, ?array $operators = null)
