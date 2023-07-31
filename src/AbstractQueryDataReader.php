@@ -191,6 +191,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
 
     /**
      * @psalm-mutation-free
+     * @psalm-return static<TKey, TValue>
      */
     public function withOffset(int $offset): static
     {
@@ -203,6 +204,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
 
     /**
      * @psalm-mutation-free
+     * @psalm-return static<TKey, TValue>
      */
     public function withLimit(int $limit): static
     {
@@ -217,6 +219,10 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
         return $new;
     }
 
+    /**
+     * @psalm-mutation-free
+     * @psalm-return static<TKey, TValue>
+     */
     public function withCountParam(?string $countParam): static
     {
         if ($this->countParam === $countParam) {
@@ -232,6 +238,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
 
     /**
      * @psalm-mutation-free
+     * @psalm-return static<TKey, TValue>
      */
     public function withSort(?Sort $sort): static
     {
@@ -244,6 +251,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
 
     /**
      * @psalm-mutation-free
+     * @psalm-return static<TKey, TValue>
      */
     public function withFilter(FilterInterface $filter): static
     {
@@ -254,6 +262,10 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
         return $new;
     }
 
+    /**
+     * @psalm-mutation-free
+     * @psalm-return static<TKey, TValue>
+     */
     public function withHaving(?FilterInterface $having): static
     {
         $new = clone $this;
@@ -263,6 +275,10 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
         return $new;
     }
 
+    /**
+     * @psalm-mutation-free
+     * @psalm-return static<TKey, TValue>
+     */
     public function withBatchSize(?int $batchSize): static
     {
         if ($batchSize !== null && $batchSize < 1) {
@@ -278,7 +294,9 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     /**
      * @param FilterHandlerInterface ...$filterHandlers
      * @return $this
-     * @psalm-suppress ArgumentTypeCoercion
+     *
+     * @psalm-suppress ArgumentTypeCoercion    *
+     * @psalm-return static<TKey, TValue>
      */
     public function withFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
     {
