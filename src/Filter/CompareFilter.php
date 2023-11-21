@@ -15,8 +15,6 @@ abstract class CompareFilter implements FilterInterface
 
     public static string $mainDateTimeFormat = 'Y-m-d H:i:s';
 
-    protected mixed $value;
-
     protected bool $ignoreNull = false;
     protected ?string $dateTimeFormat = null;
 
@@ -25,9 +23,8 @@ abstract class CompareFilter implements FilterInterface
      * @param mixed $value
      * @param string|null $table
      */
-    public function __construct(string|ExpressionInterface $column, mixed $value, ?string $table = null)
+    public function __construct(string|ExpressionInterface $column, protected mixed $value, ?string $table = null)
     {
-        $this->value = $value;
         $this->setColumn($column, $table);
     }
 
@@ -48,7 +45,6 @@ abstract class CompareFilter implements FilterInterface
     }
 
     /**
-     * @param mixed $value
      * @return mixed
      */
     protected function formatValue(mixed $value): mixed
@@ -63,9 +59,7 @@ abstract class CompareFilter implements FilterInterface
     }
 
     /**
-     * @param array $values
      * @psalm-param array<int, mixed> $values
-     *
      * @return array
      */
     protected function formatValues(array $values): array
