@@ -43,7 +43,6 @@ use function sprintf;
  */
 abstract class AbstractQueryDataReader implements QueryDataReaderInterface
 {
-    private QueryInterface $query;
     private ?Sort $sort = null;
     private ?FilterInterface $filter = null;
     private ?FilterInterface $having = null;
@@ -65,9 +64,8 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
      */
     protected array $filterHandlers = [];
 
-    public function __construct(QueryInterface $query)
+    public function __construct(private QueryInterface $query)
     {
-        $this->query = $query;
         $this->filterHandlers = $this->prepareHandlers(
             new AllHandler(),
             new AnyHandler(),
@@ -311,7 +309,6 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     }
 
     /**
-     * @param QueryHandlerInterface ...$queryHandlers
      * @return QueryHandlerInterface[]
      */
     private function prepareHandlers(QueryHandlerInterface ...$queryHandlers): array
