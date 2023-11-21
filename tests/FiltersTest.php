@@ -331,8 +331,6 @@ final class FiltersTest extends TestCase
     }
 
     /**
-     * @param EqualsEmpty $filter
-     * @param array $expected
      * @dataProvider equalsEmptyDataProvider
      */
     public function testEqualsEmpty(EqualsEmpty $filter, array $expected): void

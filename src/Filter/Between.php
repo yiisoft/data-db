@@ -27,7 +27,6 @@ final class Between extends CompareFilter
     }
 
     /**
-     * @param mixed $value
      * @return bool
      */
     private static function isEmpty(mixed $value): bool

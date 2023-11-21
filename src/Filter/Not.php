@@ -12,7 +12,6 @@ use function strtoupper;
 
 final class Not implements FilterInterface
 {
-    private FilterInterface $filter;
     private array $operators = [
         'IS' => 'IS NOT',
         'IN' => 'NOT IN',
@@ -27,10 +26,8 @@ final class Not implements FilterInterface
         '=' => '!=',
     ];
 
-    public function __construct(FilterInterface $filter, ?array $operators = null)
+    public function __construct(private FilterInterface $filter, ?array $operators = null)
     {
-        $this->filter = $filter;
-
         if ($operators !== null) {
             $this->operators = $operators;
         }

@@ -9,11 +9,8 @@ use Yiisoft\Db\Query\QueryInterface;
 
 final class Exists implements FilterInterface
 {
-    private QueryInterface $query;
-
-    public function __construct(QueryInterface $query)
+    public function __construct(private QueryInterface $query)
     {
-        $this->query = $query;
     }
 
     public static function getOperator(): string
