@@ -6,7 +6,8 @@ namespace Yiisoft\Data\Db\Filter;
 
 use DateTimeInterface;
 use Yiisoft\Data\Db\ColumnFormatterTrait;
-use Yiisoft\Data\Reader\Filter\FilterInterface;
+use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Db\Expression\ExpressionInterface;
 
 abstract class CompareFilter implements FilterInterface
 {
@@ -14,25 +15,23 @@ abstract class CompareFilter implements FilterInterface
 
     public static string $mainDateTimeFormat = 'Y-m-d H:i:s';
 
-    /**
-     * @var mixed
-     */
-    protected $value;
+    protected mixed $value;
 
     protected bool $ignoreNull = false;
     protected ?string $dateTimeFormat = null;
 
     /**
-     * @param mixed $column
+     * @param ExpressionInterface|string $column
      * @param mixed $value
+     * @param string|null $table
      */
-    public function __construct($column, $value, ?string $table = null)
+    public function __construct(string|ExpressionInterface $column, mixed $value, ?string $table = null)
     {
         $this->value = $value;
         $this->setColumn($column, $table);
     }
 
-    public function withIgnoreNull(bool $ignoreNull = true): self
+    public function withIgnoreNull(bool $ignoreNull = true): static
     {
         $new = clone $this;
         $new->ignoreNull = $ignoreNull;
@@ -40,7 +39,7 @@ abstract class CompareFilter implements FilterInterface
         return $new;
     }
 
-    public function withDateTimeFormat(?string $format): self
+    public function withDateTimeFormat(?string $format): static
     {
         $new = clone $this;
         $new->dateTimeFormat = $format;
@@ -50,12 +49,11 @@ abstract class CompareFilter implements FilterInterface
 
     /**
      * @param mixed $value
-     *
      * @return mixed
      */
-    protected function formatValue($value)
+    protected function formatValue(mixed $value): mixed
     {
-        $format = $this->dateTimeFormat ?? self::$mainDateTimeFormat;
+        $format = $this->dateTimeFormat ?? static::$mainDateTimeFormat;
 
         if ($format && $value instanceof DateTimeInterface) {
             return $value->format($format);
@@ -65,6 +63,7 @@ abstract class CompareFilter implements FilterInterface
     }
 
     /**
+     * @param array $values
      * @psalm-param array<int, mixed> $values
      *
      * @return array
@@ -74,10 +73,10 @@ abstract class CompareFilter implements FilterInterface
         return array_map([$this, 'formatValue'], $values);
     }
 
-    public function toArray(): array
+    public function toCriteriaArray(): array
     {
         if ($this->value === null) {
-            return $this->ignoreNull ? [] : (new IsNull($this->column))->toArray();
+            return $this->ignoreNull ? [] : (new IsNull($this->column))->toCriteriaArray();
         }
 
         if (is_array($this->value)) {

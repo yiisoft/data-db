@@ -8,20 +8,24 @@ use DateTime;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Db\Filter\All as FilterAll;
 use Yiisoft\Data\Db\Filter\Any as FilterAny;
-use Yiisoft\Data\Db\Filter\Between as FilterBetween;
+use Yiisoft\Data\Db\Filter\Between;
 use Yiisoft\Data\Db\Filter\CompareFilter;
-use Yiisoft\Data\Db\Filter\Equals as FilterEquals;
-use Yiisoft\Data\Db\Filter\GreaterThan as FilterGreaterThan;
-use Yiisoft\Data\Db\Filter\GreaterThanOrEqual as FilterGreaterThanOrEqual;
+use Yiisoft\Data\Db\Filter\Equals;
+use Yiisoft\Data\Db\Filter\EqualsEmpty;
+use Yiisoft\Data\Db\Filter\GreaterThan;
+use Yiisoft\Data\Db\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Db\Filter\GroupFilter;
-use Yiisoft\Data\Db\Filter\ILike as FilterILike;
-use Yiisoft\Data\Db\Filter\In as FilterIn;
-use Yiisoft\Data\Db\Filter\LessThan as FilterLessThan;
-use Yiisoft\Data\Db\Filter\LessThanOrEqual as FilterLessThanOrEqual;
-use Yiisoft\Data\Db\Filter\Like as FilterLike;
-use Yiisoft\Data\Db\Filter\Not as FilterNot;
-use Yiisoft\Data\Db\Filter\NotEquals as FilterNotEquals;
-use Yiisoft\Data\Reader\Filter\FilterInterface;
+use Yiisoft\Data\Db\Filter\ILike;
+use Yiisoft\Data\Db\Filter\In;
+use Yiisoft\Data\Db\Filter\LessThan;
+use Yiisoft\Data\Db\Filter\LessThanOrEqual;
+use Yiisoft\Data\Db\Filter\Like;
+use Yiisoft\Data\Db\Filter\Not;
+use Yiisoft\Data\Db\Filter\NotEquals;
+use Yiisoft\Data\Reader\FilterInterface;
+
+use function mb_strtoupper;
+use function strtolower;
 
 final class FiltersTest extends TestCase
 {
@@ -33,99 +37,99 @@ final class FiltersTest extends TestCase
     public function simpleDataProvider(): array
     {
         return [
-            //Equals
+            //EqualsHandler
             [
-                new FilterEquals('equals', 1),
+                new Equals('equals', 1),
                 ['=', 'equals', 1],
             ],
             [
-                new FilterEquals('equals', [1, 2, 3]),
+                new Equals('equals', [1, 2, 3]),
                 ['in', 'equals', [1, 2, 3]],
             ],
             [
-                new FilterEquals('column', new DateTime('2011-01-01T15:03:01.012345Z')),
+                new Equals('column', new DateTime('2011-01-01T15:03:01.012345Z')),
                 ['=', 'column', '2011-01-01 15:03:01 +00:00'],
             ],
-            //Between
+            //BetweenHandler
             [
-                new FilterBetween('column', [100, 300]),
+                new Between('column', [100, 300]),
                 ['between', 'column', 100, 300],
             ],
             [
-                new FilterBetween('column', [100, null]),
+                new Between('column', [100, null]),
                 ['>=', 'column', 100],
             ],
             [
-                new FilterBetween('column', [null, 250]),
+                new Between('column', [null, 250]),
                 ['<=', 'column', 250],
             ],
             [
-                new FilterBetween('column', [new DateTime('2011-01-01T15:00:01'), new DateTime('2011-01-01T15:10:01')]),
+                new Between('column', [new DateTime('2011-01-01T15:00:01'), new DateTime('2011-01-01T15:10:01')]),
                 ['between', 'column', '2011-01-01 15:00:01 +00:00', '2011-01-01 15:10:01 +00:00'],
             ],
-            //GreaterThan
+            //GreaterThanHandler
             [
-                new FilterGreaterThan('column', 1000),
+                new GreaterThan('column', 1000),
                 ['>', 'column', 1000],
             ],
             [
-                new FilterGreaterThan('column', new DateTime('2011-01-01T15:00:01')),
+                new GreaterThan('column', new DateTime('2011-01-01T15:00:01')),
                 ['>', 'column', '2011-01-01 15:00:01 +00:00'],
             ],
             [
-                new FilterGreaterThanOrEqual('column', 3.5),
+                new GreaterThanOrEqual('column', 3.5),
                 ['>=', 'column', 3.5],
             ],
             [
-                new FilterLessThan('column', 10.7),
+                new LessThan('column', 10.7),
                 ['<', 'column', 10.7],
             ],
             [
-                new FilterLessThanOrEqual('column', 100),
+                new LessThanOrEqual('column', 100),
                 ['<=', 'column', 100],
             ],
             [
-                new FilterIn('column', [10, 20, 30]),
+                new In('column', [10, 20, 30]),
                 ['in', 'column', [10, 20, 30]],
             ],
-            //Not equals
+            //NotHandler equals
             [
-                new FilterNotEquals('column', 40),
+                new NotEquals('column', 40),
                 ['!=', 'column', 40],
             ],
-            //Like
+            //LikeHandler
             [
-                new FilterLike('column', 'foo'),
+                new Like('column', 'foo'),
                 ['like', 'column', 'foo'],
             ],
             [
-                (new FilterLike('column', 'foo'))->withoutStart(),
-                ['like', 'column', 'foo%', false],
+                (new Like('column', 'foo'))->withoutStart(),
+                ['like', 'column', 'foo%', null],
             ],
             [
-                (new FilterLike('column', 'foo'))->withoutEnd(),
-                ['like', 'column', '%foo', false],
+                (new Like('column', 'foo'))->withoutEnd(),
+                ['like', 'column', '%foo', null],
             ],
             [
-                (new FilterLike('column', 'foo'))->withoutBoth(),
-                ['like', 'column', 'foo', false],
+                (new Like('column', 'foo'))->withoutBoth(),
+                ['like', 'column', 'foo', null],
             ],
-            //ILike
+            //ILikeHandler
             [
-                new FilterILike('column', 'foo'),
+                new ILike('column', 'foo'),
                 ['ilike', 'column', 'foo'],
             ],
             [
-                (new FilterILike('column', 'foo'))->withoutStart(),
-                ['ilike', 'column', 'foo%', false],
+                (new ILike('column', 'foo'))->withoutStart(),
+                ['ilike', 'column', 'foo%', null],
             ],
             [
-                (new FilterILike('column', 'foo'))->withoutEnd(),
-                ['ilike', 'column', '%foo', false],
+                (new ILike('column', 'foo'))->withoutEnd(),
+                ['ilike', 'column', '%foo', null],
             ],
             [
-                (new FilterILike('column', 'foo'))->withoutBoth(),
-                ['ilike', 'column', 'foo', false],
+                (new ILike('column', 'foo'))->withoutBoth(),
+                ['ilike', 'column', 'foo', null],
             ],
         ];
     }
@@ -134,53 +138,53 @@ final class FiltersTest extends TestCase
     {
         return [
             [
-                new FilterEquals('column', null),
+                new Equals('column', null),
             ],
             [
-                new FilterBetween('column', null),
+                new Between('column', null),
             ],
             [
-                new FilterGreaterThan('column', null),
+                new GreaterThan('column', null),
             ],
             [
-                new FilterGreaterThanOrEqual('column', null),
+                new GreaterThanOrEqual('column', null),
             ],
             [
-                new FilterLessThan('column', null),
+                new LessThan('column', null),
             ],
             [
-                new FilterLessThanOrEqual('column', null),
+                new LessThanOrEqual('column', null),
             ],
             [
-                new FilterIn('column', null),
+                new In('column', null),
             ],
             [
-                new FilterNotEquals('column', null),
-                ['NOT', ['column' => null]],
+                new NotEquals('column', null),
+                ['IS NOT', 'column', null],
             ],
             [
-                new FilterLike('column', null),
+                new Like('column', null),
             ],
             [
-                (new FilterLike('column', null))->withoutStart(),
+                (new Like('column', null))->withoutStart(),
             ],
             [
-                (new FilterLike('column', null))->withoutEnd(),
+                (new Like('column', null))->withoutEnd(),
             ],
             [
-                (new FilterLike('column', null))->withoutBoth(),
+                (new Like('column', null))->withoutBoth(),
             ],
             [
-                new FilterILike('column', null),
+                new ILike('column', null),
             ],
             [
-                (new FilterILike('column', null))->withoutStart(),
+                (new ILike('column', null))->withoutStart(),
             ],
             [
-                (new FilterILike('column', null))->withoutEnd(),
+                (new ILike('column', null))->withoutEnd(),
             ],
             [
-                (new FilterILike('column', null))->withoutBoth(),
+                (new ILike('column', null))->withoutBoth(),
             ],
         ];
     }
@@ -189,9 +193,9 @@ final class FiltersTest extends TestCase
     {
         $filters = array_column($this->simpleDataProvider(), 0);
         $nullFilters = array_column($this->nullDataProvider(), 0);
-        $map = array_map(static fn ($filter) => $filter
+        $map = array_map(static fn (CompareFilter $filter) => $filter
             ->withDateTimeFormat('Y-m-d H:i:s P')
-            ->toArray(), $filters);
+            ->toCriteriaArray(), $filters);
         $nullMap = array_map(static fn ($filter) => $filter->withIgnoreNull(), $nullFilters);
 
         return [
@@ -221,18 +225,16 @@ final class FiltersTest extends TestCase
      */
     public function testSimpleFilter(FilterInterface $filter, array $expected): void
     {
-        $this->assertSame($expected, $filter->toArray());
+        $this->assertSame($expected, $filter->toCriteriaArray());
     }
 
     /**
      * @dataProvider nullDataProvider
      */
-    public function testWithNull(FilterInterface $filter, array $expected = ['is', 'column', null]): void
+    public function testWithNull(FilterInterface $filter, array $expected = ['IS', 'column', null]): void
     {
-        $this->assertSame($expected, $filter->toArray());
-        $this->assertSame([], $filter
-            ->withIgnoreNull()
-            ->toArray());
+        $this->assertSame($expected, $filter->toCriteriaArray());
+        $this->assertSame([], $filter->withIgnoreNull()->toCriteriaArray());
     }
 
     /**
@@ -240,17 +242,54 @@ final class FiltersTest extends TestCase
      */
     public function testNotFilter(FilterInterface $filter, array $expected): void
     {
-        $not = new FilterNot($filter);
-        $array = $filter->toArray();
+        $not = new Not($filter);
+        $array = $filter->toCriteriaArray();
 
-        if ($array[0] === 'in' || $array[0] === 'between') {
-            $array[0] = 'not ' . $array[0];
-            $expected = $array;
-        } else {
-            $expected = ['not', $expected];
+        switch (strtolower($array[0])) {
+            case 'in':
+            case 'between':
+            case 'like':
+            case 'ilike':
+                $array[0] = 'NOT ' . mb_strtoupper($array[0]);
+                $expected = $array;
+                break;
+
+            case '>':
+                $array[0] = '<=';
+                $expected = $array;
+                break;
+
+            case '>=':
+                $array[0] = '<';
+                $expected = $array;
+                break;
+
+            case '<':
+                $array[0] = '>=';
+                $expected = $array;
+                break;
+
+            case '<=':
+                $array[0] = '>';
+                $expected = $array;
+                break;
+
+            case 'is':
+                $array[0] = 'IS NOT';
+                $expected = $array;
+                break;
+
+            case '=':
+                $array[0] = '!=';
+                $expected = $array;
+
+                break;
+
+            default:
+                $expected = ['not', $expected];
         }
 
-        $this->assertSame($expected, $not->toArray());
+        $this->assertSame($expected, $not->toCriteriaArray());
     }
 
     /**
@@ -258,6 +297,46 @@ final class FiltersTest extends TestCase
      */
     public function testGroupFilters(GroupFilter $filter, array $expected): void
     {
-        $this->assertSame($expected, $filter->toArray());
+        $this->assertSame($expected, $filter->toCriteriaArray());
+    }
+
+    public function equalsEmptyDataProvider(): array
+    {
+        return [
+            [
+                new EqualsEmpty('column'),
+                [
+                    'or',
+                    ['IS', 'column', null],
+                    ['=', 'column', ''],
+                ],
+            ],
+            [
+                (new EqualsEmpty('column'))->withFilter(new Equals('column', 0)),
+                [
+                    'or',
+                    ['IS', 'column', null],
+                    ['=', 'column', ''],
+                    ['=', 'column', 0],
+                ],
+            ],
+            [
+                (new EqualsEmpty('column'))->withFilters(new LessThanOrEqual('column', 10)),
+                [
+                    'or',
+                    ['<=', 'column', 10],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @param EqualsEmpty $filter
+     * @param array $expected
+     * @dataProvider equalsEmptyDataProvider
+     */
+    public function testEqualsEmpty(EqualsEmpty $filter, array $expected): void
+    {
+        $this->assertSame($filter->toCriteriaArray(), $expected);
     }
 }

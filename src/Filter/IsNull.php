@@ -5,28 +5,26 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Filter;
 
 use Yiisoft\Data\Db\ColumnFormatterTrait;
-use Yiisoft\Data\Reader\Filter\FilterInterface;
+use Yiisoft\Data\Reader\Filter\EqualsNull;
+use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Db\Expression\ExpressionInterface;
 
 final class IsNull implements FilterInterface
 {
     use ColumnFormatterTrait;
 
-    /**
-     * @param mixed $column
-     * @param string|null $table
-     */
-    public function __construct($column, ?string $table = null)
+    public function __construct(string|ExpressionInterface $column, ?string $table = null)
     {
         $this->setColumn($column, $table);
     }
 
     public static function getOperator(): string
     {
-        return 'is';
+        return EqualsNull::getOperator();
     }
 
-    public function toArray(): array
+    public function toCriteriaArray(): array
     {
-        return [self::getOperator(), $this->column, null];
+        return ['IS', $this->column, null];
     }
 }
