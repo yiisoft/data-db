@@ -58,10 +58,6 @@ abstract class CompareFilter implements FilterInterface
         return $value;
     }
 
-    /**
-     * @psalm-param array<int, mixed> $values
-     * @return array
-     */
     protected function formatValues(array $values): array
     {
         return array_map([$this, 'formatValue'], $values);

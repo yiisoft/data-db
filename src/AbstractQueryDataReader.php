@@ -310,6 +310,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
 
     /**
      * @return QueryHandlerInterface[]
+     * @psalm-return array<string, QueryHandlerInterface>
      */
     private function prepareHandlers(QueryHandlerInterface ...$queryHandlers): array
     {
@@ -337,6 +338,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     public function read(): array
     {
         if ($this->data === null) {
+            /** @psalm-var array<TKey, TValue> */
             $this->data = $this->getPreparedQuery()->all();
         }
 

@@ -27,10 +27,12 @@
             "url": "https://github.com/sponsors/yiisoft"
         }
     ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "require": {
         "php": "^8.0",
         "yiisoft/db": "^1.0",
-        "yiisoft/data": "^1.0"
+        "yiisoft/data": "dev-master"
     },
     "require-dev": {
         "maglnet/composer-require-checker": "^4.2",
