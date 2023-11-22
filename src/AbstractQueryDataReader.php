@@ -338,8 +338,14 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     public function read(): array
     {
         if ($this->data === null) {
-            /** @psalm-var array<TKey, TValue> */
-            $this->data = $this->getPreparedQuery()->all();
+            $this->data = [];
+            /**
+             * @psalm-var TKey $key
+             * @psalm-var array $row
+             */
+            foreach ($this->getPreparedQuery()->all() as $key => $row) {
+                $this->data[$key] = $this->createItem($row);
+            }
         }
 
         return $this->data;
@@ -362,4 +368,9 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
 
         return $this->withLimit(1)->getIterator()->current();
     }
+
+    /**
+     * @psalm-return TValue
+     */
+    abstract protected function createItem(array $row): array|object;
 }
