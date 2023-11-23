@@ -14,7 +14,7 @@ namespace Yiisoft\Data\Db;
  */
 final class QueryDataReader extends AbstractQueryDataReader
 {
-    protected function createItem(array $row): array
+    protected function createItem(array|object $row): array|object
     {
         /** @psalm-var TValue */
         return $row;
