@@ -8,7 +8,6 @@ use Yiisoft\Data\Db\AbstractQueryDataReader;
 
 final class CustomerDataReader extends AbstractQueryDataReader
 {
-
     /**
      * @inheritDoc
      */

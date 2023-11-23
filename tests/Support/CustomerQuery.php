@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Tests\Support;
 
 use Yiisoft\Db\Query\Query;
+
 use function count;
 
 final class CustomerQuery extends Query
@@ -24,7 +25,7 @@ final class CustomerQuery extends Query
             'id' => 3,
             'email' => 'user3@example.com',
             'user1' => 'address3',
-        ]
+        ],
     ];
 
     public function all(): array
