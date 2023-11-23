@@ -30,9 +30,9 @@ use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Db\Query\QueryInterface;
-
 use function array_key_first;
 use function is_array;
+use function is_object;
 use function sprintf;
 
 /**
@@ -107,8 +107,9 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
         } else {
             $iterator = $this->getPreparedQuery()->each($this->batchSize);
 
+            /** @var array|object $row */
             foreach ($iterator as $index => $row) {
-                yield $index => $row;
+                yield $index => $this->createItem($row);
             }
         }
     }
@@ -158,8 +159,12 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
         return $query;
     }
 
-    protected function getHandlerByOperation(string $operation): QueryHandlerInterface
+    public function getHandlerByOperation(string|FilterInterface $operation): QueryHandlerInterface
     {
+        if (is_object($operation)) {
+            $operation = $operation::getOperator();
+        }
+
         if (!isset($this->filterHandlers[$operation])) {
             throw new RuntimeException(sprintf('Operation "%s" is not supported', $operation));
         }
@@ -170,7 +175,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     protected function applyFilter(QueryInterface $query): QueryInterface
     {
         if ($this->filter !== null) {
-            $query = $this->getHandlerByOperation($this->filter::getOperator())
+            $query = $this->getHandlerByOperation($this->filter)
                 ->applyFilter($query, $this->filter);
         }
 
@@ -180,7 +185,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     protected function applyHaving(QueryInterface $query): QueryInterface
     {
         if ($this->having !== null) {
-            $query = $this->getHandlerByOperation($this->having::getOperator())
+            $query = $this->getHandlerByOperation($this->having)
                 ->applyHaving($query, $this->having);
         }
 
@@ -366,11 +371,13 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
             return $key === null ? null : $this->data[$key];
         }
 
-        return $this->withLimit(1)->getIterator()->current();
+        $current = $this->withLimit(1)->getIterator()->current();
+
+        return $current === null ? null : $this->createItem($current);
     }
 
     /**
      * @psalm-return TValue
      */
-    abstract protected function createItem(array $row): array|object;
+    abstract protected function createItem(array|object $row): array|object;
 }
