@@ -219,8 +219,6 @@ final class DataReaderTest extends TestCase
 
     /**
      * @dataProvider handlerDataProvider
-     * @param FilterInterface $filter
-     * @param string $handler
      */
     public function testHandlerByOperation(FilterInterface $filter, string $handler): void
     {
