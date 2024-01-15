@@ -372,9 +372,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
             return $key === null ? null : $this->data[$key];
         }
 
-        $current = $this->withLimit(1)->getIterator()->current();
-
-        return $current === null ? null : $this->createItem($current);
+        return $this->withLimit(1)->getIterator()->current();
     }
 
     /**
