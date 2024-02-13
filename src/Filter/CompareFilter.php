@@ -18,11 +18,6 @@ abstract class CompareFilter implements FilterInterface
     protected bool $ignoreNull = false;
     protected ?string $dateTimeFormat = null;
 
-    /**
-     * @param ExpressionInterface|string $column
-     * @param mixed $value
-     * @param string|null $table
-     */
     public function __construct(string|ExpressionInterface $column, protected mixed $value, ?string $table = null)
     {
         $this->setColumn($column, $table);
@@ -44,9 +39,6 @@ abstract class CompareFilter implements FilterInterface
         return $new;
     }
 
-    /**
-     * @return mixed
-     */
     protected function formatValue(mixed $value): mixed
     {
         $format = $this->dateTimeFormat ?? static::$mainDateTimeFormat;
@@ -60,7 +52,7 @@ abstract class CompareFilter implements FilterInterface
 
     protected function formatValues(array $values): array
     {
-        return array_map([$this, 'formatValue'], $values);
+        return array_map($this->formatValue(...), $values);
     }
 
     public function toCriteriaArray(): array

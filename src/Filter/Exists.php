@@ -9,7 +9,7 @@ use Yiisoft\Db\Query\QueryInterface;
 
 final class Exists implements FilterInterface
 {
-    public function __construct(private QueryInterface $query)
+    public function __construct(private readonly QueryInterface $query)
     {
     }
 
