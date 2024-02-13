@@ -49,6 +49,10 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     private ?FilterInterface $having = null;
     private int $limit = 0;
     private int $offset = 0;
+
+    /**
+     * @psalm-var non-negative-int|null
+     */
     private ?int $count = null;
 
     /**
@@ -133,6 +137,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
                 $query->limit(null);
                 $query->orderBy('');
 
+                /** @psalm-var non-negative-int */
                 $this->count = (int) $query->count($q);
             }
         }
