@@ -15,6 +15,7 @@
     </projectFiles>
     <issueHandlers>
         <MixedAssignment errorLevel="suppress" />
+        <RiskyTruthyFalsyComparison errorLevel="suppress" />
         <PropertyNotSetInConstructor>
             <errorLevel type="suppress">
                 <file name="src/Filter/*.php" />
