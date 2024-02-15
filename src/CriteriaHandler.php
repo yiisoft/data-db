@@ -8,6 +8,7 @@ use LogicException;
 use Yiisoft\Data\Db\FilterHandler\AllHandler;
 use Yiisoft\Data\Db\FilterHandler\AnyHandler;
 use Yiisoft\Data\Db\FilterHandler\BetweenHandler;
+use Yiisoft\Data\Db\FilterHandler\Context;
 use Yiisoft\Data\Db\FilterHandler\EqualsEmptyHandler;
 use Yiisoft\Data\Db\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Db\FilterHandler\EqualsNullHandler;
@@ -24,13 +25,22 @@ use Yiisoft\Data\Reader\FilterHandlerInterface;
 
 final class CriteriaHandler
 {
+    private Context $context;
+
     /**
      * @psalm-var array<string, QueryHandlerInterface>
      */
     private array $handlers;
 
-    public function __construct(QueryHandlerInterface ...$handlers)
-    {
+    /**
+     * @param QueryHandlerInterface[]|null $handlers
+     * @param ValueNormalizerInterface|null $valueNormalizer
+     * @param $
+     */
+    public function __construct(
+        ?array $handlers = null,
+        ValueNormalizerInterface $valueNormalizer = null,
+    ) {
         if (empty($handlers)) {
             $handlers = [
                 new AllHandler(),
@@ -51,6 +61,7 @@ final class CriteriaHandler
         }
 
         $this->handlers = $this->prepareHandlers($handlers);
+        $this->context = new Context($this, $valueNormalizer ?? new ValueNormalizer());
     }
 
     public function withFilterHandlers(FilterHandlerInterface ...$handlers): self
@@ -88,7 +99,7 @@ final class CriteriaHandler
 
         $operands = array_slice($criteria, 1);
 
-        return $this->getHandlerByOperator($operator)->getCondition($operands, $this);
+        return $this->getHandlerByOperator($operator)->getCondition($operands, $this->context);
     }
 
     private function getHandlerByOperator(string $operator): QueryHandlerInterface

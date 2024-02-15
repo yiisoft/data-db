@@ -6,7 +6,6 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use DateTimeInterface;
 use LogicException;
-use Yiisoft\Data\Db\CriteriaHandler;
 use Yiisoft\Data\Reader\Filter\Between;
 
 final class BetweenHandler implements QueryHandlerInterface
@@ -16,7 +15,7 @@ final class BetweenHandler implements QueryHandlerInterface
         return Between::getOperator();
     }
 
-    public function getCondition(array $operands, CriteriaHandler $criteriaHandler): ?array
+    public function getCondition(array $operands, Context $context): ?array
     {
         if (
             array_keys($operands) !== [0, 1, 2]
@@ -26,12 +25,11 @@ final class BetweenHandler implements QueryHandlerInterface
         ) {
             throw new LogicException('Incorrect criteria for the "between" operator.');
         }
-        $from = $operands[1] instanceof DateTimeInterface
-            ? $operands[1]->format('Y-m-d H:i:s')
-            : $operands[1];
-        $to = $operands[2] instanceof DateTimeInterface
-            ? $operands[2]->format('Y-m-d H:i:s')
-            : $operands[2];
-        return ['BETWEEN', $operands[0], $from, $to];
+        return [
+            'BETWEEN',
+            $operands[0],
+            $context->normalizeValueToScalar($operands[1]),
+            $context->normalizeValueToScalar($operands[2]),
+        ];
     }
 }

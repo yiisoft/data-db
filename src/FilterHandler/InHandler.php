@@ -15,7 +15,7 @@ final class InHandler implements QueryHandlerInterface
         return In::getOperator();
     }
 
-    public function getCondition(array $operands, CriteriaHandler $criteriaHandler): ?array
+    public function getCondition(array $operands, Context $context): ?array
     {
         if (
             array_keys($operands) !== [0, 1]

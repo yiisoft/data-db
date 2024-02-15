@@ -12,7 +12,7 @@ use Yiisoft\Data\Db\CriteriaHandler;
  */
 abstract class GroupHandler implements QueryHandlerInterface
 {
-    public function getCondition(array $operands, CriteriaHandler $criteriaHandler): ?array
+    public function getCondition(array $operands, Context $context): ?array
     {
         if (!array_key_exists(0, $operands)) {
             throw new LogicException(
@@ -39,7 +39,7 @@ abstract class GroupHandler implements QueryHandlerInterface
             if (!is_array($subCriteria)) {
                 throw new LogicException('Incorrect sub-criteria.');
             }
-            $condition[] = $criteriaHandler->handle($subCriteria);
+            $condition[] = $context->handleCriteria($subCriteria);
         }
         return $condition;
     }

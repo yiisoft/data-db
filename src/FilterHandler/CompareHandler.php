@@ -6,11 +6,10 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use DateTimeInterface;
 use LogicException;
-use Yiisoft\Data\Db\CriteriaHandler;
 
 abstract class CompareHandler implements QueryHandlerInterface
 {
-    public function getCondition(array $operands, CriteriaHandler $criteriaHandler): ?array
+    public function getCondition(array $operands, Context $context): ?array
     {
         if (
             array_keys($operands) !== [0, 1]
@@ -22,11 +21,6 @@ abstract class CompareHandler implements QueryHandlerInterface
         ) {
             throw new LogicException(sprintf('Incorrect criteria for the "%s" operator.', $this->getOperator()));
         }
-
-        $value = $operands[1] instanceof DateTimeInterface
-            ? $operands[1]->format('Y-m-d H:i:s')
-            : $operands[1];
-
-        return [$this->getOperator(), $operands[0], $value];
+        return [$this->getOperator(), $operands[0], $context->normalizeValueToScalar($operands[1])];
     }
 }
