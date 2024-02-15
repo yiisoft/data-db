@@ -12,7 +12,6 @@ use Yiisoft\Data\Db\Filter\Equals;
 use Yiisoft\Data\Db\Filter\EqualsEmpty;
 use Yiisoft\Data\Db\Filter\GreaterThan;
 use Yiisoft\Data\Db\Filter\GreaterThanOrEqual;
-use Yiisoft\Data\Db\Filter\GroupFilter;
 use Yiisoft\Data\Db\Filter\ILike;
 use Yiisoft\Data\Db\Filter\In;
 use Yiisoft\Data\Db\Filter\LessThan;
