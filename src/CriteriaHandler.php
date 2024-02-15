@@ -88,7 +88,7 @@ final class CriteriaHandler
 
         $operands = array_slice($criteria, 1);
 
-        return $this->getHandlerByOperator($operator)->getCondition($operator, $operands, $this);
+        return $this->getHandlerByOperator($operator)->getCondition($operands, $this);
     }
 
     private function getHandlerByOperator(string $operator): QueryHandlerInterface

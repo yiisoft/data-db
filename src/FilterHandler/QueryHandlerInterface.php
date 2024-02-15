@@ -9,5 +9,5 @@ use Yiisoft\Data\Reader\FilterHandlerInterface;
 
 interface QueryHandlerInterface extends FilterHandlerInterface
 {
-    public function getCondition(string $operator, array $operands, CriteriaHandler $criteriaHandler): ?array;
+    public function getCondition(array $operands, CriteriaHandler $criteriaHandler): ?array;
 }

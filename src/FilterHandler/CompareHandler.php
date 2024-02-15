@@ -10,7 +10,7 @@ use Yiisoft\Data\Db\CriteriaHandler;
 
 abstract class CompareHandler implements QueryHandlerInterface
 {
-    public function getCondition(string $operator, array $operands, CriteriaHandler $criteriaHandler): ?array
+    public function getCondition(array $operands, CriteriaHandler $criteriaHandler): ?array
     {
         if (
             array_keys($operands) !== [0, 1]
@@ -20,13 +20,13 @@ abstract class CompareHandler implements QueryHandlerInterface
                 && !(is_scalar($operands[1]) || $operands[1] instanceof DateTimeInterface)
             )
         ) {
-            throw new LogicException(sprintf('Incorrect criteria for the "%s" operator.', $operator));
+            throw new LogicException(sprintf('Incorrect criteria for the "%s" operator.', $this->getOperator()));
         }
 
         $value = $operands[1] instanceof DateTimeInterface
             ? $operands[1]->format('Y-m-d H:i:s')
             : $operands[1];
 
-        return [$operator, $operands[0], $value];
+        return [$this->getOperator(), $operands[0], $value];
     }
 }

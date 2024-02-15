@@ -12,13 +12,13 @@ use Yiisoft\Data\Db\CriteriaHandler;
  */
 abstract class GroupHandler implements QueryHandlerInterface
 {
-    public function getCondition(string $operator, array $operands, CriteriaHandler $criteriaHandler): ?array
+    public function getCondition(array $operands, CriteriaHandler $criteriaHandler): ?array
     {
         if (!array_key_exists(0, $operands)) {
             throw new LogicException(
                 sprintf(
                     'Not found parameter for the "%s" operator.',
-                    $operator,
+                    $this->getOperator(),
                 )
             );
         }
@@ -26,7 +26,7 @@ abstract class GroupHandler implements QueryHandlerInterface
             throw new LogicException(
                 sprintf(
                     'The parameter for "%s" operator must be an array. Got %s.',
-                    $operator,
+                    $this->getOperator(),
                     get_debug_type($operands[0])
                 )
             );
@@ -34,7 +34,7 @@ abstract class GroupHandler implements QueryHandlerInterface
         if (empty($operands[0])) {
             return null;
         }
-        $condition = [strtoupper($operator)];
+        $condition = [strtoupper($this->getOperator())];
         foreach ($operands[0] as $subCriteria) {
             if (!is_array($subCriteria)) {
                 throw new LogicException('Incorrect sub-criteria.');

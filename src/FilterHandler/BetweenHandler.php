@@ -16,7 +16,7 @@ final class BetweenHandler implements QueryHandlerInterface
         return Between::getOperator();
     }
 
-    public function getCondition(string $operator, array $operands, CriteriaHandler $criteriaHandler): ?array
+    public function getCondition(array $operands, CriteriaHandler $criteriaHandler): ?array
     {
         if (
             array_keys($operands) !== [0, 1, 2]
