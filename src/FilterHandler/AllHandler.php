@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use Yiisoft\Data\Reader\Filter\All;
 
-final class AllHandler extends BaseHandler
+final class AllHandler extends GroupHandler
 {
     public function getOperator(): string
     {
