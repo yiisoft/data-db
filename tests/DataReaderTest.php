@@ -159,68 +159,12 @@ final class DataReaderTest extends TestCase
         );
     }
 
-    public static function handlerDataProvider(): array
-    {
-        return [
-            [
-                new Equals('equals', 1),
-                EqualsHandler::class,
-            ],
-            [
-                new Between('column', 100, 300),
-                BetweenHandler::class,
-            ],
-            [
-                new GreaterThan('column', 1000),
-                GreaterThanHandler::class,
-            ],
-            [
-                new GreaterThanOrEqual('column', 3.5),
-                GreaterThanOrEqualHandler::class,
-            ],
-            [
-                new LessThan('column', 10.7),
-                LessThanHandler::class,
-            ],
-            [
-                new LessThanOrEqual('column', 100),
-                LessThanOrEqualHandler::class,
-            ],
-            [
-                new In('column', [10, 20, 30]),
-                InHandler::class,
-            ],
-            [
-                new Like('column', 'foo'),
-                LikeHandler::class,
-            ],
-        ];
-    }
-
     public function testCount(): void
     {
         $query = new CustomerQuery($this->getConnection());
         $dataReader = (new CustomerDataReader($query));
 
         self::assertEquals($query->count(), $dataReader->count());
-    }
-
-    /**
-     * @dataProvider handlerDataProvider
-     */
-    public function testHandlerByOperation(FilterInterface $filter, string $handler): void
-    {
-        $db = $this->getConnection();
-
-        $query = (new Query($db))
-            ->from('customer');
-
-        $dataReader = new QueryDataReader($query);
-        $filterHandler = $dataReader->getHandlerByOperation($filter);
-        $filterOperatorHandler = $dataReader->getHandlerByOperation($filter::getOperator());
-
-        self::assertInstanceOf($handler, $filterHandler);
-        self::assertInstanceOf($handler, $filterOperatorHandler);
     }
 
     public function testDtoCreateItem(): void

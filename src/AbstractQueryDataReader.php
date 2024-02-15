@@ -41,6 +41,8 @@ use function sprintf;
  */
 abstract class AbstractQueryDataReader implements QueryDataReaderInterface
 {
+    private FilterHandler $filterHandler;
+
     private ?Sort $sort = null;
     private ?FilterInterface $filter = null;
     private ?FilterInterface $having = null;
@@ -60,30 +62,12 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     private ?int $batchSize = 100;
     private ?string $countParam = null;
 
-    /**
-     * @var QueryHandlerInterface[]
-     * @psalm-var array<string, QueryHandlerInterface>
-     */
-    protected array $filterHandlers = [];
-
-    public function __construct(private QueryInterface $query)
+    public function __construct(
+        private QueryInterface $query,
+        ?FilterHandler $filterHandler = null,
+    )
     {
-        $this->filterHandlers = $this->prepareHandlers(
-            new AllHandler(),
-            new AnyHandler(),
-            new EqualsHandler(),
-            new GreaterThanHandler(),
-            new GreaterThanOrEqualHandler(),
-            new LessThanHandler(),
-            new LessThanOrEqualHandler(),
-            new LikeHandler(),
-            new InHandler(),
-            new ExistsHandler(),
-            new NotHandler(),
-            new BetweenHandler(),
-            new EqualsNullHandler(),
-            new EqualsEmptyHandler()
-        );
+        $this->filterHandler = $filterHandler ?? new FilterHandler();
     }
 
     /**
@@ -158,23 +142,10 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
         return $query;
     }
 
-    public function getHandlerByOperation(string|FilterInterface $operation): QueryHandlerInterface
-    {
-        if (is_object($operation)) {
-            $operation = $operation::getOperator();
-        }
-
-        if (!isset($this->filterHandlers[$operation])) {
-            throw new RuntimeException(sprintf('Operation "%s" is not supported', $operation));
-        }
-
-        return $this->filterHandlers[$operation];
-    }
-
     protected function applyFilter(QueryInterface $query): QueryInterface
     {
         if ($this->filter !== null) {
-            $condition = $this->getCondition($this->filter);
+            $condition = $this->filterHandler->handle($this->filter);
             if ($condition !== null) {
                 $query = $query->andWhere($condition);
             }
@@ -186,7 +157,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     protected function applyHaving(QueryInterface $query): QueryInterface
     {
         if ($this->having !== null) {
-            $condition = $this->getCondition($this->having);
+            $condition = $this->filterHandler->handle($this->having);
             if ($condition !== null) {
                 $query = $query->andHaving($condition);
             }
@@ -308,27 +279,8 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     {
         $new = clone $this;
         $new->count = $new->data = null;
-        $new->filterHandlers = array_merge(
-            $this->filterHandlers,
-            $this->prepareHandlers(...$filterHandlers)
-        );
-
+        $new->filterHandler = $this->filterHandler->withFilterHandlers(...$filterHandlers);
         return $new;
-    }
-
-    /**
-     * @return QueryHandlerInterface[]
-     * @psalm-return array<string, QueryHandlerInterface>
-     */
-    private function prepareHandlers(QueryHandlerInterface ...$queryHandlers): array
-    {
-        $handlers = [];
-
-        foreach ($queryHandlers as $handler) {
-            $handlers[$handler->getOperator()] = $handler;
-        }
-
-        return $handlers;
     }
 
     public function getSort(): ?Sort
@@ -381,21 +333,4 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
      * @psalm-return TValue
      */
     abstract protected function createItem(array|object $row): array|object;
-
-    private function getCondition(FilterInterface $filter): ?array
-    {
-        $criteria = $filter->toCriteriaArray();
-        if (!isset($criteria[0])) {
-            throw new LogicException('Incorrect criteria array.');
-        }
-
-        $operator = $criteria[0];
-        if (!is_string($operator)) {
-            throw new LogicException('Criteria operator must be a string.');
-        }
-
-        $operands = array_slice($criteria, 1);
-
-        return $this->getHandlerByOperation($filter)->getCondition($operator, $operands);
-    }
 }
