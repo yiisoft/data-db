@@ -6,8 +6,6 @@ namespace Yiisoft\Data\Db\Tests;
 
 use DateTime;
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Data\Db\Filter\All;
-use Yiisoft\Data\Db\Filter\Any;
 use Yiisoft\Data\Db\Filter\Between;
 use Yiisoft\Data\Db\Filter\CompareFilter;
 use Yiisoft\Data\Db\Filter\Equals;
@@ -24,6 +22,8 @@ use Yiisoft\Data\Db\Filter\NotEquals;
 use Yiisoft\Data\Db\Filter\OrLike;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Db\Tests\Support\TestTrait;
+use Yiisoft\Data\Reader\Filter\All;
+use Yiisoft\Data\Reader\Filter\Any;
 use Yiisoft\Db\Expression\Expression;
 use Yiisoft\Db\Query\Query;
 

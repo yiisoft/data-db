@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Filter;
 
 use Yiisoft\Data\Db\ColumnFormatterTrait;
+use Yiisoft\Data\Reader\Filter\Any;
 use Yiisoft\Data\Reader\Filter\EqualsEmpty as FilterEqualsEmpty;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\Expression\ExpressionInterface;

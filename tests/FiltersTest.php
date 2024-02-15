@@ -6,8 +6,6 @@ namespace Yiisoft\Data\Db\Tests;
 
 use DateTime;
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Data\Db\Filter\All as FilterAll;
-use Yiisoft\Data\Db\Filter\Any as FilterAny;
 use Yiisoft\Data\Db\Filter\Between;
 use Yiisoft\Data\Db\Filter\CompareFilter;
 use Yiisoft\Data\Db\Filter\Equals;
@@ -22,6 +20,8 @@ use Yiisoft\Data\Db\Filter\LessThanOrEqual;
 use Yiisoft\Data\Db\Filter\Like;
 use Yiisoft\Data\Db\Filter\Not;
 use Yiisoft\Data\Db\Filter\NotEquals;
+use Yiisoft\Data\Reader\Filter\All;
+use Yiisoft\Data\Reader\Filter\Any;
 use Yiisoft\Data\Reader\FilterInterface;
 
 use function mb_strtoupper;
@@ -201,20 +201,20 @@ final class FiltersTest extends TestCase
         return [
             //AND
             [
-                new FilterAll(...$filters),
+                new All(...$filters),
                 array_merge(['and'], $map),
             ],
             [
-                new FilterAll(...$nullMap),
+                new All(...$nullMap),
                 [],
             ],
             //OR
             [
-                new FilterAny(...$filters),
+                new Any(...$filters),
                 array_merge(['or'], $map),
             ],
             [
-                new FilterAny(...$nullMap),
+                new Any(...$nullMap),
                 [],
             ],
         ];
@@ -295,7 +295,7 @@ final class FiltersTest extends TestCase
     /**
      * @dataProvider groupDataProvider
      */
-    public function testGroupFilters(GroupFilter $filter, array $expected): void
+    public function testGroupFilters(All|Any $filter, array $expected): void
     {
         $this->assertSame($expected, $filter->toCriteriaArray());
     }
