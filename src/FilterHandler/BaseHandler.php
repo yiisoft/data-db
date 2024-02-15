@@ -8,8 +8,8 @@ use Yiisoft\Data\Reader\FilterInterface;
 
 abstract class BaseHandler implements QueryHandlerInterface
 {
-    public function getCondition(FilterInterface $filter): ?array
+    public function getCondition(string $operator, array $operands): ?array
     {
-        return ConditionFactory::make($filter->toCriteriaArray());
+        return ConditionFactory::make($operator, $operands);
     }
 }

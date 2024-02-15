@@ -6,6 +6,7 @@ namespace Yiisoft\Data\Db;
 
 use Generator;
 use InvalidArgumentException;
+use LogicException;
 use RuntimeException;
 use Yiisoft\Data\Db\FilterHandler\AllHandler;
 use Yiisoft\Data\Db\FilterHandler\AnyHandler;
@@ -173,7 +174,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     protected function applyFilter(QueryInterface $query): QueryInterface
     {
         if ($this->filter !== null) {
-            $condition = $this->getHandlerByOperation($this->filter)->getCondition($this->filter);
+            $condition = $this->getCondition($this->filter);
             if ($condition !== null) {
                 $query = $query->andWhere($condition);
             }
@@ -185,7 +186,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     protected function applyHaving(QueryInterface $query): QueryInterface
     {
         if ($this->having !== null) {
-            $condition = $this->getHandlerByOperation($this->having)->getCondition($this->having);
+            $condition = $this->getCondition($this->having);
             if ($condition !== null) {
                 $query = $query->andHaving($condition);
             }
@@ -380,4 +381,21 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
      * @psalm-return TValue
      */
     abstract protected function createItem(array|object $row): array|object;
+
+    private function getCondition(FilterInterface $filter): ?array
+    {
+        $criteria = $filter->toCriteriaArray();
+        if (!isset($criteria[0])) {
+            throw new LogicException('Incorrect criteria array.');
+        }
+
+        $operator = $criteria[0];
+        if (!is_string($operator)) {
+            throw new LogicException('Criteria operator must be a string.');
+        }
+
+        $operands = array_slice($criteria, 1);
+
+        return $this->getHandlerByOperation($filter)->getCondition($operator, $operands);
+    }
 }

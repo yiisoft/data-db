@@ -13,19 +13,8 @@ use Yiisoft\Db\Query\QueryInterface;
  */
 final class ConditionFactory
 {
-    public static function make(array $criteria): ?array
+    public static function make(string $operator, array $operands): ?array
     {
-        if (!isset($criteria[0])) {
-            throw new LogicException('Incorrect criteria array.');
-        }
-
-        $operator = $criteria[0];
-        if (!is_string($operator)) {
-            throw new LogicException('Operator must be a string.');
-        }
-
-        $operands = array_slice($criteria, 1);
-
         return match ($operator) {
             'and', 'or' => self::makeGroup($operator, $operands),
             'not' => self::makeNot($operator, $operands),
@@ -68,7 +57,13 @@ final class ConditionFactory
             if (!is_array($subCriteria)) {
                 throw new LogicException('Incorrect sub-criteria.');
             }
-            $condition[] = self::make($subCriteria);
+            if (!isset($subCriteria[0])) {
+                throw new LogicException('Incorrect sub-criteria array.');
+            }
+            if (!is_string($subCriteria[0])) {
+                throw new LogicException('Sub-criteria operator must be a string.');
+            }
+            $condition[] = self::make($subCriteria[0], array_slice($subCriteria, 1));
         }
         return $condition;
     }
@@ -85,7 +80,14 @@ final class ConditionFactory
             return null;
         }
 
-        $subCondition = self::make($operands[0]);
+        if (!isset($operands[0][0])) {
+            throw new LogicException('Incorrect sub-criteria array.');
+        }
+        if (!is_string($operands[0][0])) {
+            throw new LogicException('Sub-criteria operator must be a string.');
+        }
+
+        $subCondition = self::make($operands[0][0], array_slice($operands[0], 1));
 
         if (isset($subCondition[0]) && is_string($subCondition[0])) {
             $convert = [
