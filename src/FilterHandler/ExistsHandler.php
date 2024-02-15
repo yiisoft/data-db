@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use Yiisoft\Data\Db\Filter\Exists;
 
-final class ExistsHandler extends AbstractHandler
+final class ExistsHandler extends BaseHandler
 {
     public function getOperator(): string
     {

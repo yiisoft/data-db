@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use Yiisoft\Data\Db\Filter\LessThanOrEqual;
 
-final class LessThanOrEqualHandler extends AbstractHandler
+final class LessThanOrEqualHandler extends BaseHandler
 {
     public function getOperator(): string
     {

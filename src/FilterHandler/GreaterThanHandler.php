@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use Yiisoft\Data\Db\Filter\GreaterThan;
 
-final class GreaterThanHandler extends AbstractHandler
+final class GreaterThanHandler extends BaseHandler
 {
     public function getOperator(): string
     {

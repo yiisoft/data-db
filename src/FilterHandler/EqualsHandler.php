@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use Yiisoft\Data\Db\Filter\Equals;
 
-final class EqualsHandler extends AbstractHandler
+final class EqualsHandler extends BaseHandler
 {
     public function getOperator(): string
     {

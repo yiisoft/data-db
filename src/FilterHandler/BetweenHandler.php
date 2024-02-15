@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use Yiisoft\Data\Db\Filter\Between;
 
-final class BetweenHandler extends AbstractHandler
+final class BetweenHandler extends BaseHandler
 {
     public function getOperator(): string
     {

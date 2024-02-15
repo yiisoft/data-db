@@ -5,37 +5,13 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\FilterHandler;
 
 use LogicException;
-use Yiisoft\Data\Reader\FilterInterface;
-use Yiisoft\Db\Query\QueryInterface;
 
 /**
  * @internal
  */
-abstract class GroupHandler implements QueryHandlerInterface
+final class ConditionFactory
 {
-    public function applyFilter(QueryInterface $query, FilterInterface $filter): QueryInterface
-    {
-        $condition = $this->prepareCondition($filter->toCriteriaArray());
-
-        if ($condition === null) {
-            return $query;
-        }
-
-        return $query->andWhere($condition);
-    }
-
-    public function applyHaving(QueryInterface $query, FilterInterface $having): QueryInterface
-    {
-        $condition = $this->prepareCondition($having->toCriteriaArray());
-
-        if ($condition === null) {
-            return $query;
-        }
-
-        return $query->andHaving($condition);
-    }
-
-    private function prepareCondition(array $criteria): ?array
+    public static function make(array $criteria): ?array
     {
         if (!isset($criteria[0])) {
             throw new LogicException('Incorrect criteria array.');
@@ -70,7 +46,7 @@ abstract class GroupHandler implements QueryHandlerInterface
                     if (!is_array($subCriteria)) {
                         throw new LogicException('Incorrect sub-criteria.');
                     }
-                    $condition[] = $this->prepareCondition($subCriteria);
+                    $condition[] = self::make($subCriteria);
                 }
                 return $condition;
 

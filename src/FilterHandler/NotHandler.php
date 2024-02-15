@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use Yiisoft\Data\Db\Filter\Not;
 
-final class NotHandler extends AbstractHandler
+final class NotHandler extends BaseHandler
 {
     public function getOperator(): string
     {

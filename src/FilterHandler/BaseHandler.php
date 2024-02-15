@@ -7,27 +7,27 @@ namespace Yiisoft\Data\Db\FilterHandler;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\Query\QueryInterface;
 
-abstract class AbstractHandler implements QueryHandlerInterface
+abstract class BaseHandler implements QueryHandlerInterface
 {
     public function applyFilter(QueryInterface $query, FilterInterface $filter): QueryInterface
     {
-        $array = $filter->toCriteriaArray();
+        $condition = ConditionFactory::make($filter->toCriteriaArray());
 
-        if ($array === []) {
+        if ($condition === null) {
             return $query;
         }
 
-        return $query->andWhere($array);
+        return $query->andWhere($condition);
     }
 
     public function applyHaving(QueryInterface $query, FilterInterface $having): QueryInterface
     {
-        $array = $having->toCriteriaArray();
+        $condition = ConditionFactory::make($having->toCriteriaArray());
 
-        if ($array === []) {
+        if ($condition === null) {
             return $query;
         }
 
-        return $query->andHaving($array);
+        return $query->andHaving($condition);
     }
 }

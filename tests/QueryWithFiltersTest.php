@@ -196,7 +196,7 @@ final class QueryWithFiltersTest extends TestCase
                 "([greater_than] > 15) OR ([less_than_or_equal] <= 10) OR ([not_equals] != 'test') OR (([id] = 8) AND ([name] LIKE '%bar%'))",
             ],
             [
-                All::fromCriteriaArray([
+                (new All())->withCriteriaArray([
                     ['>', 'id', 88],
                     [
                         'or',
@@ -207,7 +207,7 @@ final class QueryWithFiltersTest extends TestCase
                 "([id] > 88) AND (([state] = 2) OR ([name] LIKE '%eva%'))",
             ],
             [
-                Any::fromCriteriaArray([
+                (new All())->withCriteriaArray([
                     ['>', 'id', 88],
                     [
                         'and',
@@ -245,7 +245,7 @@ final class QueryWithFiltersTest extends TestCase
     /**
      * @dataProvider groupFilterDataProvider
      */
-    public function testGroupFilter(GroupFilter $filter, string $expected): void
+    public function testGroupFilter(All|Any $filter, string $expected): void
     {
         $db = $this->getConnection();
         $query = (new Query($db))
