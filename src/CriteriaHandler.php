@@ -21,9 +21,8 @@ use Yiisoft\Data\Db\FilterHandler\LikeHandler;
 use Yiisoft\Data\Db\FilterHandler\NotHandler;
 use Yiisoft\Data\Db\FilterHandler\QueryHandlerInterface;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
-use Yiisoft\Data\Reader\FilterInterface;
 
-final class FilterHandler
+final class CriteriaHandler
 {
     /**
      * @psalm-var array<string, QueryHandlerInterface>
@@ -76,9 +75,8 @@ final class FilterHandler
         return $new;
     }
 
-    public function handle(FilterInterface $filter): ?array
+    public function handle(array $criteria): ?array
     {
-        $criteria = $filter->toCriteriaArray();
         if (!isset($criteria[0])) {
             throw new LogicException('Incorrect criteria array.');
         }
@@ -90,7 +88,7 @@ final class FilterHandler
 
         $operands = array_slice($criteria, 1);
 
-        return $this->getHandlerByOperator($operator)->getCondition($operator, $operands);
+        return $this->getHandlerByOperator($operator)->getCondition($operator, $operands, $this);
     }
 
     private function getHandlerByOperator(string $operator): QueryHandlerInterface

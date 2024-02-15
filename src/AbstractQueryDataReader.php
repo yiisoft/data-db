@@ -41,7 +41,7 @@ use function sprintf;
  */
 abstract class AbstractQueryDataReader implements QueryDataReaderInterface
 {
-    private FilterHandler $filterHandler;
+    private CriteriaHandler $criteriaHandler;
 
     private ?Sort $sort = null;
     private ?FilterInterface $filter = null;
@@ -64,10 +64,10 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
 
     public function __construct(
         private QueryInterface $query,
-        ?FilterHandler $filterHandler = null,
+        ?CriteriaHandler $filterHandler = null,
     )
     {
-        $this->filterHandler = $filterHandler ?? new FilterHandler();
+        $this->criteriaHandler = $filterHandler ?? new CriteriaHandler();
     }
 
     /**
@@ -145,7 +145,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     protected function applyFilter(QueryInterface $query): QueryInterface
     {
         if ($this->filter !== null) {
-            $condition = $this->filterHandler->handle($this->filter);
+            $condition = $this->criteriaHandler->handle($this->filter->toCriteriaArray());
             if ($condition !== null) {
                 $query = $query->andWhere($condition);
             }
@@ -157,7 +157,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     protected function applyHaving(QueryInterface $query): QueryInterface
     {
         if ($this->having !== null) {
-            $condition = $this->filterHandler->handle($this->having);
+            $condition = $this->criteriaHandler->handle($this->having->toCriteriaArray());
             if ($condition !== null) {
                 $query = $query->andHaving($condition);
             }
@@ -279,7 +279,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     {
         $new = clone $this;
         $new->count = $new->data = null;
-        $new->filterHandler = $this->filterHandler->withFilterHandlers(...$filterHandlers);
+        $new->criteriaHandler = $this->criteriaHandler->withFilterHandlers(...$filterHandlers);
         return $new;
     }
 

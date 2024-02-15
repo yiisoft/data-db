@@ -6,6 +6,7 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use DateTimeInterface;
 use LogicException;
+use Yiisoft\Data\Db\CriteriaHandler;
 use Yiisoft\Db\Query\QueryInterface;
 
 /**
@@ -13,11 +14,11 @@ use Yiisoft\Db\Query\QueryInterface;
  */
 final class ConditionFactory
 {
-    public static function make(string $operator, array $operands): ?array
+    public static function make(string $operator, array $operands, CriteriaHandler $criteriaHandler): ?array
     {
         return match ($operator) {
-            'and', 'or' => self::makeGroup($operator, $operands),
-            'not' => self::makeNot($operator, $operands),
+            'and', 'or' => self::makeGroup($operator, $operands, $criteriaHandler),
+            'not' => self::makeNot($operator, $operands, $criteriaHandler),
             'like' => self::makeLike($operator, $operands),
             'between' => self::makeBetween($operator, $operands),
             'in' => self::makeIn($operator, $operands),
@@ -30,7 +31,7 @@ final class ConditionFactory
         };
     }
 
-    private static function makeGroup(string $operator, array $operands): ?array
+    private static function makeGroup(string $operator, array $operands, CriteriaHandler $filterHandler): ?array
     {
         if (!array_key_exists(0, $operands)) {
             throw new LogicException(
@@ -57,18 +58,12 @@ final class ConditionFactory
             if (!is_array($subCriteria)) {
                 throw new LogicException('Incorrect sub-criteria.');
             }
-            if (!isset($subCriteria[0])) {
-                throw new LogicException('Incorrect sub-criteria array.');
-            }
-            if (!is_string($subCriteria[0])) {
-                throw new LogicException('Sub-criteria operator must be a string.');
-            }
-            $condition[] = self::make($subCriteria[0], array_slice($subCriteria, 1));
+            $condition[] = $filterHandler->handle($subCriteria);
         }
         return $condition;
     }
 
-    private static function makeNot(string $operator, array $operands): ?array
+    private static function makeNot(string $operator, array $operands, CriteriaHandler $filterHandler): array
     {
         if (
             array_keys($operands) !== [0]
@@ -76,18 +71,7 @@ final class ConditionFactory
         ) {
             throw new LogicException('Incorrect criteria for the "not" operator.');
         }
-        if (empty($operands[0])) {
-            return null;
-        }
-
-        if (!isset($operands[0][0])) {
-            throw new LogicException('Incorrect sub-criteria array.');
-        }
-        if (!is_string($operands[0][0])) {
-            throw new LogicException('Sub-criteria operator must be a string.');
-        }
-
-        $subCondition = self::make($operands[0][0], array_slice($operands[0], 1));
+        $subCondition = $filterHandler->handle($operands[0]);
 
         if (isset($subCondition[0]) && is_string($subCondition[0])) {
             $convert = [
