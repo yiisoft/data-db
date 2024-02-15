@@ -26,40 +26,35 @@ final class DataFilterTest extends TestCase
     public function simpleDataProvider(): array
     {
         return [
-            //EqualsHandler
-            [
+            'equals' => [
                 new Equals('equals', 1),
                 '[equals] = 1',
             ],
-
-            //BetweenHandler
-            [
+            'between' => [
                 new Between('column', 100, 300),
                 '[column] BETWEEN 100 AND 300',
             ],
-            //GreaterThanHandler
-            [
+            'greater-than' => [
                 new GreaterThan('column', 1000),
                 '[column] > 1000',
             ],
-            [
+            'greater-than-or-equal' => [
                 new GreaterThanOrEqual('column', 3.5),
                 '[column] >= 3.5',
             ],
-            [
+            'less-than' => [
                 new LessThan('column', 10.7),
                 '[column] < 10.7',
             ],
-            [
+            'less-than-or-equal' => [
                 new LessThanOrEqual('column', 100),
                 '[column] <= 100',
             ],
-            [
+            'in' => [
                 new In('column', [10, 20, 30]),
                 '[column] IN (10, 20, 30)',
             ],
-            //LikeHandler
-            [
+            'like' => [
                 new Like('column', 'foo'),
                 "[column] LIKE '%foo%'",
             ],
@@ -88,14 +83,40 @@ final class DataFilterTest extends TestCase
 
     public function notDataProvider(): array
     {
-        $filters = $this->simpleDataProvider();
-
-        foreach ($filters as $i => $filter) {
-            $filters[$i][0] = new Not($filter[0]);
-            $filters[$i][1] = 'NOT (' . $filter[1] . ')';
-        }
-
-        return $filters;
+        return [
+            'equals' => [
+                new Not(new Equals('equals', 1)),
+                '[equals] != 1',
+            ],
+            'between' => [
+                new Not(new Between('column', 100, 300)),
+                '[column] NOT BETWEEN 100 AND 300',
+            ],
+            'greater-than' => [
+                new Not(new GreaterThan('column', 1000)),
+                '[column] <= 1000',
+            ],
+            'greater-than-or-equal' => [
+                new Not(new GreaterThanOrEqual('column', 3.5)),
+                '[column] < 3.5',
+            ],
+            'less-than' => [
+                new Not(new LessThan('column', 10.7)),
+                '[column] >= 10.7',
+            ],
+            'less-than-or-equal' => [
+                new Not(new LessThanOrEqual('column', 100)),
+                '[column] > 100',
+            ],
+            'in' => [
+                new Not(new In('column', [10, 20, 30])),
+                '[column] NOT IN (10, 20, 30)',
+            ],
+            'like' => [
+                new Not(new Like('column', 'foo')),
+                "[column] NOT LIKE '%foo%'",
+            ],
+        ];
     }
 
     /**

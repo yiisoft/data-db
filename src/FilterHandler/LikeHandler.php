@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\FilterHandler;
 
-use Yiisoft\Data\Db\Filter\Like;
+use Yiisoft\Data\Reader\Filter\Like;
 
 final class LikeHandler extends BaseHandler
 {

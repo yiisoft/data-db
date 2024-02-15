@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\FilterHandler;
 
-use Yiisoft\Data\Db\Filter\Equals;
+use Yiisoft\Data\Reader\Filter\Equals;
 
 final class EqualsHandler extends BaseHandler
 {

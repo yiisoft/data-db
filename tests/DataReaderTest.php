@@ -6,31 +6,27 @@ namespace Yiisoft\Data\Db\Tests;
 
 use PHPUnit\Framework\TestCase;
 use stdClass;
-use Yiisoft\Data\Db\Filter\Between;
-use Yiisoft\Data\Db\Filter\Equals;
-use Yiisoft\Data\Db\Filter\GreaterThan;
-use Yiisoft\Data\Db\Filter\GreaterThanOrEqual;
-use Yiisoft\Data\Db\Filter\ILike;
-use Yiisoft\Data\Db\Filter\In;
-use Yiisoft\Data\Db\Filter\LessThan;
-use Yiisoft\Data\Db\Filter\LessThanOrEqual;
-use Yiisoft\Data\Db\Filter\Like;
-use Yiisoft\Data\Db\Filter\NotEquals;
 use Yiisoft\Data\Db\FilterHandler\BetweenHandler;
 use Yiisoft\Data\Db\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Db\FilterHandler\GreaterThanHandler;
 use Yiisoft\Data\Db\FilterHandler\GreaterThanOrEqualHandler;
-use Yiisoft\Data\Db\FilterHandler\ILikeHandler;
 use Yiisoft\Data\Db\FilterHandler\InHandler;
 use Yiisoft\Data\Db\FilterHandler\LessThanHandler;
 use Yiisoft\Data\Db\FilterHandler\LessThanOrEqualHandler;
 use Yiisoft\Data\Db\FilterHandler\LikeHandler;
-use Yiisoft\Data\Db\FilterHandler\NotEqualsHandler;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Db\Tests\Support\CustomerDataReader;
 use Yiisoft\Data\Db\Tests\Support\CustomerDTO;
 use Yiisoft\Data\Db\Tests\Support\CustomerQuery;
 use Yiisoft\Data\Db\Tests\Support\TestTrait;
+use Yiisoft\Data\Reader\Filter\Between;
+use Yiisoft\Data\Reader\Filter\Equals;
+use Yiisoft\Data\Reader\Filter\GreaterThan;
+use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
+use Yiisoft\Data\Reader\Filter\In;
+use Yiisoft\Data\Reader\Filter\LessThan;
+use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
+use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Db\Expression\Expression;
@@ -171,7 +167,7 @@ final class DataReaderTest extends TestCase
                 EqualsHandler::class,
             ],
             [
-                new Between('column', [100, 300]),
+                new Between('column', 100, 300),
                 BetweenHandler::class,
             ],
             [
@@ -195,16 +191,8 @@ final class DataReaderTest extends TestCase
                 InHandler::class,
             ],
             [
-                new NotEquals('column', 40),
-                NotEqualsHandler::class,
-            ],
-            [
                 new Like('column', 'foo'),
                 LikeHandler::class,
-            ],
-            [
-                new ILike('column', 'foo'),
-                ILikeHandler::class,
             ],
         ];
     }

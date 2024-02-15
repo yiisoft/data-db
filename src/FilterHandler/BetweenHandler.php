@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\FilterHandler;
 
-use Yiisoft\Data\Db\Filter\Between;
+use Yiisoft\Data\Reader\Filter\Between;
 
 final class BetweenHandler extends BaseHandler
 {

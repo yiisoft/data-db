@@ -15,16 +15,12 @@ use Yiisoft\Data\Db\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Db\FilterHandler\ExistsHandler;
 use Yiisoft\Data\Db\FilterHandler\GreaterThanHandler;
 use Yiisoft\Data\Db\FilterHandler\GreaterThanOrEqualHandler;
-use Yiisoft\Data\Db\FilterHandler\ILikeHandler;
 use Yiisoft\Data\Db\FilterHandler\InHandler;
-use Yiisoft\Data\Db\FilterHandler\IsNullHandler;
+use Yiisoft\Data\Db\FilterHandler\EqualsNullHandler;
 use Yiisoft\Data\Db\FilterHandler\LessThanHandler;
 use Yiisoft\Data\Db\FilterHandler\LessThanOrEqualHandler;
 use Yiisoft\Data\Db\FilterHandler\LikeHandler;
-use Yiisoft\Data\Db\FilterHandler\NotEqualsHandler;
 use Yiisoft\Data\Db\FilterHandler\NotHandler;
-use Yiisoft\Data\Db\FilterHandler\OrILikeHandler;
-use Yiisoft\Data\Db\FilterHandler\OrLikeHandler;
 use Yiisoft\Data\Db\FilterHandler\QueryHandlerInterface;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
@@ -80,15 +76,11 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
             new LessThanHandler(),
             new LessThanOrEqualHandler(),
             new LikeHandler(),
-            new ILikeHandler(),
-            new OrLikeHandler(),
-            new OrILikeHandler(),
             new InHandler(),
             new ExistsHandler(),
-            new NotEqualsHandler(),
             new NotHandler(),
             new BetweenHandler(),
-            new IsNullHandler(),
+            new EqualsNullHandler(),
             new EqualsEmptyHandler()
         );
     }

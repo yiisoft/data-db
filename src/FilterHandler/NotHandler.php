@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\FilterHandler;
 
-use Yiisoft\Data\Db\Filter\Not;
+use Yiisoft\Data\Reader\Filter\Not;
 
 final class NotHandler extends BaseHandler
 {

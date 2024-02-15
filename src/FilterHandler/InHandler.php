@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\FilterHandler;
 
-use Yiisoft\Data\Db\Filter\In;
+use Yiisoft\Data\Reader\Filter\In;
 
 final class InHandler extends BaseHandler
 {
