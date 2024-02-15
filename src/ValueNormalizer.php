@@ -10,7 +10,7 @@ use RuntimeException;
 final class ValueNormalizer implements ValueNormalizerInterface
 {
     public function __construct(
-        private string $dateTimeFormat = 'Y-m-d H:i:s',
+        private readonly string $dateTimeFormat = 'Y-m-d H:i:s',
     ) {
     }
 
