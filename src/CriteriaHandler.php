@@ -22,7 +22,12 @@ use Yiisoft\Data\Db\FilterHandler\LikeHandler;
 use Yiisoft\Data\Db\FilterHandler\NotHandler;
 use Yiisoft\Data\Db\FilterHandler\QueryHandlerInterface;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
+use Yiisoft\Db\Query\QueryPartsInterface;
 
+/**
+ * `CriteriaHandler` process filter criteria array from {@see FilterInterface::toCriteriaArray()} to condition array
+ * that used in {@see QueryPartsInterface::andWhere()} and {@see QueryPartsInterface::andHaving()}.
+ */
 final class CriteriaHandler
 {
     private Context $context;
@@ -35,7 +40,6 @@ final class CriteriaHandler
     /**
      * @param QueryHandlerInterface[]|null $handlers
      * @param ValueNormalizerInterface|null $valueNormalizer
-     * @param $
      */
     public function __construct(
         ?array $handlers = null,
