@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\FilterHandler;
 
 use LogicException;
-use Yiisoft\Data\Db\CriteriaHandler;
 use Yiisoft\Data\Reader\Filter\Not;
 
 final class NotHandler implements QueryHandlerInterface

@@ -6,23 +6,6 @@ namespace Yiisoft\Data\Db;
 
 use Generator;
 use InvalidArgumentException;
-use LogicException;
-use RuntimeException;
-use Yiisoft\Data\Db\FilterHandler\AllHandler;
-use Yiisoft\Data\Db\FilterHandler\AnyHandler;
-use Yiisoft\Data\Db\FilterHandler\BetweenHandler;
-use Yiisoft\Data\Db\FilterHandler\EqualsEmptyHandler;
-use Yiisoft\Data\Db\FilterHandler\EqualsHandler;
-use Yiisoft\Data\Db\FilterHandler\ExistsHandler;
-use Yiisoft\Data\Db\FilterHandler\GreaterThanHandler;
-use Yiisoft\Data\Db\FilterHandler\GreaterThanOrEqualHandler;
-use Yiisoft\Data\Db\FilterHandler\InHandler;
-use Yiisoft\Data\Db\FilterHandler\EqualsNullHandler;
-use Yiisoft\Data\Db\FilterHandler\LessThanHandler;
-use Yiisoft\Data\Db\FilterHandler\LessThanOrEqualHandler;
-use Yiisoft\Data\Db\FilterHandler\LikeHandler;
-use Yiisoft\Data\Db\FilterHandler\NotHandler;
-use Yiisoft\Data\Db\FilterHandler\QueryHandlerInterface;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Sort;
@@ -30,8 +13,6 @@ use Yiisoft\Db\Query\QueryInterface;
 
 use function array_key_first;
 use function is_array;
-use function is_object;
-use function sprintf;
 
 /**
  * @template TKey as array-key
@@ -65,8 +46,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     public function __construct(
         private QueryInterface $query,
         ?CriteriaHandler $filterHandler = null,
-    )
-    {
+    ) {
         $this->criteriaHandler = $filterHandler ?? new CriteriaHandler();
     }
 

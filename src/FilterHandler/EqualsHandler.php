@@ -22,7 +22,7 @@ final class EqualsHandler implements QueryHandlerInterface
             || !is_string($operands[0])
             || (
                 !is_string($operands[1])
-                && !(is_scalar($operands[1]) || is_null($operands[1]) || $operands[1] instanceof DateTimeInterface)
+                && !(is_scalar($operands[1]) || null === $operands[1] || $operands[1] instanceof DateTimeInterface)
             )
         ) {
             throw new LogicException('Incorrect criteria for the "=" operator.');

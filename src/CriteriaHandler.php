@@ -56,7 +56,7 @@ final class CriteriaHandler
                 new NotHandler(),
                 new BetweenHandler(),
                 new EqualsNullHandler(),
-                new EqualsEmptyHandler()
+                new EqualsEmptyHandler(),
             ];
         }
 
