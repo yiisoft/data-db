@@ -25,8 +25,8 @@ use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Db\Query\QueryPartsInterface;
 
 /**
- * `CriteriaHandler` process filter criteria array from {@see FilterInterface::toCriteriaArray()} to condition array
- * that used in {@see QueryPartsInterface::andWhere()} and {@see QueryPartsInterface::andHaving()}.
+ * `CriteriaHandler` processes filter criteria array from {@see FilterInterface::toCriteriaArray()} into condition array
+ * that is used in {@see QueryPartsInterface::andWhere()} and {@see QueryPartsInterface::andHaving()}.
  */
 final class CriteriaHandler
 {
