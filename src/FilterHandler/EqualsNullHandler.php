@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\FilterHandler;
 
 use LogicException;
-use Yiisoft\Data\Reader\Filter\EqualsEmpty;
+use Yiisoft\Data\Reader\Filter\EqualsNull;
 
-final class EqualsEmptyHandler implements QueryHandlerInterface
+final class EqualsNullHandler implements QueryHandlerInterface
 {
     public function getOperator(): string
     {
-        return EqualsEmpty::getOperator();
+        return EqualsNull::getOperator();
     }
 
     public function getCondition(array $operands, Context $context): ?array
@@ -22,6 +22,6 @@ final class EqualsEmptyHandler implements QueryHandlerInterface
         ) {
             throw new LogicException('Incorrect criteria for the "empty" operator.');
         }
-        return ['OR', ['IS', $operands[0], null], ['=', $operands[0], '']];
+        return ['IS', $operands[0], null];
     }
 }

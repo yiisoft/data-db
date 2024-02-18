@@ -6,26 +6,6 @@ namespace Yiisoft\Data\Db;
 
 use Generator;
 use InvalidArgumentException;
-use RuntimeException;
-use Yiisoft\Data\Db\FilterHandler\AllHandler;
-use Yiisoft\Data\Db\FilterHandler\AnyHandler;
-use Yiisoft\Data\Db\FilterHandler\BetweenHandler;
-use Yiisoft\Data\Db\FilterHandler\EqualsEmptyHandler;
-use Yiisoft\Data\Db\FilterHandler\EqualsHandler;
-use Yiisoft\Data\Db\FilterHandler\ExistsHandler;
-use Yiisoft\Data\Db\FilterHandler\GreaterThanHandler;
-use Yiisoft\Data\Db\FilterHandler\GreaterThanOrEqualHandler;
-use Yiisoft\Data\Db\FilterHandler\ILikeHandler;
-use Yiisoft\Data\Db\FilterHandler\InHandler;
-use Yiisoft\Data\Db\FilterHandler\IsNullHandler;
-use Yiisoft\Data\Db\FilterHandler\LessThanHandler;
-use Yiisoft\Data\Db\FilterHandler\LessThanOrEqualHandler;
-use Yiisoft\Data\Db\FilterHandler\LikeHandler;
-use Yiisoft\Data\Db\FilterHandler\NotEqualsHandler;
-use Yiisoft\Data\Db\FilterHandler\NotHandler;
-use Yiisoft\Data\Db\FilterHandler\OrILikeHandler;
-use Yiisoft\Data\Db\FilterHandler\OrLikeHandler;
-use Yiisoft\Data\Db\FilterHandler\QueryHandlerInterface;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Sort;
@@ -33,8 +13,6 @@ use Yiisoft\Db\Query\QueryInterface;
 
 use function array_key_first;
 use function is_array;
-use function is_object;
-use function sprintf;
 
 /**
  * @template TKey as array-key
@@ -44,6 +22,8 @@ use function sprintf;
  */
 abstract class AbstractQueryDataReader implements QueryDataReaderInterface
 {
+    private CriteriaHandler $criteriaHandler;
+
     private ?Sort $sort = null;
     private ?FilterInterface $filter = null;
     private ?FilterInterface $having = null;
@@ -63,34 +43,11 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     private ?int $batchSize = 100;
     private ?string $countParam = null;
 
-    /**
-     * @var QueryHandlerInterface[]
-     * @psalm-var array<string, QueryHandlerInterface>
-     */
-    protected array $filterHandlers = [];
-
-    public function __construct(private QueryInterface $query)
-    {
-        $this->filterHandlers = $this->prepareHandlers(
-            new AllHandler(),
-            new AnyHandler(),
-            new EqualsHandler(),
-            new GreaterThanHandler(),
-            new GreaterThanOrEqualHandler(),
-            new LessThanHandler(),
-            new LessThanOrEqualHandler(),
-            new LikeHandler(),
-            new ILikeHandler(),
-            new OrLikeHandler(),
-            new OrILikeHandler(),
-            new InHandler(),
-            new ExistsHandler(),
-            new NotEqualsHandler(),
-            new NotHandler(),
-            new BetweenHandler(),
-            new IsNullHandler(),
-            new EqualsEmptyHandler()
-        );
+    public function __construct(
+        private QueryInterface $query,
+        ?CriteriaHandler $filterHandler = null,
+    ) {
+        $this->criteriaHandler = $filterHandler ?? new CriteriaHandler();
     }
 
     /**
@@ -165,24 +122,13 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
         return $query;
     }
 
-    public function getHandlerByOperation(string|FilterInterface $operation): QueryHandlerInterface
-    {
-        if (is_object($operation)) {
-            $operation = $operation::getOperator();
-        }
-
-        if (!isset($this->filterHandlers[$operation])) {
-            throw new RuntimeException(sprintf('Operation "%s" is not supported', $operation));
-        }
-
-        return $this->filterHandlers[$operation];
-    }
-
     protected function applyFilter(QueryInterface $query): QueryInterface
     {
         if ($this->filter !== null) {
-            $query = $this->getHandlerByOperation($this->filter)
-                ->applyFilter($query, $this->filter);
+            $condition = $this->criteriaHandler->handle($this->filter->toCriteriaArray());
+            if ($condition !== null) {
+                $query = $query->andWhere($condition);
+            }
         }
 
         return $query;
@@ -191,8 +137,10 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     protected function applyHaving(QueryInterface $query): QueryInterface
     {
         if ($this->having !== null) {
-            $query = $this->getHandlerByOperation($this->having)
-                ->applyHaving($query, $this->having);
+            $condition = $this->criteriaHandler->handle($this->having->toCriteriaArray());
+            if ($condition !== null) {
+                $query = $query->andHaving($condition);
+            }
         }
 
         return $query;
@@ -311,27 +259,8 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     {
         $new = clone $this;
         $new->count = $new->data = null;
-        $new->filterHandlers = array_merge(
-            $this->filterHandlers,
-            $this->prepareHandlers(...$filterHandlers)
-        );
-
+        $new->criteriaHandler = $this->criteriaHandler->withFilterHandlers(...$filterHandlers);
         return $new;
-    }
-
-    /**
-     * @return QueryHandlerInterface[]
-     * @psalm-return array<string, QueryHandlerInterface>
-     */
-    private function prepareHandlers(QueryHandlerInterface ...$queryHandlers): array
-    {
-        $handlers = [];
-
-        foreach ($queryHandlers as $handler) {
-            $handlers[$handler->getOperator()] = $handler;
-        }
-
-        return $handlers;
     }
 
     public function getSort(): ?Sort
