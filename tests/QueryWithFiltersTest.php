@@ -35,7 +35,7 @@ final class QueryWithFiltersTest extends TestCase
                 '[equals] = 1',
             ],
             'equals-datetime' => [
-                new Equals('column', new DateTime('2011-01-01T15:03:01.012345Z')),
+                new Equals('column', (new DateTime('2011-01-01T15:03:01.012345Z'))->format('Y-m-d H:i:s')),
                 "[column] = '2011-01-01 15:03:01'",
             ],
             'between' => [
@@ -43,7 +43,7 @@ final class QueryWithFiltersTest extends TestCase
                 '[column] BETWEEN 100 AND 300',
             ],
             'between-dates' => [
-                new Between('column', new DateTime('2011-01-01T15:00:01'), new DateTime('2011-01-01T15:10:01')),
+                new Between('column', (new DateTime('2011-01-01T15:00:01'))->format('Y-m-d H:i:s'), (new DateTime('2011-01-01T15:10:01'))->format('Y-m-d H:i:s')),
                 "[column] BETWEEN '2011-01-01 15:00:01' AND '2011-01-01 15:10:01'",
             ],
             'greater-than' => [
@@ -51,7 +51,7 @@ final class QueryWithFiltersTest extends TestCase
                 '[column] > 1000',
             ],
             'greater-than-date' => [
-                new GreaterThan('column', new DateTime('2011-01-01T15:00:01')),
+                new GreaterThan('column', (new DateTime('2011-01-01T15:00:01'))->format('Y-m-d H:i:s')),
                 "[column] > '2011-01-01 15:00:01'",
             ],
             [
@@ -112,8 +112,8 @@ final class QueryWithFiltersTest extends TestCase
         $expected = 'SELECT * FROM [customer] HAVING ' . $condition;
 
         $this->assertSame(
-            $dataReader->getPreparedQuery()->createCommand()->getRawSql(),
             $expected,
+            $dataReader->getPreparedQuery()->createCommand()->getRawSql(),
         );
     }
 

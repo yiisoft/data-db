@@ -40,6 +40,10 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
      * @psalm-var array<TKey, TValue>|null
      */
     private ?array $data = null;
+
+    /**
+     * @psalm-var non-negative-int|null
+     */
     private ?int $batchSize = 100;
     private ?string $countParam = null;
 
@@ -62,9 +66,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
      */
     public function getIterator(): Generator
     {
-        if (is_array($this->data)) {
-            yield from $this->data;
-        } elseif ($this->batchSize === null) {
+        if ($this->batchSize === null) {
             yield from $this->read();
         } else {
             $iterator = $this->getPreparedQuery()->each($this->batchSize);
@@ -104,7 +106,8 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
 
     public function getPreparedQuery(): QueryInterface
     {
-        $query = $this->applyFilter(clone $this->query);
+        $query = clone $this->query;
+        $query = $this->applyFilter($query);
         $query = $this->applyHaving($query);
 
         if ($this->limit) {
@@ -125,10 +128,9 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     protected function applyFilter(QueryInterface $query): QueryInterface
     {
         if ($this->filter !== null) {
-            $condition = $this->criteriaHandler->handle($this->filter->toCriteriaArray());
-            if ($condition !== null) {
-                $query = $query->andWhere($condition);
-            }
+            return $this->criteriaHandler
+                ->getHandlerByOperator($this->filter)
+                ->applyFilter($this->query, $this->filter, $this->criteriaHandler);
         }
 
         return $query;
@@ -137,10 +139,9 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     protected function applyHaving(QueryInterface $query): QueryInterface
     {
         if ($this->having !== null) {
-            $condition = $this->criteriaHandler->handle($this->having->toCriteriaArray());
-            if ($condition !== null) {
-                $query = $query->andHaving($condition);
-            }
+            return $this->criteriaHandler
+                ->getHandlerByOperator($this->having)
+                ->applyHaving($this->query, $this->having, $this->criteriaHandler);
         }
 
         return $query;
@@ -152,6 +153,10 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
      */
     public function withOffset(int $offset): static
     {
+        if ($this->offset === $offset) {
+            return $this;
+        }
+
         $new = clone $this;
         $new->data = null;
         $new->offset = $offset;
@@ -167,6 +172,10 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     {
         if ($limit < 0) {
             throw new InvalidArgumentException('$limit must not be less than 0.');
+        }
+
+        if ($this->limit === $limit) {
+            return $this;
         }
 
         $new = clone $this;
@@ -240,6 +249,10 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     {
         if ($batchSize !== null && $batchSize < 1) {
             throw new InvalidArgumentException('$batchSize cannot be less than 1.');
+        }
+
+        if ($this->batchSize === $batchSize) {
+            return $this;
         }
 
         $new = clone $this;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\FilterHandler;
 
-use Yiisoft\Data\Reader\Filter\All;
+use Yiisoft\Data\Db\Filter\All;
 
 final class AllHandler extends GroupHandler
 {

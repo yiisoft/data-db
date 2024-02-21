@@ -7,10 +7,14 @@ namespace Yiisoft\Data\Db\Tests;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Db\Tests\Support\TestTrait;
+use Yiisoft\Data\Reader\Filter\All;
+use Yiisoft\Data\Reader\Filter\Any;
 use Yiisoft\Data\Reader\Filter\Between;
 use Yiisoft\Data\Reader\Filter\Equals;
+use Yiisoft\Data\Reader\Filter\EqualsEmpty;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
+use Yiisoft\Data\Reader\Filter\Group;
 use Yiisoft\Data\Reader\Filter\In;
 use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
@@ -23,7 +27,7 @@ final class DataFilterTest extends TestCase
 {
     use TestTrait;
 
-    public function simpleDataProvider(): array
+    public static function simpleDataProvider(): array
     {
         return [
             'equals' => [
@@ -58,6 +62,10 @@ final class DataFilterTest extends TestCase
                 new Like('column', 'foo'),
                 "[column] LIKE '%foo%'",
             ],
+            'equals-empty' => [
+                new EqualsEmpty('column'),
+                "[column] IS NULL",
+            ],
         ];
     }
 
@@ -81,7 +89,7 @@ final class DataFilterTest extends TestCase
         );
     }
 
-    public function notDataProvider(): array
+    public static function notDataProvider(): array
     {
         return [
             'equals' => [
@@ -136,6 +144,57 @@ final class DataFilterTest extends TestCase
         $this->assertSame(
             $dataReader->getPreparedQuery()->createCommand()->getRawSql(),
             $expected,
+        );
+    }
+
+    public static function groupFilterDataProvider(): array
+    {
+        return [
+            'all' => [
+                new All(
+                    new Equals('equals', 1),
+                    new GreaterThanOrEqual('greater', 10),
+                    new Any(
+                        new LessThan('less', 5),
+                        new Like('like', 'foo'),
+                    ),
+                ),
+                "([equals] = 1) AND ([greater] >= 10) AND (([less] < 5) OR ([like] LIKE '%foo%'))",
+            ],
+            'any' => [
+                new Any(
+                    new LessThan('less', 5),
+                    new Like('like', 'bar'),
+                    new All(
+                        new Equals('equals', 1),
+                        new GreaterThanOrEqual('greater', 10),
+                    ),
+                ),
+                "([less] < 5) OR ([like] LIKE '%bar%') OR (([equals] = 1) AND ([greater] >= 10))",
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider groupFilterDataProvider
+     * @param Group $filter
+     * @param string $condition
+     * @return void
+     */
+    public function testGroupFilter(Group $filter, string $condition): void
+    {
+        $db = $this->getConnection();
+        $query = (new Query($db))
+            ->from('customer');
+
+        $dataReader = (new QueryDataReader($query))
+            ->withFilter($filter);
+
+        $expected = 'SELECT * FROM [customer] WHERE ' . $condition;
+
+        $this->assertSame(
+            $expected,
+            $dataReader->getPreparedQuery()->createCommand()->getRawSql(),
         );
     }
 }

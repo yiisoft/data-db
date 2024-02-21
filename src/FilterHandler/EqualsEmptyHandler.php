@@ -4,24 +4,26 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\FilterHandler;
 
-use LogicException;
-use Yiisoft\Data\Reader\Filter\EqualsEmpty;
+use Yiisoft\Data\Db\Filter\EqualsEmpty;
+use Yiisoft\Data\Reader\Filter\EqualsEmpty as BaseEqualsEmptyFilter;
 
-final class EqualsEmptyHandler implements QueryHandlerInterface
+use function strcasecmp;
+
+final class EqualsEmptyHandler extends AbstractHandler
 {
     public function getOperator(): string
     {
         return EqualsEmpty::getOperator();
     }
 
-    public function getCondition(array $operands, Context $context): ?array
+    protected function splitCriteria(array $criteria): array
     {
-        if (
-            array_keys($operands) !== [0]
-            || !is_string($operands[0])
-        ) {
-            throw new LogicException('Incorrect criteria for the "empty" operator.');
+        [$operator, $criteria] = parent::splitCriteria($criteria);
+
+        if (strcasecmp($operator, BaseEqualsEmptyFilter::getOperator()) === 0) {
+            return ['IS', [$criteria[0], null]];
         }
-        return ['OR', ['IS', $operands[0], null], ['=', $operands[0], '']];
+
+        return [$operator, $criteria];
     }
 }

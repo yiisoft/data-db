@@ -39,8 +39,9 @@ final class DataReaderTest extends TestCase
 
         $query = (new Query($db))
             ->from('customer');
-        $dataReader = (new QueryDataReader($query))
-            ->withOffset(2);
+        $dataReader = (new QueryDataReader($query))->withOffset(2);
+        $sameDataReader = $dataReader->withOffset(2);
+        $newDataReader = $dataReader->withOffset(5);
         $query->offset(2);
 
         $actual = $dataReader->getPreparedQuery()->createCommand()->getRawSql();
@@ -48,6 +49,8 @@ final class DataReaderTest extends TestCase
 
         self::assertSame($expected, $actual);
         self::assertStringEndsWith('OFFSET 2', $actual);
+        self::assertTrue($dataReader === $sameDataReader);
+        self::assertNotTrue($dataReader === $newDataReader);
     }
 
     public function testLimit(): void
@@ -59,6 +62,8 @@ final class DataReaderTest extends TestCase
         $dataReader = (new QueryDataReader($query))
             ->withOffset(1)
             ->withLimit(1);
+        $sameDataReader = $dataReader->withLimit(1);
+        $newDataReader = $dataReader->withLimit(2);
         $query
             ->offset(1)
             ->limit(1);
@@ -68,6 +73,8 @@ final class DataReaderTest extends TestCase
 
         self::assertSame($expected, $actual);
         self::assertStringEndsWith('LIMIT 1 OFFSET 1', $actual);
+        self::assertTrue($dataReader === $sameDataReader);
+        self::assertNotTrue($dataReader === $newDataReader);
     }
 
     public function sortDataProvider(): array
@@ -155,13 +162,17 @@ final class DataReaderTest extends TestCase
         $query = new CustomerQuery($this->getConnection());
         $dataReader = (new CustomerDataReader($query))
             ->withBatchSize(null);
-
+        $sameDataReader = $dataReader->withBatchSize(null);
+        $newDataReader = $dataReader->withBatchSize(10);
 
         self::assertInstanceOf(CustomerDTO::class, $dataReader->readOne());
 
-        foreach ($dataReader->read() as $row) {
+        foreach ($sameDataReader->read() as $row) {
             self::assertInstanceOf(CustomerDTO::class, $row);
         }
+
+        self::assertTrue($dataReader === $sameDataReader);
+        self::assertNotTrue($dataReader === $newDataReader);
     }
 
     public function testObjectCreateItem(): void

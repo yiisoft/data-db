@@ -8,21 +8,26 @@ use LogicException;
 use Yiisoft\Data\Db\FilterHandler\AllHandler;
 use Yiisoft\Data\Db\FilterHandler\AnyHandler;
 use Yiisoft\Data\Db\FilterHandler\BetweenHandler;
-use Yiisoft\Data\Db\FilterHandler\Context;
 use Yiisoft\Data\Db\FilterHandler\EqualsEmptyHandler;
 use Yiisoft\Data\Db\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Db\FilterHandler\EqualsNullHandler;
 use Yiisoft\Data\Db\FilterHandler\ExistsHandler;
 use Yiisoft\Data\Db\FilterHandler\GreaterThanHandler;
 use Yiisoft\Data\Db\FilterHandler\GreaterThanOrEqualHandler;
+use Yiisoft\Data\Db\FilterHandler\ILikeHandler;
 use Yiisoft\Data\Db\FilterHandler\InHandler;
 use Yiisoft\Data\Db\FilterHandler\LessThanHandler;
 use Yiisoft\Data\Db\FilterHandler\LessThanOrEqualHandler;
 use Yiisoft\Data\Db\FilterHandler\LikeHandler;
 use Yiisoft\Data\Db\FilterHandler\NotHandler;
+use Yiisoft\Data\Db\FilterHandler\OrILikeHandler;
+use Yiisoft\Data\Db\FilterHandler\OrLikeHandler;
 use Yiisoft\Data\Db\FilterHandler\QueryHandlerInterface;
-use Yiisoft\Data\Reader\FilterHandlerInterface;
+use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\Query\QueryPartsInterface;
+
+use function array_merge;
+use function array_unshift;
 
 /**
  * `CriteriaHandler` processes filter criteria array from {@see FilterInterface::toCriteriaArray()} into condition array
@@ -30,22 +35,18 @@ use Yiisoft\Db\Query\QueryPartsInterface;
  */
 final class CriteriaHandler
 {
-    private Context $context;
-
     /**
      * @psalm-var array<string, QueryHandlerInterface>
      */
     private array $handlers;
 
     /**
-     * @param QueryHandlerInterface[]|null $handlers
-     * @param ValueNormalizerInterface|null $valueNormalizer
+     * @param QueryHandlerInterface ...$handlers
      */
     public function __construct(
-        ?array $handlers = null,
-        ValueNormalizerInterface $valueNormalizer = null,
+        QueryHandlerInterface ...$handlers
     ) {
-        if (empty($handlers)) {
+        if ($handlers === []) {
             $handlers = [
                 new AllHandler(),
                 new AnyHandler(),
@@ -55,6 +56,9 @@ final class CriteriaHandler
                 new LessThanHandler(),
                 new LessThanOrEqualHandler(),
                 new LikeHandler(),
+                new ILikeHandler(),
+                new OrLikeHandler(),
+                new OrILikeHandler(),
                 new InHandler(),
                 new ExistsHandler(),
                 new NotHandler(),
@@ -64,51 +68,37 @@ final class CriteriaHandler
             ];
         }
 
-        $this->handlers = $this->prepareHandlers($handlers);
-        $this->context = new Context($this, $valueNormalizer ?? new ValueNormalizer());
+        $this->handlers = $this->prepareHandlers(...$handlers);
     }
 
-    public function withFilterHandlers(FilterHandlerInterface ...$handlers): self
+    public function withFilterHandlers(QueryHandlerInterface $handler, QueryHandlerInterface ...$handlers): self
     {
-        foreach ($handlers as $handler) {
-            if (!$handler instanceof QueryHandlerInterface) {
-                throw new LogicException(
-                    sprintf(
-                        'Filter handler must implement "%s".',
-                        QueryHandlerInterface::class,
-                    )
-                );
-            }
-        }
-        /** @var QueryHandlerInterface[] $handlers */
+        array_unshift($handlers, $handler);
 
         $new = clone $this;
         $new->handlers = array_merge(
             $this->handlers,
-            $this->prepareHandlers($handlers),
+            $this->prepareHandlers(...$handlers),
         );
         return $new;
     }
 
-    public function handle(array $criteria): ?array
+    public function hasHandler(string|FilterInterface $operator): bool
     {
-        if (!isset($criteria[0])) {
-            throw new LogicException('Incorrect criteria array.');
+        if ($operator instanceof FilterInterface) {
+            $operator = $operator::getOperator();
         }
 
-        $operator = $criteria[0];
-        if (!is_string($operator)) {
-            throw new LogicException('Criteria operator must be a string.');
-        }
-
-        $operands = array_slice($criteria, 1);
-
-        return $this->getHandlerByOperator($operator)->getCondition($operands, $this->context);
+        return isset($this->handlers[$operator]);
     }
 
-    private function getHandlerByOperator(string $operator): QueryHandlerInterface
+    public function getHandlerByOperator(string|FilterInterface $operator): QueryHandlerInterface
     {
-        if (!isset($this->handlers[$operator])) {
+        if ($operator instanceof FilterInterface) {
+            $operator = $operator::getOperator();
+        }
+
+        if (!$this->hasHandler($operator)) {
             throw new LogicException(sprintf('Operator "%s" is not supported', $operator));
         }
 
@@ -116,12 +106,12 @@ final class CriteriaHandler
     }
 
     /**
-     * @param QueryHandlerInterface[] $handlers
+     * @param QueryHandlerInterface ...$handlers
      *
      * @return QueryHandlerInterface[]
      * @psalm-return array<string, QueryHandlerInterface>
      */
-    private function prepareHandlers(array $handlers): array
+    private function prepareHandlers(QueryHandlerInterface ...$handlers): array
     {
         $result = [];
         foreach ($handlers as $handler) {
