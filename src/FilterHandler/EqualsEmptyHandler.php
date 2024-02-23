@@ -14,7 +14,7 @@ final class EqualsEmptyHandler implements QueryHandlerInterface
         return EqualsEmpty::getOperator();
     }
 
-    public function getCondition(array $operands, Context $context): ?array
+    public function getCondition(array $operands, Context $context): ?Condition
     {
         if (
             array_keys($operands) !== [0]
@@ -22,6 +22,6 @@ final class EqualsEmptyHandler implements QueryHandlerInterface
         ) {
             throw new LogicException('Incorrect criteria for the "empty" operator.');
         }
-        return ['OR', ['IS', $operands[0], null], ['=', $operands[0], '']];
+        return new Condition(['OR', ['IS', $operands[0], null], ['=', $operands[0], '']]);
     }
 }

@@ -15,7 +15,7 @@ final class ExistsHandler implements QueryHandlerInterface
         return Exists::getOperator();
     }
 
-    public function getCondition(array $operands, Context $context): ?array
+    public function getCondition(array $operands, Context $context): ?Condition
     {
         if (
             array_keys($operands) !== [0]
@@ -24,6 +24,6 @@ final class ExistsHandler implements QueryHandlerInterface
             throw new LogicException('Incorrect criteria for the "exists" operator.');
         }
 
-        return ['EXISTS', $operands[0]];
+        return new Condition(['EXISTS', $operands[0]]);
     }
 }

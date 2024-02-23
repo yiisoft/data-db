@@ -14,7 +14,7 @@ final class NotHandler implements QueryHandlerInterface
         return Not::getOperator();
     }
 
-    public function getCondition(array $operands, Context $context): ?array
+    public function getCondition(array $operands, Context $context): ?Condition
     {
         if (
             array_keys($operands) !== [0]
@@ -23,8 +23,14 @@ final class NotHandler implements QueryHandlerInterface
             throw new LogicException('Incorrect criteria for the "not" operator.');
         }
         $subCondition = $context->handleCriteria($operands[0]);
+        if ($subCondition === null) {
+            return null;
+        }
 
-        if (isset($subCondition[0]) && is_string($subCondition[0])) {
+        $body = $subCondition->body;
+        $params = $subCondition->params;
+
+        if (isset($body[0]) && is_string($body[0])) {
             $convert = [
                 'IS' => 'IS NOT',
                 'IN' => 'NOT IN',
@@ -38,13 +44,13 @@ final class NotHandler implements QueryHandlerInterface
                 '<=' => '>',
                 '=' => '!=',
             ];
-            $operator = strtoupper($subCondition[0]);
+            $operator = strtoupper($body[0]);
             if (isset($convert[$operator])) {
-                $subCondition[0] = $convert[$operator];
-                return $subCondition;
+                $body[0] = $convert[$operator];
+                return new Condition($body, $params);
             }
         }
 
-        return ['NOT', $subCondition];
+        return new Condition(['NOT', $body], $params);
     }
 }

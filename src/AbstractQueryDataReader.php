@@ -127,7 +127,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
         if ($this->filter !== null) {
             $condition = $this->criteriaHandler->handle($this->filter->toCriteriaArray());
             if ($condition !== null) {
-                $query = $query->andWhere($condition);
+                $query = $query->andWhere($condition->body, $condition->params);
             }
         }
 
@@ -139,7 +139,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
         if ($this->having !== null) {
             $condition = $this->criteriaHandler->handle($this->having->toCriteriaArray());
             if ($condition !== null) {
-                $query = $query->andHaving($condition);
+                $query = $query->andHaving($condition->body, $condition->params);
             }
         }
 

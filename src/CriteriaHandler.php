@@ -8,6 +8,7 @@ use LogicException;
 use Yiisoft\Data\Db\FilterHandler\AllHandler;
 use Yiisoft\Data\Db\FilterHandler\AnyHandler;
 use Yiisoft\Data\Db\FilterHandler\BetweenHandler;
+use Yiisoft\Data\Db\FilterHandler\Condition;
 use Yiisoft\Data\Db\FilterHandler\Context;
 use Yiisoft\Data\Db\FilterHandler\EqualsEmptyHandler;
 use Yiisoft\Data\Db\FilterHandler\EqualsHandler;
@@ -90,7 +91,7 @@ final class CriteriaHandler
         return $new;
     }
 
-    public function handle(array $criteria): ?array
+    public function handle(array $criteria): ?Condition
     {
         if (!isset($criteria[0])) {
             throw new LogicException('Incorrect criteria array.');

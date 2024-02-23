@@ -14,7 +14,7 @@ final class LikeHandler implements QueryHandlerInterface
         return Like::getOperator();
     }
 
-    public function getCondition(array $operands, Context $context): ?array
+    public function getCondition(array $operands, Context $context): ?Condition
     {
         if (
             array_keys($operands) !== [0, 1]
@@ -23,6 +23,6 @@ final class LikeHandler implements QueryHandlerInterface
         ) {
             throw new LogicException('Incorrect criteria for the "like" operator.');
         }
-        return ['LIKE', $operands[0], $operands[1]];
+        return new Condition(['LIKE', $operands[0], $operands[1]]);
     }
 }

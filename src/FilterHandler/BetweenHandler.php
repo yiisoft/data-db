@@ -15,7 +15,7 @@ final class BetweenHandler implements QueryHandlerInterface
         return Between::getOperator();
     }
 
-    public function getCondition(array $operands, Context $context): ?array
+    public function getCondition(array $operands, Context $context): ?Condition
     {
         if (
             array_keys($operands) !== [0, 1, 2]
@@ -25,11 +25,11 @@ final class BetweenHandler implements QueryHandlerInterface
         ) {
             throw new LogicException('Incorrect criteria for the "between" operator.');
         }
-        return [
+        return new Condition([
             'BETWEEN',
             $operands[0],
             $context->normalizeValueToScalar($operands[1]),
             $context->normalizeValueToScalar($operands[2]),
-        ];
+        ]);
     }
 }

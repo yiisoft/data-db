@@ -15,7 +15,7 @@ final class Context
     ) {
     }
 
-    public function handleCriteria(array $criteria): ?array
+    public function handleCriteria(array $criteria): ?Condition
     {
         return $this->criteriaHandler->handle($criteria);
     }

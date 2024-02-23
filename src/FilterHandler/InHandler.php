@@ -14,7 +14,7 @@ final class InHandler implements QueryHandlerInterface
         return In::getOperator();
     }
 
-    public function getCondition(array $operands, Context $context): ?array
+    public function getCondition(array $operands, Context $context): ?Condition
     {
         if (
             array_keys($operands) !== [0, 1]
@@ -23,6 +23,6 @@ final class InHandler implements QueryHandlerInterface
         ) {
             throw new LogicException('Incorrect criteria for the "in" operator.');
         }
-        return ['IN', $operands[0], $operands[1]];
+        return new Condition(['IN', $operands[0], $operands[1]]);
     }
 }
