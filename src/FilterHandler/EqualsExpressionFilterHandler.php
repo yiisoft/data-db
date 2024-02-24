@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\FilterHandler;
 
-use Yiisoft\Data\Db\Filter\ExpressionEquals;
+use Yiisoft\Data\Db\Filter\EqualsExpression;
 use Yiisoft\Data\Reader\FilterInterface;
 
-final class ExpressionEqualsFilterHandler implements QueryFilterHandlerInterface
+final class EqualsExpressionFilterHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {
-        return ExpressionEqualsFilterHandler::class;
+        return EqualsExpressionFilterHandler::class;
     }
 
     public function getCondition(FilterInterface $filter, Context $context): ?Condition
     {
-        /** @var ExpressionEquals $filter */
+        /** @var EqualsExpression $filter */
 
         return new Condition(['=', $filter->field, $filter->expression]);
     }

@@ -7,7 +7,7 @@ namespace Yiisoft\Data\Db\Filter;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\Expression\ExpressionInterface;
 
-final class ExpressionEquals implements FilterInterface
+final class EqualsExpression implements FilterInterface
 {
     public function __construct(
         public readonly string $field,
