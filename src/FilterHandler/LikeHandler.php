@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\FilterHandler;
 
+use InvalidArgumentException;
 use LogicException;
 use Yiisoft\Data\Reader\Filter\Like;
+use Yiisoft\Data\Reader\Filter\Not;
+use Yiisoft\Data\Reader\FilterInterface;
 
 final class LikeHandler implements QueryHandlerInterface
 {
-    public function getOperator(): string
+    public function getFilterClass(): string
     {
-        return Like::getOperator();
+        return Like::class;
     }
 
-    public function getCondition(array $operands, Context $context): ?Condition
+    public function getCondition(FilterInterface $filter, Context $context): ?Condition
     {
-        if (
-            array_keys($operands) !== [0, 1]
-            || !is_string($operands[0])
-            || !is_string($operands[1])
-        ) {
-            throw new LogicException('Incorrect criteria for the "like" operator.');
+        if (!$filter instanceof Like) {
+            throw new InvalidArgumentException('Incorrect filter.');
         }
-        return new Condition(['LIKE', $operands[0], $operands[1]]);
+
+        return new Condition(['LIKE', $filter->field, $filter->value]);
     }
 }

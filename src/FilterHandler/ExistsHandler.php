@@ -4,26 +4,26 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\FilterHandler;
 
+use InvalidArgumentException;
 use LogicException;
 use Yiisoft\Data\Db\Filter\Exists;
+use Yiisoft\Data\Reader\Filter\Any;
+use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\Query\QueryInterface;
 
 final class ExistsHandler implements QueryHandlerInterface
 {
-    public function getOperator(): string
+    public function getFilterClass(): string
     {
-        return Exists::getOperator();
+        return Exists::class;
     }
 
-    public function getCondition(array $operands, Context $context): ?Condition
+    public function getCondition(FilterInterface $filter, Context $context): ?Condition
     {
-        if (
-            array_keys($operands) !== [0]
-            || !$operands[0] instanceof QueryInterface
-        ) {
-            throw new LogicException('Incorrect criteria for the "exists" operator.');
+        if (!$filter instanceof Exists) {
+            throw new InvalidArgumentException('Incorrect filter.');
         }
 
-        return new Condition(['EXISTS', $operands[0]]);
+        return new Condition(['EXISTS', $filter->query]);
     }
 }

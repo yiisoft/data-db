@@ -6,6 +6,7 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use Yiisoft\Data\Db\CriteriaHandler;
 use Yiisoft\Data\Db\ValueNormalizerInterface;
+use Yiisoft\Data\Reader\FilterInterface;
 
 final class Context
 {
@@ -15,18 +16,13 @@ final class Context
     ) {
     }
 
-    public function handleCriteria(array $criteria): ?Condition
+    public function handleFilter(FilterInterface $filter): ?Condition
     {
-        return $this->criteriaHandler->handle($criteria);
+        return $this->criteriaHandler->handle($filter);
     }
 
     public function normalizeValueToScalar(mixed $value): bool|string|int|float
     {
         return $this->valueNormalizer->toScalar($value);
-    }
-
-    public function normalizeValueToScalarOrNull(mixed $value): bool|string|null|int|float
-    {
-        return $this->valueNormalizer->toScalarOrNull($value);
     }
 }

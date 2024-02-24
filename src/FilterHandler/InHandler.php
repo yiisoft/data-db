@@ -4,25 +4,24 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\FilterHandler;
 
+use InvalidArgumentException;
 use LogicException;
 use Yiisoft\Data\Reader\Filter\In;
+use Yiisoft\Data\Reader\FilterInterface;
 
 final class InHandler implements QueryHandlerInterface
 {
-    public function getOperator(): string
+    public function getFilterClass(): string
     {
-        return In::getOperator();
+        return In::class;
     }
 
-    public function getCondition(array $operands, Context $context): ?Condition
+    public function getCondition(FilterInterface $filter, Context $context): ?Condition
     {
-        if (
-            array_keys($operands) !== [0, 1]
-            || !is_string($operands[0])
-            || !is_array($operands[1])
-        ) {
-            throw new LogicException('Incorrect criteria for the "in" operator.');
+        if (!$filter instanceof In) {
+            throw new InvalidArgumentException('Incorrect filter.');
         }
-        return new Condition(['IN', $operands[0], $operands[1]]);
+
+        return new Condition(['IN', $filter->field, $filter->getValues()]);
     }
 }

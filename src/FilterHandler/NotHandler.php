@@ -4,25 +4,24 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\FilterHandler;
 
-use LogicException;
+use InvalidArgumentException;
+use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Filter\Not;
 
 final class NotHandler implements QueryHandlerInterface
 {
-    public function getOperator(): string
+    public function getFilterClass(): string
     {
-        return Not::getOperator();
+        return Not::class;
     }
 
-    public function getCondition(array $operands, Context $context): ?Condition
+    public function getCondition(FilterInterface $filter, Context $context): ?Condition
     {
-        if (
-            array_keys($operands) !== [0]
-            || !is_array($operands[0])
-        ) {
-            throw new LogicException('Incorrect criteria for the "not" operator.');
+        if (!$filter instanceof Not) {
+            throw new InvalidArgumentException('Incorrect filter.');
         }
-        $subCondition = $context->handleCriteria($operands[0]);
+
+        $subCondition = $context->handleFilter($filter->filter);
         if ($subCondition === null) {
             return null;
         }

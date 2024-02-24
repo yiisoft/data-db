@@ -23,6 +23,7 @@ use Yiisoft\Data\Db\FilterHandler\LikeHandler;
 use Yiisoft\Data\Db\FilterHandler\NotHandler;
 use Yiisoft\Data\Db\FilterHandler\QueryHandlerInterface;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
+use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\Query\QueryPartsInterface;
 
 /**
@@ -91,20 +92,9 @@ final class CriteriaHandler
         return $new;
     }
 
-    public function handle(array $criteria): ?Condition
+    public function handle(FilterInterface $filter): ?Condition
     {
-        if (!isset($criteria[0])) {
-            throw new LogicException('Incorrect criteria array.');
-        }
-
-        $operator = $criteria[0];
-        if (!is_string($operator)) {
-            throw new LogicException('Criteria operator must be a string.');
-        }
-
-        $operands = array_slice($criteria, 1);
-
-        return $this->getHandlerByOperator($operator)->getCondition($operands, $this->context);
+        return $this->getHandlerByOperator($filter::class)->getCondition($filter, $this->context);
     }
 
     private function getHandlerByOperator(string $operator): QueryHandlerInterface
@@ -120,13 +110,13 @@ final class CriteriaHandler
      * @param QueryHandlerInterface[] $handlers
      *
      * @return QueryHandlerInterface[]
-     * @psalm-return array<string, QueryHandlerInterface>
+     * @psalm-return array<class-string, QueryHandlerInterface>
      */
     private function prepareHandlers(array $handlers): array
     {
         $result = [];
         foreach ($handlers as $handler) {
-            $result[$handler->getOperator()] = $handler;
+            $result[$handler->getFilterClass()] = $handler;
         }
         return $result;
     }

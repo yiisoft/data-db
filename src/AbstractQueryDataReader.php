@@ -125,7 +125,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     protected function applyFilter(QueryInterface $query): QueryInterface
     {
         if ($this->filter !== null) {
-            $condition = $this->criteriaHandler->handle($this->filter->toCriteriaArray());
+            $condition = $this->criteriaHandler->handle($this->filter);
             if ($condition !== null) {
                 $query = $query->andWhere($condition->body, $condition->params);
             }
@@ -137,7 +137,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     protected function applyHaving(QueryInterface $query): QueryInterface
     {
         if ($this->having !== null) {
-            $condition = $this->criteriaHandler->handle($this->having->toCriteriaArray());
+            $condition = $this->criteriaHandler->handle($this->having);
             if ($condition !== null) {
                 $query = $query->andHaving($condition->body, $condition->params);
             }
