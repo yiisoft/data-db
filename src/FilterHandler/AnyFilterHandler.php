@@ -5,28 +5,26 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\FilterHandler;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\Filter\All;
+use Yiisoft\Data\Reader\Filter\Any;
 use Yiisoft\Data\Reader\FilterInterface;
 
-final class AllHandler implements QueryHandlerInterface
+final class AnyFilterHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {
-        return All::class;
+        return Any::class;
     }
 
     public function getCondition(FilterInterface $filter, Context $context): ?Condition
     {
-        if (!$filter instanceof All) {
-            throw new InvalidArgumentException('Incorrect filter.');
-        }
+        /** @var Any $filter */
 
         $filters = $filter->getFilters();
         if (empty($filters)) {
             return null;
         }
 
-        $body = ['AND'];
+        $body = ['OR'];
         $params = [];
 
         foreach ($filters as $subFilter) {

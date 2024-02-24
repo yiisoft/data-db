@@ -5,24 +5,25 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\FilterHandler;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
+use LogicException;
+use Yiisoft\Data\Db\Filter\Exists;
+use Yiisoft\Data\Reader\Filter\Any;
 use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Db\Query\QueryInterface;
 
-final class GreaterThanOrEqualHandler implements QueryHandlerInterface
+final class ExistsFilterHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {
-        return GreaterThanOrEqual::class;
+        return Exists::class;
     }
 
     public function getCondition(FilterInterface $filter, Context $context): ?Condition
     {
-        if (!$filter instanceof GreaterThanOrEqual) {
+        if (!$filter instanceof Exists) {
             throw new InvalidArgumentException('Incorrect filter.');
         }
 
-        return new Condition(
-            ['>=', $filter->field, $context->normalizeValueToScalar($filter->getValue())],
-        );
+        return new Condition(['EXISTS', $filter->query]);
     }
 }

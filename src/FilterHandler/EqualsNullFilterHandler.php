@@ -9,7 +9,7 @@ use LogicException;
 use Yiisoft\Data\Reader\Filter\EqualsNull;
 use Yiisoft\Data\Reader\FilterInterface;
 
-final class EqualsNullHandler implements QueryHandlerInterface
+final class EqualsNullFilterHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {
@@ -18,9 +18,7 @@ final class EqualsNullHandler implements QueryHandlerInterface
 
     public function getCondition(FilterInterface $filter, Context $context): ?Condition
     {
-        if (!$filter instanceof EqualsNull) {
-            throw new InvalidArgumentException('Incorrect filter.');
-        }
+        /** @var EqualsNull $filter */
 
         return new Condition(['IS', $filter->field, null]);
     }

@@ -7,16 +7,17 @@ namespace Yiisoft\Data\Db\FilterHandler;
 use Yiisoft\Data\Db\Filter\ExpressionEquals;
 use Yiisoft\Data\Reader\FilterInterface;
 
-final class ExpressionEqualsHandler implements QueryHandlerInterface
+final class ExpressionEqualsFilterHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {
-        return ExpressionEqualsHandler::class;
+        return ExpressionEqualsFilterHandler::class;
     }
 
     public function getCondition(FilterInterface $filter, Context $context): ?Condition
     {
         /** @var ExpressionEquals $filter */
+
         return new Condition(['=', $filter->field, $filter->expression]);
     }
 }

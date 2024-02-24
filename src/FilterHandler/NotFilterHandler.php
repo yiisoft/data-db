@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Filter\Not;
 
-final class NotHandler implements QueryHandlerInterface
+final class NotFilterHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {
@@ -17,9 +17,7 @@ final class NotHandler implements QueryHandlerInterface
 
     public function getCondition(FilterInterface $filter, Context $context): ?Condition
     {
-        if (!$filter instanceof Not) {
-            throw new InvalidArgumentException('Incorrect filter.');
-        }
+        /** @var Not $filter */
 
         $subCondition = $context->handleFilter($filter->filter);
         if ($subCondition === null) {

@@ -11,7 +11,7 @@ use Yiisoft\Data\Reader\Filter\Between;
 use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\FilterInterface;
 
-final class BetweenHandler implements QueryHandlerInterface
+final class BetweenFilterHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {
@@ -20,9 +20,7 @@ final class BetweenHandler implements QueryHandlerInterface
 
     public function getCondition(FilterInterface $filter, Context $context): ?Condition
     {
-        if (!$filter instanceof Between) {
-            throw new InvalidArgumentException('Incorrect filter.');
-        }
+        /** @var Between $filter */
 
         return new Condition([
             'BETWEEN',

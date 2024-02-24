@@ -10,7 +10,7 @@ use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Filter\Not;
 use Yiisoft\Data\Reader\FilterInterface;
 
-final class LikeHandler implements QueryHandlerInterface
+final class LikeFilterHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {
@@ -19,9 +19,7 @@ final class LikeHandler implements QueryHandlerInterface
 
     public function getCondition(FilterInterface $filter, Context $context): ?Condition
     {
-        if (!$filter instanceof Like) {
-            throw new InvalidArgumentException('Incorrect filter.');
-        }
+        /** @var Like $filter */
 
         return new Condition(['LIKE', $filter->field, $filter->value]);
     }

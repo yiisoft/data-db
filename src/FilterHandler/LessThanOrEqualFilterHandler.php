@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\FilterInterface;
 
-final class LessThanOrEqualHandler implements QueryHandlerInterface
+final class LessThanOrEqualFilterHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {
@@ -17,9 +17,7 @@ final class LessThanOrEqualHandler implements QueryHandlerInterface
 
     public function getCondition(FilterInterface $filter, Context $context): ?Condition
     {
-        if (!$filter instanceof LessThanOrEqual) {
-            throw new InvalidArgumentException('Incorrect filter.');
-        }
+        /** @var LessThanOrEqual $filter */
 
         return new Condition(
             ['<=', $filter->field, $context->normalizeValueToScalar($filter->getValue())],

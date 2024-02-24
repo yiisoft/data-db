@@ -9,7 +9,7 @@ use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\FilterInterface;
 
-final class EqualsHandler implements QueryHandlerInterface
+final class EqualsFilterHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {
@@ -18,9 +18,7 @@ final class EqualsHandler implements QueryHandlerInterface
 
     public function getCondition(FilterInterface $filter, Context $context): ?Condition
     {
-        if (!$filter instanceof Equals) {
-            throw new InvalidArgumentException('Incorrect filter.');
-        }
+        /** @var Equals $filter */
 
         return new Condition(
             ['=', $filter->field, $context->normalizeValueToScalar($filter->getValue())],

@@ -5,23 +5,23 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db;
 
 use LogicException;
-use Yiisoft\Data\Db\FilterHandler\AllHandler;
-use Yiisoft\Data\Db\FilterHandler\AnyHandler;
-use Yiisoft\Data\Db\FilterHandler\BetweenHandler;
+use Yiisoft\Data\Db\FilterHandler\AllFilterHandler;
+use Yiisoft\Data\Db\FilterHandler\AnyFilterHandler;
+use Yiisoft\Data\Db\FilterHandler\BetweenFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\Condition;
 use Yiisoft\Data\Db\FilterHandler\Context;
-use Yiisoft\Data\Db\FilterHandler\EqualsEmptyHandler;
-use Yiisoft\Data\Db\FilterHandler\EqualsHandler;
-use Yiisoft\Data\Db\FilterHandler\EqualsNullHandler;
-use Yiisoft\Data\Db\FilterHandler\ExistsHandler;
-use Yiisoft\Data\Db\FilterHandler\GreaterThanHandler;
-use Yiisoft\Data\Db\FilterHandler\GreaterThanOrEqualHandler;
-use Yiisoft\Data\Db\FilterHandler\InHandler;
-use Yiisoft\Data\Db\FilterHandler\LessThanHandler;
-use Yiisoft\Data\Db\FilterHandler\LessThanOrEqualHandler;
-use Yiisoft\Data\Db\FilterHandler\LikeHandler;
-use Yiisoft\Data\Db\FilterHandler\NotHandler;
-use Yiisoft\Data\Db\FilterHandler\QueryHandlerInterface;
+use Yiisoft\Data\Db\FilterHandler\EqualsEmptyFilterHandler;
+use Yiisoft\Data\Db\FilterHandler\EqualsFilterHandler;
+use Yiisoft\Data\Db\FilterHandler\EqualsNullFilterHandler;
+use Yiisoft\Data\Db\FilterHandler\ExistsFilterHandler;
+use Yiisoft\Data\Db\FilterHandler\GreaterThanFilterHandler;
+use Yiisoft\Data\Db\FilterHandler\GreaterThanOrEqualFilterHandler;
+use Yiisoft\Data\Db\FilterHandler\InFilterHandler;
+use Yiisoft\Data\Db\FilterHandler\LessThanFilterHandler;
+use Yiisoft\Data\Db\FilterHandler\LessThanOrEqualFilterHandler;
+use Yiisoft\Data\Db\FilterHandler\LikeFilterHandler;
+use Yiisoft\Data\Db\FilterHandler\NotFilterHandler;
+use Yiisoft\Data\Db\FilterHandler\QueryFilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\Query\QueryPartsInterface;
@@ -35,12 +35,12 @@ final class CriteriaHandler
     private Context $context;
 
     /**
-     * @psalm-var array<string, QueryHandlerInterface>
+     * @psalm-var array<string, QueryFilterHandlerInterface>
      */
     private array $handlers;
 
     /**
-     * @param QueryHandlerInterface[]|null $handlers
+     * @param QueryFilterHandlerInterface[]|null $handlers
      * @param ValueNormalizerInterface|null $valueNormalizer
      */
     public function __construct(
@@ -49,20 +49,20 @@ final class CriteriaHandler
     ) {
         if (empty($handlers)) {
             $handlers = [
-                new AllHandler(),
-                new AnyHandler(),
-                new EqualsHandler(),
-                new GreaterThanHandler(),
-                new GreaterThanOrEqualHandler(),
-                new LessThanHandler(),
-                new LessThanOrEqualHandler(),
-                new LikeHandler(),
-                new InHandler(),
-                new ExistsHandler(),
-                new NotHandler(),
-                new BetweenHandler(),
-                new EqualsNullHandler(),
-                new EqualsEmptyHandler(),
+                new AllFilterHandler(),
+                new AnyFilterHandler(),
+                new EqualsFilterHandler(),
+                new GreaterThanFilterHandler(),
+                new GreaterThanOrEqualFilterHandler(),
+                new LessThanFilterHandler(),
+                new LessThanOrEqualFilterHandler(),
+                new LikeFilterHandler(),
+                new InFilterHandler(),
+                new ExistsFilterHandler(),
+                new NotFilterHandler(),
+                new BetweenFilterHandler(),
+                new EqualsNullFilterHandler(),
+                new EqualsEmptyFilterHandler(),
             ];
         }
 
@@ -73,16 +73,16 @@ final class CriteriaHandler
     public function withFilterHandlers(FilterHandlerInterface ...$handlers): self
     {
         foreach ($handlers as $handler) {
-            if (!$handler instanceof QueryHandlerInterface) {
+            if (!$handler instanceof QueryFilterHandlerInterface) {
                 throw new LogicException(
                     sprintf(
                         'Filter handler must implement "%s".',
-                        QueryHandlerInterface::class,
+                        QueryFilterHandlerInterface::class,
                     )
                 );
             }
         }
-        /** @var QueryHandlerInterface[] $handlers */
+        /** @var QueryFilterHandlerInterface[] $handlers */
 
         $new = clone $this;
         $new->handlers = array_merge(
@@ -97,7 +97,7 @@ final class CriteriaHandler
         return $this->getHandlerByOperator($filter::class)->getCondition($filter, $this->context);
     }
 
-    private function getHandlerByOperator(string $operator): QueryHandlerInterface
+    private function getHandlerByOperator(string $operator): QueryFilterHandlerInterface
     {
         if (!isset($this->handlers[$operator])) {
             throw new LogicException(sprintf('Operator "%s" is not supported', $operator));
@@ -107,10 +107,10 @@ final class CriteriaHandler
     }
 
     /**
-     * @param QueryHandlerInterface[] $handlers
+     * @param QueryFilterHandlerInterface[] $handlers
      *
-     * @return QueryHandlerInterface[]
-     * @psalm-return array<class-string, QueryHandlerInterface>
+     * @return QueryFilterHandlerInterface[]
+     * @psalm-return array<class-string, QueryFilterHandlerInterface>
      */
     private function prepareHandlers(array $handlers): array
     {

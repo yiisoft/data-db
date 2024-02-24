@@ -5,24 +5,22 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\FilterHandler;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\Filter\LessThan;
+use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\FilterInterface;
 
-final class LessThanHandler implements QueryHandlerInterface
+final class GreaterThanOrEqualFilterHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {
-        return LessThan::class;
+        return GreaterThanOrEqual::class;
     }
 
     public function getCondition(FilterInterface $filter, Context $context): ?Condition
     {
-        if (!$filter instanceof LessThan) {
-            throw new InvalidArgumentException('Incorrect filter.');
-        }
+        /** @var GreaterThanOrEqual $filter */
 
         return new Condition(
-            ['<', $filter->field, $context->normalizeValueToScalar($filter->getValue())],
+            ['>=', $filter->field, $context->normalizeValueToScalar($filter->getValue())],
         );
     }
 }

@@ -9,7 +9,7 @@ use LogicException;
 use Yiisoft\Data\Reader\Filter\In;
 use Yiisoft\Data\Reader\FilterInterface;
 
-final class InHandler implements QueryHandlerInterface
+final class InFilterHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {
@@ -18,9 +18,7 @@ final class InHandler implements QueryHandlerInterface
 
     public function getCondition(FilterInterface $filter, Context $context): ?Condition
     {
-        if (!$filter instanceof In) {
-            throw new InvalidArgumentException('Incorrect filter.');
-        }
+        /** @var In $filter */
 
         return new Condition(['IN', $filter->field, $filter->getValues()]);
     }
