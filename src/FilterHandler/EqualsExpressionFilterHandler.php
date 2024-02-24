@@ -11,7 +11,7 @@ final class EqualsExpressionFilterHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {
-        return EqualsExpressionFilterHandler::class;
+        return self::class;
     }
 
     public function getCondition(FilterInterface $filter, Context $context): ?Condition

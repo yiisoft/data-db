@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\FilterHandler;
 
-use InvalidArgumentException;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
-use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\FilterInterface;
 
 final class GreaterThanFilterHandler implements QueryFilterHandlerInterface

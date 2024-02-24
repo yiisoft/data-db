@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\FilterHandler;
 
-use DateTimeInterface;
-use InvalidArgumentException;
-use LogicException;
 use Yiisoft\Data\Reader\Filter\Between;
-use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\FilterInterface;
 
 final class BetweenFilterHandler implements QueryFilterHandlerInterface

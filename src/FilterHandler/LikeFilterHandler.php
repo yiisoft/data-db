@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\FilterHandler;
 
-use InvalidArgumentException;
-use LogicException;
 use Yiisoft\Data\Reader\Filter\Like;
-use Yiisoft\Data\Reader\Filter\Not;
 use Yiisoft\Data\Reader\FilterInterface;
 
 final class LikeFilterHandler implements QueryFilterHandlerInterface
