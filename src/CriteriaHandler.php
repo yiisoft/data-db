@@ -10,7 +10,6 @@ use Yiisoft\Data\Db\FilterHandler\AnyFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\BetweenFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\Condition;
 use Yiisoft\Data\Db\FilterHandler\Context;
-use Yiisoft\Data\Db\FilterHandler\EqualsEmptyFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\EqualsFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\EqualsNullFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\ExistsFilterHandler;
@@ -62,7 +61,6 @@ final class CriteriaHandler
                 new NotFilterHandler(),
                 new BetweenFilterHandler(),
                 new EqualsNullFilterHandler(),
-                new EqualsEmptyFilterHandler(),
             ];
         }
 

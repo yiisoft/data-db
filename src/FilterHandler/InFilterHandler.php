@@ -18,6 +18,6 @@ final class InFilterHandler implements QueryFilterHandlerInterface
     {
         /** @var In $filter */
 
-        return new Condition(['IN', $filter->field, $filter->getValues()]);
+        return new Condition(['IN', $filter->getField(), $filter->getValues()]);
     }
 }

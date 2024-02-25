@@ -18,7 +18,7 @@ final class NotFilterHandler implements QueryFilterHandlerInterface
     {
         /** @var Not $filter */
 
-        $subCondition = $context->handleFilter($filter->filter);
+        $subCondition = $context->handleFilter($filter->getFilter());
         if ($subCondition === null) {
             return null;
         }

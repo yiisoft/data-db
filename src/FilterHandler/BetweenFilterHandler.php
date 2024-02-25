@@ -20,9 +20,9 @@ final class BetweenFilterHandler implements QueryFilterHandlerInterface
 
         return new Condition([
             'BETWEEN',
-            $filter->field,
-            $context->normalizeValueToScalar($filter->minValue),
-            $context->normalizeValueToScalar($filter->maxValue),
+            $filter->getField(),
+            $context->normalizeValueToScalar($filter->getMinValue()),
+            $context->normalizeValueToScalar($filter->getMaxValue()),
         ]);
     }
 }

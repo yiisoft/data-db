@@ -19,7 +19,7 @@ final class GreaterThanOrEqualFilterHandler implements QueryFilterHandlerInterfa
         /** @var GreaterThanOrEqual $filter */
 
         return new Condition(
-            ['>=', $filter->field, $context->normalizeValueToScalar($filter->getValue())],
+            ['>=', $filter->getField(), $context->normalizeValueToScalar($filter->getValue())],
         );
     }
 }

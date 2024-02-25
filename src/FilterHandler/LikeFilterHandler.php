@@ -18,6 +18,6 @@ final class LikeFilterHandler implements QueryFilterHandlerInterface
     {
         /** @var Like $filter */
 
-        return new Condition(['LIKE', $filter->field, $filter->value]);
+        return new Condition(['LIKE', $filter->getField(), $filter->getValue()]);
     }
 }
