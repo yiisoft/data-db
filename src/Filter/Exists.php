@@ -9,17 +9,13 @@ use Yiisoft\Db\Query\QueryInterface;
 
 final class Exists implements FilterInterface
 {
-    public function __construct(private readonly QueryInterface $query)
-    {
+    public function __construct(
+        private readonly QueryInterface $query,
+    ) {
     }
 
-    public static function getOperator(): string
+    public function getQuery(): QueryInterface
     {
-        return 'exists';
-    }
-
-    public function toCriteriaArray(): array
-    {
-        return [self::getOperator(), $this->query];
+        return $this->query;
     }
 }

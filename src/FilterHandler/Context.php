@@ -4,29 +4,25 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\FilterHandler;
 
-use Yiisoft\Data\Db\CriteriaHandler;
+use Yiisoft\Data\Db\FilterHandler;
 use Yiisoft\Data\Db\ValueNormalizerInterface;
+use Yiisoft\Data\Reader\FilterInterface;
 
 final class Context
 {
     public function __construct(
-        private readonly CriteriaHandler $criteriaHandler,
+        private readonly FilterHandler $filterHandler,
         private readonly ValueNormalizerInterface $valueNormalizer,
     ) {
     }
 
-    public function handleCriteria(array $criteria): ?array
+    public function handleFilter(FilterInterface $filter): ?Criteria
     {
-        return $this->criteriaHandler->handle($criteria);
+        return $this->filterHandler->handle($filter);
     }
 
     public function normalizeValueToScalar(mixed $value): bool|string|int|float
     {
         return $this->valueNormalizer->toScalar($value);
-    }
-
-    public function normalizeValueToScalarOrNull(mixed $value): bool|string|null|int|float
-    {
-        return $this->valueNormalizer->toScalarOrNull($value);
     }
 }

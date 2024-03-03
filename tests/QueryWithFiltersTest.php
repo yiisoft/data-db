@@ -145,55 +145,43 @@ final class QueryWithFiltersTest extends TestCase
                 "([greater_than] > 15) OR ([less_than_or_equal] <= 10) OR ([not_equals] != 'test') OR (([id] = 8) AND ([name] LIKE '%bar%'))",
             ],
             [
-                (new All())->withCriteriaArray([
-                    ['>', 'id', 88],
-                    [
-                        'or',
-                        [
-                            ['=', 'state', 2],
-                            ['like', 'name', 'eva'],
-                        ],
-                    ],
-                ]),
+                new All(
+                    new GreaterThan('id', 88),
+                    new Any(
+                        new Equals('state', 2),
+                        new Like('name', 'eva'),
+                    )
+                ),
                 "([id] > 88) AND (([state] = 2) OR ([name] LIKE '%eva%'))",
             ],
             [
-                (new Any())->withCriteriaArray([
-                    ['>', 'id', 88],
-                    [
-                        'and',
-                        [
-                            ['=', 'state', 2],
-                            ['like', 'name', 'eva'],
-                        ],
-                    ],
-                ]),
+                new Any(
+                    new GreaterThan('id', 88),
+                    new All(
+                        new Equals('state', 2),
+                        new Like('name', 'eva'),
+                    )
+                ),
                 "([id] > 88) OR (([state] = 2) AND ([name] LIKE '%eva%'))",
             ],
             [
-                (new Any())->withCriteriaArray([
-                    ['>', 'id', 88],
-                    [
-                        'or',
-                        [
-                            ['=', 'state', 2],
-                            ['like', 'name', 'eva'],
-                        ],
-                    ],
-                ]),
+                new Any(
+                    new GreaterThan('id', 88),
+                    new Any(
+                        new Equals('state', 2),
+                        new Like('name', 'eva'),
+                    )
+                ),
                 "([id] > 88) OR (([state] = 2) OR ([name] LIKE '%eva%'))",
             ],
             [
-                (new All())->withCriteriaArray([
-                    ['>', 'id', 88],
-                    [
-                        'and',
-                        [
-                            ['=', 'state', 2],
-                            ['like', 'name', 'eva'],
-                        ],
-                    ],
-                ]),
+                new All(
+                    new GreaterThan('id', 88),
+                    new All(
+                        new Equals('state', 2),
+                        new Like('name', 'eva'),
+                    )
+                ),
                 "([id] > 88) AND (([state] = 2) AND ([name] LIKE '%eva%'))",
             ],
         ];
