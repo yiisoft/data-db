@@ -14,10 +14,10 @@ final class InFilterHandler implements QueryFilterHandlerInterface
         return In::class;
     }
 
-    public function getCondition(FilterInterface $filter, Context $context): ?Condition
+    public function getCriteria(FilterInterface $filter, Context $context): ?Criteria
     {
         /** @var In $filter */
 
-        return new Condition(['IN', $filter->getField(), $filter->getValues()]);
+        return new Criteria(['IN', $filter->getField(), $filter->getValues()]);
     }
 }

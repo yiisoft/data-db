@@ -15,12 +15,12 @@ final class ExistsFilterHandler implements QueryFilterHandlerInterface
         return Exists::class;
     }
 
-    public function getCondition(FilterInterface $filter, Context $context): ?Condition
+    public function getCriteria(FilterInterface $filter, Context $context): ?Criteria
     {
         if (!$filter instanceof Exists) {
             throw new InvalidArgumentException('Incorrect filter.');
         }
 
-        return new Condition(['EXISTS', $filter->getQuery()]);
+        return new Criteria(['EXISTS', $filter->getQuery()]);
     }
 }

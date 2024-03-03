@@ -14,7 +14,7 @@ final class AnyFilterHandler implements QueryFilterHandlerInterface
         return Any::class;
     }
 
-    public function getCondition(FilterInterface $filter, Context $context): ?Condition
+    public function getCriteria(FilterInterface $filter, Context $context): ?Criteria
     {
         /** @var Any $filter */
 
@@ -23,16 +23,16 @@ final class AnyFilterHandler implements QueryFilterHandlerInterface
             return null;
         }
 
-        $body = ['OR'];
+        $condition = ['OR'];
         $params = [];
 
         foreach ($filters as $subFilter) {
-            $condition = $context->handleFilter($subFilter);
-            if ($condition !== null) {
-                $body[] = $condition->body;
-                $params = array_merge($params, $condition->params);
+            $criteria = $context->handleFilter($subFilter);
+            if ($criteria !== null) {
+                $condition[] = $criteria->condition;
+                $params = array_merge($params, $criteria->params);
             }
         }
-        return new Condition($body, $params);
+        return new Criteria($condition, $params);
     }
 }

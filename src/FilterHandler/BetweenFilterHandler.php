@@ -14,11 +14,11 @@ final class BetweenFilterHandler implements QueryFilterHandlerInterface
         return Between::class;
     }
 
-    public function getCondition(FilterInterface $filter, Context $context): ?Condition
+    public function getCriteria(FilterInterface $filter, Context $context): ?Criteria
     {
         /** @var Between $filter */
 
-        return new Condition([
+        return new Criteria([
             'BETWEEN',
             $filter->getField(),
             $context->normalizeValueToScalar($filter->getMinValue()),

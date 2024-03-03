@@ -14,11 +14,11 @@ final class EqualsFilterHandler implements QueryFilterHandlerInterface
         return Equals::class;
     }
 
-    public function getCondition(FilterInterface $filter, Context $context): ?Condition
+    public function getCriteria(FilterInterface $filter, Context $context): ?Criteria
     {
         /** @var Equals $filter */
 
-        return new Condition(
+        return new Criteria(
             ['=', $filter->getField(), $context->normalizeValueToScalar($filter->getValue())],
         );
     }

@@ -14,10 +14,10 @@ final class EqualsExpressionFilterHandler implements QueryFilterHandlerInterface
         return self::class;
     }
 
-    public function getCondition(FilterInterface $filter, Context $context): ?Condition
+    public function getCriteria(FilterInterface $filter, Context $context): ?Criteria
     {
         /** @var EqualsExpression $filter */
 
-        return new Condition(['=', $filter->getField(), $filter->getExpression()]);
+        return new Criteria(['=', $filter->getField(), $filter->getExpression()]);
     }
 }

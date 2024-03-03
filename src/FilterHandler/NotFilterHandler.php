@@ -14,19 +14,19 @@ final class NotFilterHandler implements QueryFilterHandlerInterface
         return Not::class;
     }
 
-    public function getCondition(FilterInterface $filter, Context $context): ?Condition
+    public function getCriteria(FilterInterface $filter, Context $context): ?Criteria
     {
         /** @var Not $filter */
 
-        $subCondition = $context->handleFilter($filter->getFilter());
-        if ($subCondition === null) {
+        $subCriteria = $context->handleFilter($filter->getFilter());
+        if ($subCriteria === null) {
             return null;
         }
 
-        $body = $subCondition->body;
-        $params = $subCondition->params;
+        $condition = $subCriteria->condition;
+        $params = $subCriteria->params;
 
-        if (isset($body[0]) && is_string($body[0])) {
+        if (isset($condition[0]) && is_string($condition[0])) {
             $convert = [
                 'IS' => 'IS NOT',
                 'IN' => 'NOT IN',
@@ -40,13 +40,13 @@ final class NotFilterHandler implements QueryFilterHandlerInterface
                 '<=' => '>',
                 '=' => '!=',
             ];
-            $operator = strtoupper($body[0]);
+            $operator = strtoupper($condition[0]);
             if (isset($convert[$operator])) {
-                $body[0] = $convert[$operator];
-                return new Condition($body, $params);
+                $condition[0] = $convert[$operator];
+                return new Criteria($condition, $params);
             }
         }
 
-        return new Condition(['NOT', $body], $params);
+        return new Criteria(['NOT', $condition], $params);
     }
 }

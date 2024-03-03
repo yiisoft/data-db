@@ -14,10 +14,10 @@ final class EqualsNullFilterHandler implements QueryFilterHandlerInterface
         return EqualsNull::class;
     }
 
-    public function getCondition(FilterInterface $filter, Context $context): ?Condition
+    public function getCriteria(FilterInterface $filter, Context $context): ?Criteria
     {
         /** @var EqualsNull $filter */
 
-        return new Condition(['IS', $filter->getField(), null]);
+        return new Criteria(['IS', $filter->getField(), null]);
     }
 }

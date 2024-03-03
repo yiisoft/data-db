@@ -22,7 +22,7 @@ use function is_array;
  */
 abstract class AbstractQueryDataReader implements QueryDataReaderInterface
 {
-    private CriteriaHandler $criteriaHandler;
+    private FilterHandler $filterHandler;
 
     private ?Sort $sort = null;
     private ?FilterInterface $filter = null;
@@ -45,9 +45,9 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
 
     public function __construct(
         private QueryInterface $query,
-        ?CriteriaHandler $filterHandler = null,
+        ?FilterHandler $filterHandler = null,
     ) {
-        $this->criteriaHandler = $filterHandler ?? new CriteriaHandler();
+        $this->filterHandler = $filterHandler ?? new FilterHandler();
     }
 
     /**
@@ -125,9 +125,9 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     protected function applyFilter(QueryInterface $query): QueryInterface
     {
         if ($this->filter !== null) {
-            $condition = $this->criteriaHandler->handle($this->filter);
+            $condition = $this->filterHandler->handle($this->filter);
             if ($condition !== null) {
-                $query = $query->andWhere($condition->body, $condition->params);
+                $query = $query->andWhere($condition->condition, $condition->params);
             }
         }
 
@@ -137,9 +137,9 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     protected function applyHaving(QueryInterface $query): QueryInterface
     {
         if ($this->having !== null) {
-            $condition = $this->criteriaHandler->handle($this->having);
+            $condition = $this->filterHandler->handle($this->having);
             if ($condition !== null) {
-                $query = $query->andHaving($condition->body, $condition->params);
+                $query = $query->andHaving($condition->condition, $condition->params);
             }
         }
 
@@ -259,7 +259,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     {
         $new = clone $this;
         $new->count = $new->data = null;
-        $new->criteriaHandler = $this->criteriaHandler->withFilterHandlers(...$filterHandlers);
+        $new->filterHandler = $this->filterHandler->withFilterHandlers(...$filterHandlers);
         return $new;
     }
 

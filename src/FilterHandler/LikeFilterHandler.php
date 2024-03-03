@@ -14,10 +14,10 @@ final class LikeFilterHandler implements QueryFilterHandlerInterface
         return Like::class;
     }
 
-    public function getCondition(FilterInterface $filter, Context $context): ?Condition
+    public function getCriteria(FilterInterface $filter, Context $context): ?Criteria
     {
         /** @var Like $filter */
 
-        return new Condition(['LIKE', $filter->getField(), $filter->getValue()]);
+        return new Criteria(['LIKE', $filter->getField(), $filter->getValue()]);
     }
 }

@@ -8,7 +8,7 @@ use LogicException;
 use Yiisoft\Data\Db\FilterHandler\AllFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\AnyFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\BetweenFilterHandler;
-use Yiisoft\Data\Db\FilterHandler\Condition;
+use Yiisoft\Data\Db\FilterHandler\Criteria;
 use Yiisoft\Data\Db\FilterHandler\Context;
 use Yiisoft\Data\Db\FilterHandler\EqualsFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\EqualsNullFilterHandler;
@@ -26,10 +26,10 @@ use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\Query\QueryPartsInterface;
 
 /**
- * `CriteriaHandler` processes filter criteria array from {@see FilterInterface::toCriteriaArray()} into condition array
- * that is used in {@see QueryPartsInterface::andWhere()} and {@see QueryPartsInterface::andHaving()}.
+ * `FilterHandler` processes filters into {@see Criteria} object that is used in {@see QueryPartsInterface::andWhere()}
+ * and {@see QueryPartsInterface::andHaving()}.
  */
-final class CriteriaHandler
+final class FilterHandler
 {
     private Context $context;
 
@@ -90,9 +90,9 @@ final class CriteriaHandler
         return $new;
     }
 
-    public function handle(FilterInterface $filter): ?Condition
+    public function handle(FilterInterface $filter): ?Criteria
     {
-        return $this->getHandlerByOperator($filter::class)->getCondition($filter, $this->context);
+        return $this->getHandlerByOperator($filter::class)->getCriteria($filter, $this->context);
     }
 
     private function getHandlerByOperator(string $operator): QueryFilterHandlerInterface
