@@ -151,7 +151,7 @@ Takes only one argument with type of`Yiisoft\Data\Reader\Filter\FilterInterface`
 
 ## Documentation
 
-- More information can be found in the [Internals.](docs/internals.md)
+- [Internals](docs/internals.md)
 
 ## Support
 
