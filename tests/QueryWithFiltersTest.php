@@ -32,47 +32,47 @@ final class QueryWithFiltersTest extends TestCase
         return [
             'equals' => [
                 new Equals('equals', 1),
-                '[equals] = 1',
+                '`equals` = 1',
             ],
             'equals-datetime' => [
                 new Equals('column', new DateTime('2011-01-01T15:03:01.012345Z')),
-                "[column] = '2011-01-01 15:03:01'",
+                "`column` = '2011-01-01 15:03:01'",
             ],
             'between' => [
                 new Between('column', 100, 300),
-                '[column] BETWEEN 100 AND 300',
+                '`column` BETWEEN 100 AND 300',
             ],
             'between-dates' => [
                 new Between('column', new DateTime('2011-01-01T15:00:01'), new DateTime('2011-01-01T15:10:01')),
-                "[column] BETWEEN '2011-01-01 15:00:01' AND '2011-01-01 15:10:01'",
+                "`column` BETWEEN '2011-01-01 15:00:01' AND '2011-01-01 15:10:01'",
             ],
             'greater-than' => [
                 new GreaterThan('column', 1000),
-                '[column] > 1000',
+                '`column` > 1000',
             ],
             'greater-than-date' => [
                 new GreaterThan('column', new DateTime('2011-01-01T15:00:01')),
-                "[column] > '2011-01-01 15:00:01'",
+                "`column` > '2011-01-01 15:00:01'",
             ],
             [
                 new GreaterThanOrEqual('column', 3.5),
-                '[column] >= 3.5',
+                '`column` >= \'3.5\'',
             ],
             [
                 new LessThan('column', 10.7),
-                '[column] < 10.7',
+                '`column` < \'10.7\'',
             ],
             [
                 new LessThanOrEqual('column', 100),
-                '[column] <= 100',
+                '`column` <= 100',
             ],
             [
                 new In('column', [10, 20.5, 30]),
-                '[column] IN (10, 20.5, 30)',
+                '`column` IN (10, \'20.5\', 30)',
             ],
             'like' => [
                 new Like('column', 'foo'),
-                "[column] LIKE '%foo%'",
+                "`column` LIKE '%foo%' ESCAPE '\'",
             ],
         ];
     }
@@ -89,7 +89,7 @@ final class QueryWithFiltersTest extends TestCase
         $dataReader = (new QueryDataReader($query))
             ->withFilter($filter);
 
-        $expected = 'SELECT * FROM [customer] WHERE ' . $condition;
+        $expected = 'SELECT * FROM `customer` WHERE ' . $condition;
 
         $this->assertSame(
             $dataReader->getPreparedQuery()->createCommand()->getRawSql(),
@@ -109,7 +109,7 @@ final class QueryWithFiltersTest extends TestCase
         $dataReader = (new QueryDataReader($query))
             ->withHaving($having);
 
-        $expected = 'SELECT * FROM [customer] HAVING ' . $condition;
+        $expected = 'SELECT * FROM `customer` HAVING ' . $condition;
 
         $this->assertSame(
             $dataReader->getPreparedQuery()->createCommand()->getRawSql(),
@@ -130,7 +130,7 @@ final class QueryWithFiltersTest extends TestCase
                         new Like('name', 'foo')
                     )
                 ),
-                "([null_column] IS NULL) AND ([equals] = 10) AND ([between] BETWEEN 10 AND 20) AND (([id] = 8) OR ([name] LIKE '%foo%'))",
+                "(`null_column` IS NULL) AND (`equals` = 10) AND (`between` BETWEEN 10 AND 20) AND ((`id` = 8) OR (`name` LIKE '%foo%' ESCAPE '\'))",
             ],
             [
                 new Any(
@@ -142,7 +142,7 @@ final class QueryWithFiltersTest extends TestCase
                         new Like('name', 'bar')
                     )
                 ),
-                "([greater_than] > 15) OR ([less_than_or_equal] <= 10) OR ([not_equals] != 'test') OR (([id] = 8) AND ([name] LIKE '%bar%'))",
+                "(`greater_than` > 15) OR (`less_than_or_equal` <= 10) OR (`not_equals` != 'test') OR ((`id` = 8) AND (`name` LIKE '%bar%' ESCAPE '\'))",
             ],
             [
                 new All(
@@ -152,7 +152,7 @@ final class QueryWithFiltersTest extends TestCase
                         new Like('name', 'eva'),
                     )
                 ),
-                "([id] > 88) AND (([state] = 2) OR ([name] LIKE '%eva%'))",
+                "(`id` > 88) AND ((`state` = 2) OR (`name` LIKE '%eva%' ESCAPE '\'))",
             ],
             [
                 new Any(
@@ -162,7 +162,7 @@ final class QueryWithFiltersTest extends TestCase
                         new Like('name', 'eva'),
                     )
                 ),
-                "([id] > 88) OR (([state] = 2) AND ([name] LIKE '%eva%'))",
+                "(`id` > 88) OR ((`state` = 2) AND (`name` LIKE '%eva%' ESCAPE '\'))",
             ],
             [
                 new Any(
@@ -172,7 +172,7 @@ final class QueryWithFiltersTest extends TestCase
                         new Like('name', 'eva'),
                     )
                 ),
-                "([id] > 88) OR (([state] = 2) OR ([name] LIKE '%eva%'))",
+                "(`id` > 88) OR ((`state` = 2) OR (`name` LIKE '%eva%' ESCAPE '\'))",
             ],
             [
                 new All(
@@ -182,7 +182,7 @@ final class QueryWithFiltersTest extends TestCase
                         new Like('name', 'eva'),
                     )
                 ),
-                "([id] > 88) AND (([state] = 2) AND ([name] LIKE '%eva%'))",
+                "(`id` > 88) AND ((`state` = 2) AND (`name` LIKE '%eva%' ESCAPE '\'))",
             ],
         ];
     }

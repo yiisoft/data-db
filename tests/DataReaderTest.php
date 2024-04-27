@@ -79,7 +79,7 @@ final class DataReaderTest extends TestCase
                     'email',
                 ])
                 ->withOrderString('-name,email'),
-                '[name] DESC, [email]',
+                '`name` DESC, `email`',
             ],
             [
                 Sort::any([
@@ -87,7 +87,7 @@ final class DataReaderTest extends TestCase
                     'email',
                 ])
                 ->withOrderString('-name,-email'),
-                '[name] DESC, [email] DESC',
+                '`name` DESC, `email` DESC',
             ],
             [
                 Sort::any([
@@ -96,7 +96,7 @@ final class DataReaderTest extends TestCase
                 ])
                 ->withoutDefaultSorting()
                 ->withOrderString('-email'),
-                '[email] DESC',
+                '`email` DESC',
             ],
             [
                 Sort::any([
@@ -104,7 +104,7 @@ final class DataReaderTest extends TestCase
                     'email',
                 ])
                 ->withOrderString('-email'),
-                '[email] DESC, [name]',
+                '`email` DESC, `name`',
             ],
             [
                 Sort::any([
@@ -118,7 +118,7 @@ final class DataReaderTest extends TestCase
                     ],
                 ])
                 ->withOrderString('-name'),
-                '[name] DESC NULLS LAST',
+                '`name` DESC NULLS LAST',
             ],
         ];
     }

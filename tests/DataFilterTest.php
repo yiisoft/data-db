@@ -28,35 +28,35 @@ final class DataFilterTest extends TestCase
         return [
             'equals' => [
                 new Equals('equals', 1),
-                '[equals] = 1',
+                '`equals` = 1',
             ],
             'between' => [
                 new Between('column', 100, 300),
-                '[column] BETWEEN 100 AND 300',
+                '`column` BETWEEN 100 AND 300',
             ],
             'greater-than' => [
                 new GreaterThan('column', 1000),
-                '[column] > 1000',
+                '`column` > 1000',
             ],
             'greater-than-or-equal' => [
                 new GreaterThanOrEqual('column', 3.5),
-                '[column] >= 3.5',
+                '`column` >= \'3.5\'',
             ],
             'less-than' => [
                 new LessThan('column', 10.7),
-                '[column] < 10.7',
+                '`column` < \'10.7\'',
             ],
             'less-than-or-equal' => [
                 new LessThanOrEqual('column', 100),
-                '[column] <= 100',
+                '`column` <= 100',
             ],
             'in' => [
                 new In('column', [10, 20, 30]),
-                '[column] IN (10, 20, 30)',
+                '`column` IN (10, 20, 30)',
             ],
             'like' => [
                 new Like('column', 'foo'),
-                "[column] LIKE '%foo%'",
+                "`column` LIKE '%foo%' ESCAPE '\'",
             ],
         ];
     }
@@ -73,7 +73,7 @@ final class DataFilterTest extends TestCase
         $dataReader = (new QueryDataReader($query))
             ->withFilter($filter);
 
-        $expected = 'SELECT * FROM [customer] WHERE ' . $condition;
+        $expected = 'SELECT * FROM `customer` WHERE ' . $condition;
 
         $this->assertSame(
             $dataReader->getPreparedQuery()->createCommand()->getRawSql(),
@@ -86,35 +86,35 @@ final class DataFilterTest extends TestCase
         return [
             'equals' => [
                 new Not(new Equals('equals', 1)),
-                '[equals] != 1',
+                '`equals` != 1',
             ],
             'between' => [
                 new Not(new Between('column', 100, 300)),
-                '[column] NOT BETWEEN 100 AND 300',
+                '`column` NOT BETWEEN 100 AND 300',
             ],
             'greater-than' => [
                 new Not(new GreaterThan('column', 1000)),
-                '[column] <= 1000',
+                '`column` <= 1000',
             ],
-            'greater-than-or-equal' => [
+            'greater-than-or-equal1' => [
                 new Not(new GreaterThanOrEqual('column', 3.5)),
-                '[column] < 3.5',
+                '`column` < \'3.5\'',
             ],
             'less-than' => [
                 new Not(new LessThan('column', 10.7)),
-                '[column] >= 10.7',
+                '`column` >= \'10.7\'',
             ],
             'less-than-or-equal' => [
                 new Not(new LessThanOrEqual('column', 100)),
-                '[column] > 100',
+                '`column` > 100',
             ],
             'in' => [
                 new Not(new In('column', [10, 20, 30])),
-                '[column] NOT IN (10, 20, 30)',
+                '`column` NOT IN (10, 20, 30)',
             ],
             'like' => [
                 new Not(new Like('column', 'foo')),
-                "[column] NOT LIKE '%foo%'",
+                "`column` NOT LIKE '%foo%' ESCAPE '\'",
             ],
         ];
     }
@@ -131,7 +131,7 @@ final class DataFilterTest extends TestCase
         $dataReader = (new QueryDataReader($query))
             ->withFilter($filter);
 
-        $expected = 'SELECT * FROM [customer] WHERE ' . $condition;
+        $expected = 'SELECT * FROM `customer` WHERE ' . $condition;
 
         $this->assertSame(
             $dataReader->getPreparedQuery()->createCommand()->getRawSql(),
