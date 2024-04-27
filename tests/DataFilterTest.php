@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Db\Tests\Support\TestTrait;
@@ -23,7 +24,7 @@ final class DataFilterTest extends TestCase
 {
     use TestTrait;
 
-    public function simpleDataProvider(): array
+    public static function simpleDataProvider(): array
     {
         return [
             'equals' => [
@@ -61,9 +62,7 @@ final class DataFilterTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider simpleDataProvider
-     */
+    #[DataProvider('simpleDataProvider')]
     public function testSimpleFilter(FilterInterface $filter, string $condition): void
     {
         $db = $this->getConnection();
@@ -81,7 +80,7 @@ final class DataFilterTest extends TestCase
         );
     }
 
-    public function notDataProvider(): array
+    public static function notDataProvider(): array
     {
         return [
             'equals' => [
@@ -119,9 +118,7 @@ final class DataFilterTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider notDataProvider
-     */
+    #[DataProvider('notDataProvider')]
     public function testNotFilter(FilterInterface $filter, string $condition): void
     {
         $db = $this->getConnection();

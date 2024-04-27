@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Yiisoft\Data\Db\QueryDataReader;
@@ -70,7 +71,7 @@ final class DataReaderTest extends TestCase
         self::assertStringEndsWith('LIMIT 1 OFFSET 1', $actual);
     }
 
-    public function sortDataProvider(): array
+    public static function sortDataProvider(): array
     {
         return [
             [
@@ -123,9 +124,7 @@ final class DataReaderTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider sortDataProvider
-     */
+    #[DataProvider('sortDataProvider')]
     public function testSort(Sort $sort, string $expected): void
     {
         $db = $this->getConnection();

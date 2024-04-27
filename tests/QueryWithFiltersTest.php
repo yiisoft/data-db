@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Tests;
 
 use DateTime;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Db\Tests\Support\TestTrait;
@@ -27,7 +28,7 @@ final class QueryWithFiltersTest extends TestCase
 {
     use TestTrait;
 
-    public function simpleDataProvider(): array
+    public static function simpleDataProvider(): array
     {
         return [
             'equals' => [
@@ -77,9 +78,7 @@ final class QueryWithFiltersTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider simpleDataProvider
-     */
+    #[DataProvider('simpleDataProvider')]
     public function testSimpleFilter(FilterInterface $filter, string $condition): void
     {
         $db = $this->getConnection();
@@ -97,9 +96,7 @@ final class QueryWithFiltersTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider simpleDataProvider
-     */
+    #[DataProvider('simpleDataProvider')]
     public function testSimpleHaving(FilterInterface $having, string $condition): void
     {
         $db = $this->getConnection();
@@ -117,7 +114,7 @@ final class QueryWithFiltersTest extends TestCase
         );
     }
 
-    public function groupFilterDataProvider(): array
+    public static function groupFilterDataProvider(): array
     {
         return [
             [
@@ -187,9 +184,7 @@ final class QueryWithFiltersTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider groupFilterDataProvider
-     */
+    #[DataProvider('groupFilterDataProvider')]
     public function testGroupFilter(All|Any $filter, string $expected): void
     {
         $db = $this->getConnection();
