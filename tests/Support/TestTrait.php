@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Tests\Support;
 
-use Yiisoft\Data\Db\Tests\Support\Stub\PdoDriver;
 use Yiisoft\Db\Driver\Pdo\PdoConnectionInterface;
 use Yiisoft\Db\Sqlite\Connection;
 use Yiisoft\Db\Sqlite\Driver;
