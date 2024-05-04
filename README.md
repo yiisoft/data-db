@@ -10,7 +10,7 @@
 [![Total Downloads](https://poser.pugx.org/yiisoft/data-db/downloads.png)](https://packagist.org/packages/yiisoft/data-db)
 [![Build status](https://github.com/yiisoft/data-db/workflows/build/badge.svg)](https://github.com/yiisoft/data-db/actions?query=workflow%3Abuild)
 [![Code Coverage](https://codecov.io/gh/yiisoft/data-db/graph/badge.svg?token=9qlfGa4kI1)](https://codecov.io/gh/yiisoft/data-db)
-[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyiisoft%2F_____%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/yiisoft/_____/master)
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyiisoft%2Fdata-db%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/yiisoft/data-db/master)
 [![static analysis](https://github.com/yiisoft/data-db/workflows/static%20analysis/badge.svg)](https://github.com/yiisoft/data-db/actions?query=workflow%3A%22static+analysis%22)
 [![type-coverage](https://shepherd.dev/github/yiisoft/data-db/coverage.svg)](https://shepherd.dev/github/yiisoft/data-db)
 
@@ -22,7 +22,7 @@ The package provides `Yiisoft\Db\Query\Query` bindings for generic data abstract
 
 ## Installation
 
-The package could be installed with composer:
+The package could be installed via [composer](https://getcomposer.org/download/)
 
 ```shell
 composer require yiisoft/data-db
