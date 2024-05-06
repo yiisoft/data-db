@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Yiisoft\Data\Db\QueryDataReader;
@@ -70,7 +71,7 @@ final class DataReaderTest extends TestCase
         self::assertStringEndsWith('LIMIT 1 OFFSET 1', $actual);
     }
 
-    public function sortDataProvider(): array
+    public static function sortDataProvider(): array
     {
         return [
             [
@@ -79,7 +80,7 @@ final class DataReaderTest extends TestCase
                     'email',
                 ])
                 ->withOrderString('-name,email'),
-                '[name] DESC, [email]',
+                '`name` DESC, `email`',
             ],
             [
                 Sort::any([
@@ -87,7 +88,7 @@ final class DataReaderTest extends TestCase
                     'email',
                 ])
                 ->withOrderString('-name,-email'),
-                '[name] DESC, [email] DESC',
+                '`name` DESC, `email` DESC',
             ],
             [
                 Sort::any([
@@ -96,7 +97,7 @@ final class DataReaderTest extends TestCase
                 ])
                 ->withoutDefaultSorting()
                 ->withOrderString('-email'),
-                '[email] DESC',
+                '`email` DESC',
             ],
             [
                 Sort::any([
@@ -104,7 +105,7 @@ final class DataReaderTest extends TestCase
                     'email',
                 ])
                 ->withOrderString('-email'),
-                '[email] DESC, [name]',
+                '`email` DESC, `name`',
             ],
             [
                 Sort::any([
@@ -118,14 +119,12 @@ final class DataReaderTest extends TestCase
                     ],
                 ])
                 ->withOrderString('-name'),
-                '[name] DESC NULLS LAST',
+                '`name` DESC NULLS LAST',
             ],
         ];
     }
 
-    /**
-     * @dataProvider sortDataProvider
-     */
+    #[DataProvider('sortDataProvider')]
     public function testSort(Sort $sort, string $expected): void
     {
         $db = $this->getConnection();
