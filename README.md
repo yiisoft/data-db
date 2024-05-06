@@ -22,7 +22,7 @@ The package provides `Yiisoft\Db\Query\Query` bindings for generic data abstract
 
 ## Installation
 
-The package could be installed via [composer](https://getcomposer.org/download/)
+The package could be installed with [Composer](https://getcomposer.org):
 
 ```shell
 composer require yiisoft/data-db
