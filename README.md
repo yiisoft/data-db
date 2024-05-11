@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://github.com/yiisoft" target="_blank">
-        <img src="https://yiisoft.github.io/docs/images/yii_logo.svg" height="100px">
+        <img src="https://yiisoft.github.io/docs/images/yii_logo.svg" height="100px" alt="Yii">
     </a>
     <h1 align="center">Yii Data DB</h1>
     <br>
@@ -67,7 +67,7 @@ $dataReader = (new QueryDataReader($query))
 
 If $typeId, $countryId and $parentId equals NULL that generate SQL like:
 
-```shell
+```sql
 SELECT AR::tableName().* FROM AR::tableName() WHERE type_id IS NULL AND country_id IS NULL AND parent_id IS NULL
 ```
 
@@ -86,12 +86,11 @@ $filter = new All(
 
 $dataReader = (new QueryDataReader($query))
             ->withFilter($filter);
-
 ```
 
 That generate SQL like:
 
-```shell
+```sql
 SELECT AR::tableName().* FROM AR::tableName() WHERE type_id = 1
 ```
 
