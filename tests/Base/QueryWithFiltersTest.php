@@ -163,7 +163,7 @@ abstract class QueryWithFiltersTest extends TestCase
                 ),
                 "(`id` > 88) OR ((`state` = 2) AND (`name` LIKE '%eva%' ESCAPE '\'))",
             ],
-            [
+            'any, any' => [
                 new Any(
                     new GreaterThan('id', 88),
                     new Any(
@@ -173,7 +173,7 @@ abstract class QueryWithFiltersTest extends TestCase
                 ),
                 "(`id` > 88) OR ((`state` = 2) OR (`name` LIKE '%eva%' ESCAPE '\'))",
             ],
-            [
+            'all, all' => [
                 new All(
                     new GreaterThan('id', 88),
                     new All(

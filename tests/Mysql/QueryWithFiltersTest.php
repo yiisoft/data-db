@@ -19,18 +19,23 @@ final class QueryWithFiltersTest extends \Yiisoft\Data\Db\Tests\Base\QueryWithFi
     public static function groupFilterDataProvider(): array
     {
         $data = parent::groupFilterDataProvider();
-        $data['all, any'] = '(`null_column` IS NULL) AND ' .
-            '(`equals` = 10) AND ' .
-            '(`between` BETWEEN 10 AND 20) AND ' .
-            "((`id` = 8) OR (`name` LIKE '%foo%'))";
-        $data['any, all'] = '(`greater_than` > 15) OR ' .
-            '(`less_than_or_equal` <= 10) OR ' .
-            "(`not_equals` != 'test') OR " .
-            "((`id` = 8) AND (`name` LIKE '%bar%'))";
-        $data['all, any 2'] = "(`id` > 88) AND ((`state` = 2) OR (`name` LIKE '%eva%'))";
-        $data['any, all 2'] = "(`id` > 88) OR ((`state` = 2) AND (`name` LIKE '%eva%'))";
-        $data['any, any'] = "(`id` > 88) OR ((`state` = 2) OR (`name` LIKE '%eva%'))";
-        $data['all, all'] = "(`id` > 88) AND ((`state` = 2) AND (`name` LIKE '%eva%'))";
+        $replacementMap = [
+            'all, any' => '(`null_column` IS NULL) AND ' .
+                '(`equals` = 10) AND ' .
+                '(`between` BETWEEN 10 AND 20) AND ' .
+                "((`id` = 8) OR (`name` LIKE '%foo%'))",
+            'any, all' => '(`greater_than` > 15) OR ' .
+                '(`less_than_or_equal` <= 10) OR ' .
+                "(`not_equals` != 'test') OR " .
+                "((`id` = 8) AND (`name` LIKE '%bar%'))",
+            'all, any 2' => "(`id` > 88) AND ((`state` = 2) OR (`name` LIKE '%eva%'))",
+            'any, all 2' => "(`id` > 88) OR ((`state` = 2) AND (`name` LIKE '%eva%'))",
+            'any, any' => "(`id` > 88) OR ((`state` = 2) OR (`name` LIKE '%eva%'))",
+            'all, all' => "(`id` > 88) AND ((`state` = 2) AND (`name` LIKE '%eva%'))",
+        ];
+        foreach ($replacementMap as $key => $value) {
+            $data[$key][1] = $value;
+        }
 
         return $data;
     }
