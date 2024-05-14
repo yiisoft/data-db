@@ -113,7 +113,7 @@ abstract class QueryWithFiltersTest extends TestCase
     public static function groupFilterDataProvider(): array
     {
         return [
-            [
+            'all, any' => [
                 new All(
                     new EqualsNull('null_column'),
                     new Equals('equals', 10),
@@ -123,9 +123,12 @@ abstract class QueryWithFiltersTest extends TestCase
                         new Like('name', 'foo')
                     )
                 ),
-                "(`null_column` IS NULL) AND (`equals` = 10) AND (`between` BETWEEN 10 AND 20) AND ((`id` = 8) OR (`name` LIKE '%foo%' ESCAPE '\'))",
+                '(`null_column` IS NULL) AND '.
+                '(`equals` = 10) AND ' .
+                '(`between` BETWEEN 10 AND 20) AND ' .
+                "((`id` = 8) OR (`name` LIKE '%foo%'))",
             ],
-            [
+            'any, all' => [
                 new Any(
                     new GreaterThan('greater_than', 15),
                     new LessThanOrEqual('less_than_or_equal', 10),
@@ -135,9 +138,12 @@ abstract class QueryWithFiltersTest extends TestCase
                         new Like('name', 'bar')
                     )
                 ),
-                "(`greater_than` > 15) OR (`less_than_or_equal` <= 10) OR (`not_equals` != 'test') OR ((`id` = 8) AND (`name` LIKE '%bar%' ESCAPE '\'))",
+                '(`greater_than` > 15) OR ' .
+                '(`less_than_or_equal` <= 10) OR ' .
+                "(`not_equals` != 'test') OR " .
+                "((`id` = 8) AND (`name` LIKE '%bar%'))",
             ],
-            [
+            'all, any 2' => [
                 new All(
                     new GreaterThan('id', 88),
                     new Any(
@@ -147,7 +153,7 @@ abstract class QueryWithFiltersTest extends TestCase
                 ),
                 "(`id` > 88) AND ((`state` = 2) OR (`name` LIKE '%eva%' ESCAPE '\'))",
             ],
-            [
+            'any, all 2' => [
                 new Any(
                     new GreaterThan('id', 88),
                     new All(

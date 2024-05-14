@@ -4,16 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Tests\Mysql;
 
-use Yiisoft\Data\Reader\Filter\Between;
-use Yiisoft\Data\Reader\Filter\Equals;
-use Yiisoft\Data\Reader\Filter\GreaterThan;
-use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
-use Yiisoft\Data\Reader\Filter\In;
-use Yiisoft\Data\Reader\Filter\LessThan;
-use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
-use Yiisoft\Data\Reader\Filter\Like;
-use Yiisoft\Data\Reader\Filter\Not;
-
 final class DataFilterTest extends \Yiisoft\Data\Db\Tests\Base\DataFilterTest
 {
     use DatabaseTrait;
@@ -21,21 +11,15 @@ final class DataFilterTest extends \Yiisoft\Data\Db\Tests\Base\DataFilterTest
     public static function simpleDataProvider(): array
     {
         $data = parent::simpleDataProvider();
-        $data['like'] = [
-            new Like('column', 'foo'),
-            "`column` LIKE '%foo%'",
-        ];
+        $data['like'][1] = "`column` LIKE '%foo%'";
 
         return $data;
     }
 
     public static function notDataProvider(): array
     {
-        $data = parent::simpleDataProvider();
-        $data['like'] = [
-            new Not(new Like('column', 'foo')),
-            "`column` NOT LIKE '%foo%'",
-        ];
+        $data = parent::notDataProvider();
+        $data['like'][1] = "`column` NOT LIKE '%foo%'";
 
         return $data;
     }
