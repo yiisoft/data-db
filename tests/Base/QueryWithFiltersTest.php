@@ -126,7 +126,7 @@ abstract class QueryWithFiltersTest extends TestCase
                 '(`null_column` IS NULL) AND ' .
                 '(`equals` = 10) AND ' .
                 '(`between` BETWEEN 10 AND 20) AND ' .
-                "((`id` = 8) OR (`name` LIKE '%foo%'))",
+                "((`id` = 8) OR (`name` LIKE '%foo%' ESCAPE '\'))",
             ],
             'any, all' => [
                 new Any(
@@ -141,7 +141,7 @@ abstract class QueryWithFiltersTest extends TestCase
                 '(`greater_than` > 15) OR ' .
                 '(`less_than_or_equal` <= 10) OR ' .
                 "(`not_equals` != 'test') OR " .
-                "((`id` = 8) AND (`name` LIKE '%bar%'))",
+                "((`id` = 8) AND (`name` LIKE '%bar%' ESCAPE '\'))",
             ],
             'all, any 2' => [
                 new All(
