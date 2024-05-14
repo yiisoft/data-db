@@ -19,7 +19,7 @@ final class QueryWithFiltersTest extends \Yiisoft\Data\Db\Tests\Base\QueryWithFi
     public static function groupFilterDataProvider(): array
     {
         $data = parent::groupFilterDataProvider();
-        $data['all, any'] = '(`null_column` IS NULL) AND '.
+        $data['all, any'] = '(`null_column` IS NULL) AND ' .
             '(`equals` = 10) AND ' .
             '(`between` BETWEEN 10 AND 20) AND ' .
             "((`id` = 8) OR (`name` LIKE '%foo%'))";
