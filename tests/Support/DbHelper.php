@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Tests\Support;
 
-use Psr\SimpleCache\CacheInterface;
-use Yiisoft\Db\Cache\SchemaCache;
 use Yiisoft\Db\Driver\Pdo\PdoConnectionInterface;
 use Yiisoft\Db\Exception\Exception;
 use Yiisoft\Db\Exception\InvalidConfigException;
