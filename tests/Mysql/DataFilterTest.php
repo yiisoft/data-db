@@ -4,13 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Tests\Mysql;
 
-use Yiisoft\Data\Reader\Filter\Between;
-use Yiisoft\Data\Reader\Filter\Equals;
-use Yiisoft\Data\Reader\Filter\GreaterThan;
-use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
-use Yiisoft\Data\Reader\Filter\In;
-use Yiisoft\Data\Reader\Filter\LessThan;
-use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Filter\Not;
 

@@ -28,6 +28,7 @@ final class QueryWithFiltersTest extends \Yiisoft\Data\Db\Tests\Base\QueryWithFi
 
         return $data;
     }
+
     public static function groupFilterDataProvider(): array
     {
         return [
