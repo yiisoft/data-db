@@ -2,24 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Db\Tests;
+namespace Yiisoft\Data\Db\Tests\Base;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
 use stdClass;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Db\Tests\Support\CustomerDataReader;
 use Yiisoft\Data\Db\Tests\Support\CustomerDTO;
 use Yiisoft\Data\Db\Tests\Support\CustomerQuery;
-use Yiisoft\Data\Db\Tests\Support\TestTrait;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Db\Expression\Expression;
 use Yiisoft\Db\Query\Query;
 
-final class DataReaderTest extends TestCase
+abstract class DataReaderTest extends TestCase
 {
-    use TestTrait;
-
     public function testDataReader(): void
     {
         $db = $this->getConnection();
@@ -34,21 +30,18 @@ final class DataReaderTest extends TestCase
         );
     }
 
-    public function testOffset(): void
+    abstract public static function dataOffset(): array;
+
+    #[DataProvider('dataOffset')]
+    public function testOffset(string $expectedSql): void
     {
         $db = $this->getConnection();
-
-        $query = (new Query($db))
-            ->from('customer');
-        $dataReader = (new QueryDataReader($query))
-            ->withOffset(2);
+        $query = (new Query($db))->from('customer');
+        $dataReader = (new QueryDataReader($query))->withOffset(2);
         $query->offset(2);
 
-        $actual = $dataReader->getPreparedQuery()->createCommand()->getRawSql();
-        $expected = $query->createCommand()->getRawSql();
-
-        self::assertSame($expected, $actual);
-        self::assertStringEndsWith('OFFSET 2', $actual);
+        $this->assertSame($expectedSql, $dataReader->getPreparedQuery()->createCommand()->getRawSql());
+        $this->assertSame($expectedSql, $query->createCommand()->getRawSql());
     }
 
     public function testLimit(): void

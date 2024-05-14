@@ -2,13 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Db\Tests;
+namespace Yiisoft\Data\Db\Tests\Base;
 
 use DateTime;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Db\QueryDataReader;
-use Yiisoft\Data\Db\Tests\Support\TestTrait;
 use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\Filter\Any;
 use Yiisoft\Data\Reader\Filter\Between;
@@ -24,10 +22,8 @@ use Yiisoft\Data\Reader\Filter\Not;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\Query\Query;
 
-final class QueryWithFiltersTest extends TestCase
+abstract class QueryWithFiltersTest extends TestCase
 {
-    use TestTrait;
-
     public static function simpleDataProvider(): array
     {
         return [

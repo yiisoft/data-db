@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Db\Tests;
+namespace Yiisoft\Data\Db\Tests\Base;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Db\QueryDataReader;
-use Yiisoft\Data\Db\Tests\Support\TestTrait;
 use Yiisoft\Data\Reader\Filter\Between;
 use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
@@ -20,10 +18,8 @@ use Yiisoft\Data\Reader\Filter\Not;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\Query\Query;
 
-final class DataFilterTest extends TestCase
+abstract class DataFilterTest extends TestCase
 {
-    use TestTrait;
-
     public static function simpleDataProvider(): array
     {
         return [

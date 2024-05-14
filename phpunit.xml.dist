@@ -6,6 +6,7 @@
          requireCoverageMetadata="false"
          beStrictAboutCoverageMetadata="true"
          beStrictAboutOutputDuringTests="true"
+         defaultTestSuite="Mysql"
          executionOrder="random"
          failOnRisky="true"
          failOnWarning="true"
@@ -17,8 +18,11 @@
     </php>
 
     <testsuites>
-        <testsuite name="Yii Data DB tests">
-            <directory>./tests</directory>
+        <testsuite name="Sqlite">
+            <directory>./tests/Sqlite</directory>
+        </testsuite>
+        <testsuite name="Mysql">
+            <directory>./tests/Mysql</directory>
         </testsuite>
     </testsuites>
 

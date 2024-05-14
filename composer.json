@@ -1,7 +1,7 @@
 {
     "name": "yiisoft/data-db",
     "type": "library",
-    "description": "Database query adapater for yiisoft/data data providers",
+    "description": "Database query adapter for yiisoft/data data providers",
     "keywords": [
         "db",
         "data provider",
@@ -41,6 +41,9 @@
         "roave/infection-static-analysis-plugin": "^1.16",
         "spatie/phpunit-watcher": "^1.23",
         "vimeo/psalm": "^5.21",
+        "vlucas/phpdotenv": "^5.6",
+        "yiisoft/cache": "^3.0",
+        "yiisoft/db-mysql": "^1.1",
         "yiisoft/db-sqlite": "^1.2"
     },
     "autoload": {
@@ -51,7 +54,8 @@
     "autoload-dev": {
         "psr-4": {
             "Yiisoft\\Data\\Db\\Tests\\": "tests"
-        }
+        },
+        "files": ["tests/bootstrap.php"]
     },
     "extra": {
         "branch-alias": {
