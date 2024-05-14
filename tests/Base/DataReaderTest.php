@@ -60,8 +60,8 @@ abstract class DataReaderTest extends TestCase
         $actual = $dataReader->getPreparedQuery()->createCommand()->getRawSql();
         $expected = $query->createCommand()->getRawSql();
 
-        self::assertSame($expected, $actual);
-        self::assertStringEndsWith('LIMIT 1 OFFSET 1', $actual);
+        $this->assertSame($expected, $actual);
+        $this->assertStringEndsWith('LIMIT 1 OFFSET 1', $actual);
     }
 
     public static function sortDataProvider(): array
@@ -128,7 +128,7 @@ abstract class DataReaderTest extends TestCase
         $dataReader = (new QueryDataReader($query))
             ->withSort($sort);
 
-        self::assertStringEndsWith(
+        $this->assertStringEndsWith(
             $expected,
             $dataReader->getPreparedQuery()->createCommand()->getRawSql()
         );
@@ -139,7 +139,7 @@ abstract class DataReaderTest extends TestCase
         $query = new CustomerQuery($this->getConnection());
         $dataReader = (new CustomerDataReader($query));
 
-        self::assertEquals($query->count(), $dataReader->count());
+        $this->assertEquals($query->count(), $dataReader->count());
     }
 
     public function testDtoCreateItem(): void
@@ -149,10 +149,10 @@ abstract class DataReaderTest extends TestCase
             ->withBatchSize(null);
 
 
-        self::assertInstanceOf(CustomerDTO::class, $dataReader->readOne());
+        $this->assertInstanceOf(CustomerDTO::class, $dataReader->readOne());
 
         foreach ($dataReader->read() as $row) {
-            self::assertInstanceOf(CustomerDTO::class, $row);
+            $this->assertInstanceOf(CustomerDTO::class, $row);
         }
     }
 
@@ -163,10 +163,10 @@ abstract class DataReaderTest extends TestCase
         $dataReader = (new QueryDataReader($query))
             ->withBatchSize(null);
 
-        self::assertInstanceOf(stdClass::class, $dataReader->readOne());
+        $this->assertInstanceOf(stdClass::class, $dataReader->readOne());
 
         foreach ($dataReader->read() as $row) {
-            self::assertInstanceOf(stdClass::class, $row);
+            $this->assertInstanceOf(stdClass::class, $row);
         }
     }
 
@@ -176,10 +176,10 @@ abstract class DataReaderTest extends TestCase
         $dataReader = (new QueryDataReader($query))
             ->withBatchSize(null);
 
-        self::assertIsArray($dataReader->readOne());
+        $this->assertIsArray($dataReader->readOne());
 
         foreach ($dataReader->read() as $row) {
-            self::assertIsArray($row);
+            $this->assertIsArray($row);
         }
     }
 }

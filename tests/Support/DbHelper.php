@@ -18,16 +18,6 @@ use function trim;
 
 final class DbHelper
 {
-    public static function getPsrCache(): CacheInterface
-    {
-        return new Cache();
-    }
-
-    public static function getSchemaCache(): SchemaCache
-    {
-        return new SchemaCache(self::getPsrCache());
-    }
-
     /**
      * Loads the fixture into the database.
      *
@@ -36,9 +26,6 @@ final class DbHelper
      */
     public static function loadFixture(PdoConnectionInterface $db, string $fixture): void
     {
-        // flush cache to new import data to dbms.
-        self::getPsrCache()->clear();
-
         $db->open();
 
         if ($db->getDriverName() === 'oci') {
