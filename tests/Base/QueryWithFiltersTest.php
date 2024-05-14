@@ -123,7 +123,7 @@ abstract class QueryWithFiltersTest extends TestCase
                         new Like('name', 'foo')
                     )
                 ),
-                '(`null_column` IS NULL) AND '.
+                '(`null_column` IS NULL) AND ' .
                 '(`equals` = 10) AND ' .
                 '(`between` BETWEEN 10 AND 20) AND ' .
                 "((`id` = 8) OR (`name` LIKE '%foo%'))",
