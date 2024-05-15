@@ -27,6 +27,9 @@
         <testsuite name="Pgsql">
             <directory>./tests/Pgsql</directory>
         </testsuite>
+        <testsuite name="Mssql">
+            <directory>./tests/Mssql</directory>
+        </testsuite>
     </testsuites>
 
     <source>

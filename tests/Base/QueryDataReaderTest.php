@@ -58,24 +58,26 @@ abstract class QueryDataReaderTest extends TestCase
         $this->assertSame($expectedSql, $query->createCommand()->getRawSql());
     }
 
-    public function testLimit(): void
+    public static function dataLimit(): array
+    {
+        return [
+            [
+                'SELECT * FROM {{%customer}} LIMIT 1 OFFSET 1',
+            ],
+        ];
+    }
+
+    #[DataProvider('dataLimit')]
+    public function testLimit(string $expectedSql): void
     {
         $db = $this->getConnection();
+        $query = (new Query($db))->from('customer');
+        $dataReader = (new QueryDataReader($query))->withOffset(1)->withLimit(1);
+        $query->offset(1)->limit(1);
+        $expectedSql = $db->getQuoter()->quoteSql($expectedSql);
 
-        $query = (new Query($db))
-            ->from('customer');
-        $dataReader = (new QueryDataReader($query))
-            ->withOffset(1)
-            ->withLimit(1);
-        $query
-            ->offset(1)
-            ->limit(1);
-
-        $actual = $dataReader->getPreparedQuery()->createCommand()->getRawSql();
-        $expected = $query->createCommand()->getRawSql();
-
-        $this->assertSame($expected, $actual);
-        $this->assertStringEndsWith('LIMIT 1 OFFSET 1', $actual);
+        $this->assertSame($expectedSql, $dataReader->getPreparedQuery()->createCommand()->getRawSql());
+        $this->assertSame($expectedSql, $query->createCommand()->getRawSql());
     }
 
     public static function dataSort(): array
