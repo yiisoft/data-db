@@ -97,11 +97,11 @@ jobs:
         run: vendor/bin/phpunit --testsuite Mssql --coverage-clover=coverage.xml --colors=always
         env:
           ENVIRONMENT: ci
-          CYCLE_MSSQL_DATABASE: yiitest
-          CYCLE_MSSQL_HOST: 127.0.0.1
-          CYCLE_MSSQL_PORT: 1433
-          CYCLE_MSSQL_USER: SA
-          CYCLE_MSSQL_PASSWORD: YourStrong!Passw0rd
+          YII_MSSQL_DATABASE: yiitest
+          YII_MSSQL_HOST: 127.0.0.1
+          YII_MSSQL_PORT: 1433
+          YII_MSSQL_USER: SA
+          YII_MSSQL_PASSWORD: YourStrong!Passw0rd
 
       - name: Upload coverage to Codecov
         if: matrix.os == 'ubuntu-latest'
