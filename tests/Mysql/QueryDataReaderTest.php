@@ -4,22 +4,25 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Tests\Mysql;
 
-final class QueryWithFiltersTest extends \Yiisoft\Data\Db\Tests\Base\QueryWithFiltersTest
+final class QueryDataReaderTest extends \Yiisoft\Data\Db\Tests\Base\QueryDataReaderTest
 {
     use DatabaseTrait;
 
-    public static function simpleDataProvider(): array
+    public static function dataOffset(): array
     {
-        $data = parent::simpleDataProvider();
-        $data['like'][1] = "`column` LIKE '%foo%'";
-
-        return $data;
+        return [
+            [
+                'SELECT * FROM `customer` LIMIT 2, 18446744073709551615',
+            ],
+        ];
     }
 
-    public static function groupFilterDataProvider(): array
+    public static function dataFilterSql(): array
     {
-        $data = parent::groupFilterDataProvider();
+        $data = parent::dataFilterSql();
         $replacementMap = [
+            'like' => "`column` LIKE '%foo%'",
+            'not like' => "`column` NOT LIKE '%foo%'",
             'all, any' => '(`null_column` IS NULL) AND ' .
                 '(`equals` = 10) AND ' .
                 '(`between` BETWEEN 10 AND 20) AND ' .

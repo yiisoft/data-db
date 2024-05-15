@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Tests\Sqlite;
 
-final class DataReaderTest extends \Yiisoft\Data\Db\Tests\Base\DataReaderTest
+final class QueryDataReaderTest extends \Yiisoft\Data\Db\Tests\Base\QueryDataReaderTest
 {
     use DatabaseTrait;
 
