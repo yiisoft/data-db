@@ -30,6 +30,9 @@
         <testsuite name="Mssql">
             <directory>./tests/Mssql</directory>
         </testsuite>
+        <testsuite name="Oracle">
+            <directory>./tests/Oracle</directory>
+        </testsuite>
     </testsuites>
 
     <source>
