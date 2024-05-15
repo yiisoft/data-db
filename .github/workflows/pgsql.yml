@@ -98,11 +98,11 @@ jobs:
         run: vendor/bin/phpunit --testsuite Pgsql --coverage-clover=coverage.xml --colors=always
         env:
           ENVIRONMENT: ci
-          CYCLE_PGSQL_DATABASE: yiitest
-          CYCLE_PGSQL_HOST: 127.0.0.1
-          CYCLE_PGSQL_PORT: 5432
-          CYCLE_PGSQL_USER: root
-          CYCLE_PGSQL_PASSWORD: root
+          YII_PGSQL_DATABASE: yiitest
+          YII_PGSQL_HOST: 127.0.0.1
+          YII_PGSQL_PORT: 5432
+          YII_PGSQL_USER: root
+          YII_PGSQL_PASSWORD: root
 
       - name: Upload coverage to Codecov
         if: matrix.os == 'ubuntu-latest'

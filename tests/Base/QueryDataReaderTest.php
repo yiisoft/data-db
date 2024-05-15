@@ -81,40 +81,40 @@ abstract class QueryDataReaderTest extends TestCase
     public static function dataSort(): array
     {
         return [
-            [
+            'with order string, 2 fields, desc and asc' => [
                 Sort::only([
                     'name',
                     'email',
                 ])
                 ->withOrderString('-name,email'),
-                '`name` DESC, `email`',
+                '[[name]] DESC, [[email]]',
             ],
-            [
+            'with order string, 2 fields, desc and desc' => [
                 Sort::any([
                     'name',
                     'email',
                 ])
                 ->withOrderString('-name,-email'),
-                '`name` DESC, `email` DESC',
+                '[[name]] DESC, [[email]] DESC',
             ],
-            [
+            'with order string, 1 field, desc' => [
+                Sort::any([
+                    'name',
+                    'email',
+                ])
+                    ->withOrderString('-email'),
+                '[[email]] DESC, [[name]]',
+            ],
+            'with order string, 1 field desc, without default sorting' => [
                 Sort::any([
                     'name',
                     'email',
                 ])
                 ->withoutDefaultSorting()
                 ->withOrderString('-email'),
-                '`email` DESC',
+                '[[email]] DESC',
             ],
-            [
-                Sort::any([
-                    'name',
-                    'email',
-                ])
-                ->withOrderString('-email'),
-                '`email` DESC, `name`',
-            ],
-            [
+            'with order string, 1 field desc, expression' => [
                 Sort::any([
                     'name' => [
                         'asc' => [
@@ -126,25 +126,22 @@ abstract class QueryDataReaderTest extends TestCase
                     ],
                 ])
                 ->withOrderString('-name'),
-                '`name` DESC NULLS LAST',
+                '[[name]] DESC NULLS LAST',
             ],
         ];
     }
 
     #[DataProvider('dataSort')]
-    public function testSort(Sort $sort, string $expected): void
+    public function testSort(Sort $sort, string $expectedSql): void
     {
         $db = $this->getConnection();
-
-        $query = (new Query($db))
-            ->from('customer');
-
-        $dataReader = (new QueryDataReader($query))
-            ->withSort($sort);
+        $query = (new Query($db))->from('customer');
+        $dataReader = (new QueryDataReader($query))->withSort($sort);
+        $expectedSql = $db->getQuoter()->quoteSql($expectedSql);
 
         $this->assertStringEndsWith(
-            $expected,
-            $dataReader->getPreparedQuery()->createCommand()->getRawSql()
+            $expectedSql,
+            $dataReader->getPreparedQuery()->createCommand()->getRawSql(),
         );
     }
 
@@ -202,80 +199,80 @@ abstract class QueryDataReaderTest extends TestCase
             // Simple
             'equals' => [
                 new Equals('equals', 1),
-                '`equals` = 1',
+                '[[equals]] = 1',
             ],
             'equals datetime' => [
                 new Equals('column', new DateTime('2011-01-01T15:03:01.012345Z')),
-                "`column` = '2011-01-01 15:03:01'",
+                "[[column]] = '2011-01-01 15:03:01'",
             ],
             'between' => [
                 new Between('column', 100, 300),
-                '`column` BETWEEN 100 AND 300',
+                '[[column]] BETWEEN 100 AND 300',
             ],
             'between dates' => [
                 new Between('column', new DateTime('2011-01-01T15:00:01'), new DateTime('2011-01-01T15:10:01')),
-                "`column` BETWEEN '2011-01-01 15:00:01' AND '2011-01-01 15:10:01'",
+                "[[column]] BETWEEN '2011-01-01 15:00:01' AND '2011-01-01 15:10:01'",
             ],
             'greater than' => [
                 new GreaterThan('column', 1000),
-                '`column` > 1000',
+                '[[column]] > 1000',
             ],
             'greater than date' => [
                 new GreaterThan('column', new DateTime('2011-01-01T15:00:01')),
-                "`column` > '2011-01-01 15:00:01'",
+                "[[column]] > '2011-01-01 15:00:01'",
             ],
             'greater than or equal' => [
                 new GreaterThanOrEqual('column', 3.5),
-                '`column` >= \'3.5\'',
+                '[[column]] >= \'3.5\'',
             ],
             'less than' => [
                 new LessThan('column', 10.7),
-                '`column` < \'10.7\'',
+                '[[column]] < \'10.7\'',
             ],
             'less-than-or-equal' => [
                 new LessThanOrEqual('column', 100),
-                '`column` <= 100',
+                '[[column]] <= 100',
             ],
             'in' => [
                 new In('column', [10, 20.5, 30]),
-                '`column` IN (10, \'20.5\', 30)',
+                '[[column]] IN (10, \'20.5\', 30)',
             ],
             'like' => [
                 new Like('column', 'foo'),
-                "`column` LIKE '%foo%' ESCAPE '\'",
+                "[[column]] LIKE '%foo%'",
             ],
             // Not
             'not equals' => [
                 new Not(new Equals('equals', 1)),
-                '`equals` != 1',
+                '[[equals]] != 1',
             ],
             'not between' => [
                 new Not(new Between('column', 100, 300)),
-                '`column` NOT BETWEEN 100 AND 300',
+                '[[column]] NOT BETWEEN 100 AND 300',
             ],
             'not greater than' => [
                 new Not(new GreaterThan('column', 1000)),
-                '`column` <= 1000',
+                '[[column]] <= 1000',
             ],
             'not greater than or equal' => [
                 new Not(new GreaterThanOrEqual('column', 3.5)),
-                '`column` < \'3.5\'',
+                '[[column]] < \'3.5\'',
             ],
             'not less than' => [
                 new Not(new LessThan('column', 10.7)),
-                '`column` >= \'10.7\'',
+                '[[column]] >= \'10.7\'',
             ],
             'not less than or equal' => [
                 new Not(new LessThanOrEqual('column', 100)),
-                '`column` > 100',
+                '[[column]] > 100',
             ],
             'not in' => [
                 new Not(new In('column', [10, 20, 30])),
-                '`column` NOT IN (10, 20, 30)',
+                '[[column]] NOT IN (10, 20, 30)',
             ],
             'not like' => [
                 new Not(new Like('column', 'foo')),
-                "`column` NOT LIKE '%foo%' ESCAPE '\'",
+                "[[column]] NOT LIKE '%foo%'",
             ],
             // Group
             'all, any' => [
@@ -288,10 +285,10 @@ abstract class QueryDataReaderTest extends TestCase
                         new Like('name', 'foo')
                     )
                 ),
-                '(`null_column` IS NULL) AND ' .
-                '(`equals` = 10) AND ' .
-                '(`between` BETWEEN 10 AND 20) AND ' .
-                "((`id` = 8) OR (`name` LIKE '%foo%' ESCAPE '\'))",
+                '([[null_column]] IS NULL) AND ' .
+                '([[equals]] = 10) AND ' .
+                '([[between]] BETWEEN 10 AND 20) AND ' .
+                "(([[id]] = 8) OR ([[name]] LIKE '%foo%'))",
             ],
             'any, all' => [
                 new Any(
@@ -303,10 +300,10 @@ abstract class QueryDataReaderTest extends TestCase
                         new Like('name', 'bar')
                     )
                 ),
-                '(`greater_than` > 15) OR ' .
-                '(`less_than_or_equal` <= 10) OR ' .
-                "(`not_equals` != 'test') OR " .
-                "((`id` = 8) AND (`name` LIKE '%bar%' ESCAPE '\'))",
+                '([[greater_than]] > 15) OR ' .
+                '([[less_than_or_equal]] <= 10) OR ' .
+                "([[not_equals]] != 'test') OR " .
+                "(([[id]] = 8) AND ([[name]] LIKE '%bar%'))",
             ],
             'all, any 2' => [
                 new All(
@@ -316,7 +313,7 @@ abstract class QueryDataReaderTest extends TestCase
                         new Like('name', 'eva'),
                     )
                 ),
-                "(`id` > 88) AND ((`state` = 2) OR (`name` LIKE '%eva%' ESCAPE '\'))",
+                "([[id]] > 88) AND (([[state]] = 2) OR ([[name]] LIKE '%eva%'))",
             ],
             'any, all 2' => [
                 new Any(
@@ -326,7 +323,7 @@ abstract class QueryDataReaderTest extends TestCase
                         new Like('name', 'eva'),
                     )
                 ),
-                "(`id` > 88) OR ((`state` = 2) AND (`name` LIKE '%eva%' ESCAPE '\'))",
+                "([[id]] > 88) OR (([[state]] = 2) AND ([[name]] LIKE '%eva%'))",
             ],
             'any, any' => [
                 new Any(
@@ -336,7 +333,7 @@ abstract class QueryDataReaderTest extends TestCase
                         new Like('name', 'eva'),
                     )
                 ),
-                "(`id` > 88) OR ((`state` = 2) OR (`name` LIKE '%eva%' ESCAPE '\'))",
+                "([[id]] > 88) OR (([[state]] = 2) OR ([[name]] LIKE '%eva%'))",
             ],
             'all, all' => [
                 new All(
@@ -346,7 +343,7 @@ abstract class QueryDataReaderTest extends TestCase
                         new Like('name', 'eva'),
                     )
                 ),
-                "(`id` > 88) AND ((`state` = 2) AND (`name` LIKE '%eva%' ESCAPE '\'))",
+                "([[id]] > 88) AND (([[state]] = 2) AND ([[name]] LIKE '%eva%'))",
             ],
         ];
     }
@@ -357,10 +354,11 @@ abstract class QueryDataReaderTest extends TestCase
         $db = $this->getConnection();
         $query = (new Query($db))->from('customer');
         $dataReader = (new QueryDataReader($query))->withFilter($filter);
-        $expected = 'SELECT * FROM `customer` WHERE ' . $condition;
+        $expectedSql = 'SELECT * FROM {{%customer}} WHERE ' . $condition;
+        $expectedSql = $db->getQuoter()->quoteSql($expectedSql);
 
-        $this->assertSame(
-            $expected,
+        $this->assertStringEndsWith(
+            $expectedSql,
             $dataReader->getPreparedQuery()->createCommand()->getRawSql(),
         );
     }
@@ -371,10 +369,11 @@ abstract class QueryDataReaderTest extends TestCase
         $db = $this->getConnection();
         $query = (new Query($db))->from('customer');
         $dataReader = (new QueryDataReader($query))->withHaving($having);
-        $expected = 'SELECT * FROM `customer` HAVING ' . $condition;
+        $expectedSql = 'SELECT * FROM {{%customer}} HAVING ' . $condition;
+        $expectedSql = $db->getQuoter()->quoteSql($expectedSql);
 
         $this->assertSame(
-            $expected,
+            $expectedSql,
             $dataReader->getPreparedQuery()->createCommand()->getRawSql(),
         );
     }

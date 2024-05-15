@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Db\Tests\Mysql;
+namespace Yiisoft\Data\Db\Tests\Pgsql;
 
 final class QueryDataReaderTest extends \Yiisoft\Data\Db\Tests\Base\QueryDataReaderTest
 {
@@ -12,7 +12,7 @@ final class QueryDataReaderTest extends \Yiisoft\Data\Db\Tests\Base\QueryDataRea
     {
         return [
             [
-                'SELECT * FROM `customer` LIMIT 2, 18446744073709551615',
+                'SELECT * FROM "customer" OFFSET 2',
             ],
         ];
     }
