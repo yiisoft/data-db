@@ -45,11 +45,10 @@ final class CustomerQuery extends Query
 
     public function asObject(bool $value): self
     {
-        if ($value) {
-            $this->data = array_map(static fn ($item) => (object) $item, $this->data);
-        } else {
-            $this->data = array_map(static fn ($item) => (array) $item, $this->data);
-        }
+        $this->data = array_map(
+            static fn ($item): object|array => $value ? (object) $item : (array) $item,
+            $this->data,
+        );
 
         return $this;
     }
