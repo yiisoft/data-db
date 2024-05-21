@@ -49,20 +49,20 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     {
         /** @var PdoConnectionInterface $db */
         $db = $this->getConnection();
-        if ($db->getSchema()->getTableSchema('user') !== null) {
+        if ($db->getSchema()->getTableSchema('{{%user}}') !== null) {
             return;
         }
 
         $db
             ->createCommand()
             ->createTable(
-                'user',
+                '{{%user}}',
                 [
                     'id' => 'pk',
                     'number' => 'integer NOT NULL',
                     'email' => 'string(255) NOT NULL',
                     'balance' => 'float NOT NULL DEFAULT 0.0',
-                    'born_at' => 'datetime',
+                    'born_at' => 'date',
                 ],
             )
             ->execute();
@@ -76,7 +76,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $db
             ->createCommand()
             ->batchInsert(
-                'user',
+                '{{%user}}',
                 ['number', 'email', 'balance', 'born_at'],
                 $fixtures,
             )
@@ -87,8 +87,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     {
         /** @var PdoConnectionInterface $db */
         $db = $this->getConnection();
-        $db
-            ->createCommand()
-            ->dropTable('{{%user}}');
+        $db->createCommand()->dropTable('{{%user}}')->execute();
     }
 }
