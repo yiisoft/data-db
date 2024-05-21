@@ -12,7 +12,7 @@ use Yiisoft\Db\Mssql\Driver;
 
 trait DatabaseTrait
 {
-    protected function getConnection(): PdoConnectionInterface
+    protected function makeConnection(): PdoConnectionInterface
     {
         $database = getenv('YII_MSSQL_DATABASE');
         $host = getenv('YII_MSSQL_HOST');
