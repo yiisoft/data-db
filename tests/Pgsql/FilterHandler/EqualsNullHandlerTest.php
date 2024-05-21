@@ -10,4 +10,3 @@ class EqualsNullHandlerTest extends \Yiisoft\Data\Db\Tests\Base\FilterHandler\Eq
 {
     use DatabaseTrait;
 }
-

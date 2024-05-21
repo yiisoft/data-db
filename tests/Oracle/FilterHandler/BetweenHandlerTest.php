@@ -10,4 +10,3 @@ class BetweenHandlerTest extends \Yiisoft\Data\Db\Tests\Base\FilterHandler\Betwe
 {
     use DatabaseTrait;
 }
-

@@ -10,4 +10,3 @@ class LikeHandlerTest extends \Yiisoft\Data\Db\Tests\Base\FilterHandler\LikeHand
 {
     use DatabaseTrait;
 }
-
