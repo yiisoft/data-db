@@ -12,7 +12,7 @@ use Yiisoft\Db\Mssql\Driver;
 
 trait DatabaseTrait
 {
-    protected function getConnection(): PdoConnectionInterface
+    protected function makeConnection(): PdoConnectionInterface
     {
         $database = getenv('YII_MSSQL_DATABASE');
         $host = getenv('YII_MSSQL_HOST');
@@ -20,7 +20,11 @@ trait DatabaseTrait
         $user = getenv('YII_MSSQL_USER');
         $password = getenv('YII_MSSQL_PASSWORD');
 
-        $pdoDriver = new Driver("sqlsrv:Server=$host,$port;Database=$database", $user, $password);
+        $pdoDriver = new Driver(
+            "sqlsrv:Server=$host,$port;Database=$database;TrustServerCertificate=true",
+            $user,
+            $password,
+        );
         $pdoDriver->charset('UTF8MB4');
 
         return new Connection($pdoDriver, new SchemaCache(new ArrayCache()));

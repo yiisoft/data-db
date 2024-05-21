@@ -13,7 +13,7 @@ use Yiisoft\Db\Oracle\Driver;
 
 trait DatabaseTrait
 {
-    protected function getConnection(): PdoConnectionInterface
+    protected function makeConnection(): PdoConnectionInterface
     {
         $database = getenv('YII_ORACLE_DATABASE');
         $host = getenv('YII_ORACLE_HOST');
