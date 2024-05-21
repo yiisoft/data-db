@@ -10,4 +10,3 @@ class NotHandlerTest extends \Yiisoft\Data\Db\Tests\Base\FilterHandler\NotHandle
 {
     use DatabaseTrait;
 }
-

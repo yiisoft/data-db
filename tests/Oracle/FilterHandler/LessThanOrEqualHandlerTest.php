@@ -10,4 +10,3 @@ class LessThanOrEqualHandlerTest extends \Yiisoft\Data\Db\Tests\Base\FilterHandl
 {
     use DatabaseTrait;
 }
-

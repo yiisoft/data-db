@@ -10,4 +10,3 @@ class AnyHandlerTest extends \Yiisoft\Data\Db\Tests\Base\FilterHandler\AnyHandle
 {
     use DatabaseTrait;
 }
-

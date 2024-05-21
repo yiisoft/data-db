@@ -10,4 +10,3 @@ class EqualsHandlerTest extends \Yiisoft\Data\Db\Tests\Base\FilterHandler\Equals
 {
     use DatabaseTrait;
 }
-

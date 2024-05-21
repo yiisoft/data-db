@@ -10,4 +10,3 @@ class GreaterThanHandlerTest extends \Yiisoft\Data\Db\Tests\Base\FilterHandler\G
 {
     use DatabaseTrait;
 }
-

@@ -10,4 +10,3 @@ class GreaterThanOrEqualHandlerTest extends \Yiisoft\Data\Db\Tests\Base\FilterHa
 {
     use DatabaseTrait;
 }
-
