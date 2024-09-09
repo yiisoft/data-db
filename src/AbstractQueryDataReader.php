@@ -255,7 +255,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
      * @psalm-suppress ArgumentTypeCoercion    *
      * @psalm-return static<TKey, TValue>
      */
-    public function withFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
+    public function withAddedFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
     {
         $new = clone $this;
         $new->count = $new->data = null;
