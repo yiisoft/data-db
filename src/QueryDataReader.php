@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db;
 
-use Yiisoft\Data\Reader\FilterInterface;
-
 /**
  * Base class for `QueryDataReaderInterface`
  *
