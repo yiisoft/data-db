@@ -20,7 +20,7 @@ name: mssql
 
 jobs:
   tests:
-    name: PHP ${{ matrix.php }}
+    name: PHP ${{ matrix.php }}-mssql-${{ matrix.mssql }}
 
     env:
       extensions: pdo, pdo_sqlsrv-5.11.1
