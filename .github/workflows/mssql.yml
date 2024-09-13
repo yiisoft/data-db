@@ -24,7 +24,6 @@ jobs:
 
     env:
       extensions: pdo, pdo_sqlsrv-5.11.1
-      SA_PASSWORD: YourStrong!Passw0rd
 
     runs-on: ubuntu-latest
 
@@ -54,19 +53,19 @@ jobs:
       mssql:
         image: mcr.microsoft.com/mssql/server:${{ matrix.mssql.server }}
         env:
-          SA_PASSWORD: ${{ env.SA_PASSWORD }}
+          SA_PASSWORD: YourStrong!Passw0rd
           ACCEPT_EULA: Y
           MSSQL_PID: Developer
         ports:
           - 1433:1433
-        options: --name=mssql --health-cmd="/opt/mssql-tools${{ matrix.mssql.odbc-version }}/bin/sqlcmd ${{ matrix.mssql.flag }} -S localhost -U SA -P '${{ SA_PASSWORD }}' -Q 'SELECT 1'" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: --name=mssql --health-cmd="/opt/mssql-tools${{ matrix.mssql.odbc-version }}/bin/sqlcmd ${{ matrix.mssql.flag }} -S localhost -U SA -P 'YourStrong!Passw0rd' -Q 'SELECT 1'" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Create MS SQL Database
-        run: docker exec -i mssql /opt/mssql-tools${{ matrix.mssql.odbc-version }}/bin/sqlcmd ${{ matrix.mssql.flag }} -S localhost -U SA -P '${{ env.SA_PASSWORD }}' -Q 'CREATE DATABASE yiitest'
+        run: docker exec -i mssql /opt/mssql-tools${{ matrix.mssql.odbc-version }}/bin/sqlcmd ${{ matrix.mssql.flag }} -S localhost -U SA -P 'YourStrong!Passw0rd' -Q 'CREATE DATABASE yiitest'
 
       - name: Install PHP with extensions
         uses: shivammathur/setup-php@v2
@@ -105,7 +104,7 @@ jobs:
           YII_MSSQL_HOST: 127.0.0.1
           YII_MSSQL_PORT: 1433
           YII_MSSQL_USER: SA
-          YII_MSSQL_PASSWORD: ${{ env.SA_PASSWORD }}
+          YII_MSSQL_PASSWORD: YourStrong!Passw0rd
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
