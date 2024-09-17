@@ -22,7 +22,7 @@ trait DatabaseTrait
             new SchemaCache(new ArrayCache()),
         );
 
-        DbHelper::loadFixture($db, dirname(__DIR__) . '/Support/Fixture/db.sql');
+        DbHelper::loadFixture($db, __DIR__ . '/db.sql');
 
         return $db;
     }
