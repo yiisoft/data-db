@@ -6,7 +6,6 @@ namespace Yiisoft\Data\Db\Tests\Base;
 
 use DateTime;
 use PHPUnit\Framework\Attributes\DataProvider;
-use stdClass;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Db\Tests\Support\CustomerDataReader;
 use Yiisoft\Data\Db\Tests\Support\CustomerDTO;
