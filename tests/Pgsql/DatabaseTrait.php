@@ -9,6 +9,9 @@ use Yiisoft\Db\Cache\SchemaCache;
 use Yiisoft\Db\Driver\Pdo\PdoConnectionInterface;
 use Yiisoft\Db\Pgsql\Connection;
 use Yiisoft\Db\Pgsql\Driver;
+use Yiisoft\Db\Tests\Support\DbHelper;
+
+use function dirname;
 
 trait DatabaseTrait
 {
@@ -23,6 +26,10 @@ trait DatabaseTrait
         $pdoDriver = new Driver("pgsql:host=$host;dbname=$database;port=$port", $user, $password);
         $pdoDriver->charset('UTF8');
 
-        return new Connection($pdoDriver, new SchemaCache(new ArrayCache()));
+        $db = new Connection($pdoDriver, new SchemaCache(new ArrayCache()));
+
+        DbHelper::loadFixture($db, dirname(__DIR__) . '/Support/Fixture/db.sql');
+
+        return $db;
     }
 }

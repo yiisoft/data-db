@@ -9,6 +9,9 @@ use Yiisoft\Db\Cache\SchemaCache;
 use Yiisoft\Db\Driver\Pdo\PdoConnectionInterface;
 use Yiisoft\Db\Mssql\Connection;
 use Yiisoft\Db\Mssql\Driver;
+use Yiisoft\Db\Tests\Support\DbHelper;
+
+use function dirname;
 
 trait DatabaseTrait
 {
@@ -23,6 +26,10 @@ trait DatabaseTrait
         $pdoDriver = new Driver("sqlsrv:Server=$host,$port;Database=$database", $user, $password);
         $pdoDriver->charset('UTF8MB4');
 
-        return new Connection($pdoDriver, new SchemaCache(new ArrayCache()));
+        $db = new Connection($pdoDriver, new SchemaCache(new ArrayCache()));
+
+        DbHelper::loadFixture($db, dirname(__DIR__) . '/Support/Fixture/db.sql');
+
+        return $db;
     }
 }

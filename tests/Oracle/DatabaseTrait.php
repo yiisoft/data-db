@@ -10,6 +10,9 @@ use Yiisoft\Db\Cache\SchemaCache;
 use Yiisoft\Db\Driver\Pdo\PdoConnectionInterface;
 use Yiisoft\Db\Oracle\Connection;
 use Yiisoft\Db\Oracle\Driver;
+use Yiisoft\Db\Tests\Support\DbHelper;
+
+use function dirname;
 
 trait DatabaseTrait
 {
@@ -25,6 +28,10 @@ trait DatabaseTrait
         $pdoDriver->charset('AL32UTF8');
         $pdoDriver->attributes([PDO::ATTR_STRINGIFY_FETCHES => true]);
 
-        return new Connection($pdoDriver, new SchemaCache(new ArrayCache()));
+        $db = new Connection($pdoDriver, new SchemaCache(new ArrayCache()));
+
+        DbHelper::loadFixture($db, dirname(__DIR__) . '/Support/Fixture/db.sql');
+
+        return $db;
     }
 }
