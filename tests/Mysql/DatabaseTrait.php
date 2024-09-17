@@ -11,8 +11,6 @@ use Yiisoft\Db\Mysql\Connection;
 use Yiisoft\Db\Mysql\Driver;
 use Yiisoft\Db\Tests\Support\DbHelper;
 
-use function dirname;
-
 trait DatabaseTrait
 {
     protected function getConnection(): PdoConnectionInterface

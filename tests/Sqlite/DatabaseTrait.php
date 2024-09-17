@@ -11,8 +11,6 @@ use Yiisoft\Db\Sqlite\Connection;
 use Yiisoft\Db\Sqlite\Driver;
 use Yiisoft\Db\Tests\Support\DbHelper;
 
-use function dirname;
-
 trait DatabaseTrait
 {
     protected function getConnection(): PdoConnectionInterface
