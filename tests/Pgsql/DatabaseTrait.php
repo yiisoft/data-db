@@ -10,9 +10,6 @@ use Yiisoft\Db\Cache\SchemaCache;
 use Yiisoft\Db\Driver\Pdo\PdoConnectionInterface;
 use Yiisoft\Db\Pgsql\Connection;
 use Yiisoft\Db\Pgsql\Driver;
-use Yiisoft\Db\Tests\Support\DbHelper;
-
-use function dirname;
 
 trait DatabaseTrait
 {

@@ -11,9 +11,6 @@ use Yiisoft\Db\Cache\SchemaCache;
 use Yiisoft\Db\Driver\Pdo\PdoConnectionInterface;
 use Yiisoft\Db\Oracle\Connection;
 use Yiisoft\Db\Oracle\Driver;
-use Yiisoft\Db\Tests\Support\DbHelper;
-
-use function dirname;
 
 trait DatabaseTrait
 {
