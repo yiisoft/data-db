@@ -6,6 +6,7 @@ namespace Yiisoft\Data\Db\Tests\Oracle;
 
 use PDO;
 use Yiisoft\Cache\ArrayCache;
+use Yiisoft\Data\Db\Tests\TestHelper;
 use Yiisoft\Db\Cache\SchemaCache;
 use Yiisoft\Db\Driver\Pdo\PdoConnectionInterface;
 use Yiisoft\Db\Oracle\Connection;
@@ -30,7 +31,7 @@ trait DatabaseTrait
 
         $db = new Connection($pdoDriver, new SchemaCache(new ArrayCache()));
 
-        DbHelper::loadFixture($db, dirname(__DIR__) . '/Support/Fixture/db.sql');
+        TestHelper::loadFixtures($db);
 
         return $db;
     }

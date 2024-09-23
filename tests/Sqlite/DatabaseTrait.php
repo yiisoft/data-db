@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Tests\Sqlite;
 
 use Yiisoft\Cache\ArrayCache;
+use Yiisoft\Data\Db\Tests\TestHelper;
 use Yiisoft\Db\Cache\SchemaCache;
 use Yiisoft\Db\Driver\Pdo\PdoConnectionInterface;
 use Yiisoft\Db\Sqlite\Connection;
 use Yiisoft\Db\Sqlite\Driver;
-use Yiisoft\Db\Tests\Support\DbHelper;
-
-use function dirname;
 
 trait DatabaseTrait
 {
@@ -21,9 +19,7 @@ trait DatabaseTrait
             new Driver('sqlite::memory:'),
             new SchemaCache(new ArrayCache()),
         );
-
-        DbHelper::loadFixture($db, __DIR__ . '/db.sql');
-
+        TestHelper::loadFixtures($db);
         return $db;
     }
 }
