@@ -25,7 +25,7 @@ jobs:
     env:
       extensions: pdo, pdo_sqlsrv-5.11.1
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.mssql.os || 'ubuntu-latest' }}
 
     strategy:
       matrix:
@@ -43,6 +43,7 @@ jobs:
           - php: 8.3
             mssql:
               server: 2017-latest
+              os: ubuntu-20.04
           - php: 8.3
             mssql:
               server: 2019-latest
