@@ -10,7 +10,6 @@ use Yiisoft\Db\Cache\SchemaCache;
 use Yiisoft\Db\Driver\Pdo\PdoConnectionInterface;
 use Yiisoft\Db\Mysql\Connection;
 use Yiisoft\Db\Mysql\Driver;
-use Yiisoft\Db\Tests\Support\DbHelper;
 
 trait DatabaseTrait
 {
