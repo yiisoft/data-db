@@ -19,7 +19,7 @@ final class TestHelper
         $db->createCommand()->createTable(
             'customer',
             [
-                'id' => $db->getSchema()->createColumn(SchemaInterface::TYPE_PK),
+                'id' => $db->getSchema()->createColumn(SchemaInterface::TYPE_INTEGER)->notNull(),
                 'name' => $db->getSchema()->createColumn(SchemaInterface::TYPE_STRING, 128)->notNull(),
                 'email' => $db->getSchema()->createColumn(SchemaInterface::TYPE_STRING, 128),
                 'address' => $db->getSchema()->createColumn(SchemaInterface::TYPE_TEXT),
@@ -29,11 +29,11 @@ final class TestHelper
         )->execute();
         $db->createCommand()->batchInsert(
             'customer',
-            ['email', 'name', 'address', 'status', 'profile_id'],
+            ['id', 'email', 'name', 'address', 'status', 'profile_id'],
             [
-                ['user1@example.com', 'user1', 'address1', 1, 1],
-                ['user2@example.com', 'user2', 'address2', 1, null],
-                ['user3@example.com', 'user3', 'address3', 2, 2],
+                [1, 'user1@example.com', 'user1', 'address1', 1, 1],
+                [2, 'user2@example.com', 'user2', 'address2', 1, null],
+                [3, 'user3@example.com', 'user3', 'address3', 2, 2],
             ],
         )->execute();
     }
