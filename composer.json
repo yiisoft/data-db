@@ -56,7 +56,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Yiisoft\\Data\\Db\\Tests\\": "tests"
+            "Yiisoft\\Data\\Db\\Tests\\": "tests",
+            "Yiisoft\\Data\\Tests\\": "vendor/yiisoft/data/tests"
         },
         "files": ["tests/bootstrap.php"]
     },

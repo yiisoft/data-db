@@ -13,7 +13,7 @@ use Yiisoft\Db\Mysql\Driver;
 
 trait DatabaseTrait
 {
-    protected function getConnection(): PdoConnectionInterface
+    protected function makeConnection(): PdoConnectionInterface
     {
         $database = getenv('YII_MYSQL_DATABASE');
         $host = getenv('YII_MYSQL_HOST');

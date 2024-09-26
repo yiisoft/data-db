@@ -6,6 +6,7 @@ namespace Yiisoft\Data\Db\Tests\Base;
 
 use DateTime;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Db\Tests\Support\CustomerDataReader;
 use Yiisoft\Data\Db\Tests\Support\CustomerDTO;
@@ -28,6 +29,8 @@ use Yiisoft\Db\Query\Query;
 
 abstract class QueryDataReaderTest extends TestCase
 {
+    use DataTrait;
+
     public function testDataReader(): void
     {
         $db = $this->getConnection();
