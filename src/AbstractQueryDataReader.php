@@ -27,7 +27,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     private ?Sort $sort = null;
     private ?FilterInterface $filter = null;
     private ?FilterInterface $having = null;
-    private int $limit = 0;
+    private ?int $limit = null;
     private int $offset = 0;
 
     /**
@@ -163,7 +163,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
      * @psalm-mutation-free
      * @psalm-return static<TKey, TValue>
      */
-    public function withLimit(int $limit): static
+    public function withLimit(?int $limit): static
     {
         if ($limit < 0) {
             throw new InvalidArgumentException('$limit must not be less than 0.');
@@ -210,7 +210,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
      * @psalm-mutation-free
      * @psalm-return static<TKey, TValue>
      */
-    public function withFilter(FilterInterface $filter): static
+    public function withFilter(?FilterInterface $filter): static
     {
         $new = clone $this;
         $new->filter = $filter;
@@ -255,7 +255,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
      * @psalm-suppress ArgumentTypeCoercion    *
      * @psalm-return static<TKey, TValue>
      */
-    public function withFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
+    public function withAddedFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
     {
         $new = clone $this;
         $new->count = $new->data = null;
@@ -313,4 +313,19 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
      * @psalm-return TValue
      */
     abstract protected function createItem(array|object $row): array|object;
+
+    public function getFilter(): ?FilterInterface
+    {
+        return $this->filter;
+    }
+
+    public function getLimit(): ?int
+    {
+        return $this->limit;
+    }
+
+    public function getOffset(): int
+    {
+        return $this->offset;
+    }
 }

@@ -6,11 +6,9 @@ namespace Yiisoft\Data\Db\Tests\Base;
 
 use DateTime;
 use PHPUnit\Framework\Attributes\DataProvider;
-use stdClass;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Db\Tests\Support\CustomerDataReader;
 use Yiisoft\Data\Db\Tests\Support\CustomerDTO;
-use Yiisoft\Data\Db\Tests\Support\CustomerQuery;
 use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\Filter\Any;
 use Yiisoft\Data\Reader\Filter\Between;
@@ -149,7 +147,7 @@ abstract class QueryDataReaderTest extends TestCase
 
     public function testCount(): void
     {
-        $query = new CustomerQuery($this->getConnection());
+        $query = (new Query($this->getConnection()))->from('customer');
         $dataReader = (new CustomerDataReader($query));
 
         $this->assertEquals($query->count(), $dataReader->count());
@@ -157,7 +155,7 @@ abstract class QueryDataReaderTest extends TestCase
 
     public function testDtoCreateItem(): void
     {
-        $query = new CustomerQuery($this->getConnection());
+        $query = (new Query($this->getConnection()))->from('customer');
         $dataReader = (new CustomerDataReader($query))
             ->withBatchSize(null);
 
@@ -168,23 +166,9 @@ abstract class QueryDataReaderTest extends TestCase
         }
     }
 
-    public function testObjectCreateItem(): void
-    {
-        $query = (new CustomerQuery($this->getConnection()))
-            ->asObject(true);
-        $dataReader = (new QueryDataReader($query))
-            ->withBatchSize(null);
-
-        $this->assertInstanceOf(stdClass::class, $dataReader->readOne());
-
-        foreach ($dataReader->read() as $row) {
-            $this->assertInstanceOf(stdClass::class, $row);
-        }
-    }
-
     public function testArrayCreateItem(): void
     {
-        $query = new CustomerQuery($this->getConnection());
+        $query = (new Query($this->getConnection()))->from('customer');
         $dataReader = (new QueryDataReader($query))
             ->withBatchSize(null);
 

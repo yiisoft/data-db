@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Tests\Mssql;
 
 use Yiisoft\Cache\ArrayCache;
+use Yiisoft\Data\Db\Tests\TestHelper;
 use Yiisoft\Db\Cache\SchemaCache;
 use Yiisoft\Db\Driver\Pdo\PdoConnectionInterface;
 use Yiisoft\Db\Mssql\Connection;
@@ -27,6 +28,10 @@ trait DatabaseTrait
         );
         $pdoDriver->charset('UTF8MB4');
 
-        return new Connection($pdoDriver, new SchemaCache(new ArrayCache()));
+        $db = new Connection($pdoDriver, new SchemaCache(new ArrayCache()));
+
+        TestHelper::loadFixtures($db);
+
+        return $db;
     }
 }
