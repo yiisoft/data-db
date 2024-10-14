@@ -18,7 +18,7 @@ use Yiisoft\Data\Db\FilterHandler\GreaterThanOrEqualFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\InFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\LessThanFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\LessThanOrEqualFilterHandler;
-use Yiisoft\Data\Db\FilterHandler\LikeFilterHandler\LikeFilterHandlerFactory;
+use Yiisoft\Data\Db\FilterHandler\LikeFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\NotFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\QueryFilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
@@ -55,7 +55,7 @@ final class FilterHandler
                 new GreaterThanOrEqualFilterHandler(),
                 new LessThanFilterHandler(),
                 new LessThanOrEqualFilterHandler(),
-                LikeFilterHandlerFactory::getLikeHandler(),
+                new LikeFilterHandler(),
                 new InFilterHandler(),
                 new ExistsFilterHandler(),
                 new NotFilterHandler(),
