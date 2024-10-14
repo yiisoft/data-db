@@ -27,7 +27,7 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Db\Expression\Expression;
 use Yiisoft\Db\Query\Query;
 
-abstract class QueryDataReaderTest extends TestCase
+abstract class BaseQueryDataReaderTestCase extends TestCase
 {
     use DataTrait;
 
