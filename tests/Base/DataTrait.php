@@ -79,12 +79,11 @@ trait DataTrait
                     'id' => 'pk',
                     'number' => 'integer NOT NULL',
                     'email' => 'string(255) NOT NULL',
-                    'balance' => 'float NOT NULL DEFAULT 0.0',
+                    'balance' => 'float DEFAULT 0.0 NOT NULL',
                     'born_at' => 'date',
                 ],
             )
             ->execute();
-
 
         $fixtures = self::$fixtures;
         foreach ($fixtures as $index => $fixture) {
