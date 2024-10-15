@@ -87,7 +87,7 @@ trait DataTrait
 
         $fixtures = self::$fixtures;
         foreach ($fixtures as $index => $fixture) {
-            $fixtures[$index]['balance'] = (string) $fixtures[$index]['balance'];
+            // $fixtures[$index]['balance'] = (string) $fixtures[$index]['balance'];
         }
 
         $db
