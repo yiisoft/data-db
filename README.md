@@ -16,6 +16,16 @@
 
 The package provides `Yiisoft\Db\Query\Query` bindings for generic data abstractions.
 
+Detailed build statuses:
+
+| RDBMS                | Status                                                                                                                                                            |
+|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| SQLite               | [![SQLite status](https://github.com/yiisoft/data-db/workflows/sqlite/badge.svg)](https://github.com/yiisoft/data-db/actions?query=workflow%3Asqlite)             |
+| MySQL                | [![MYSQL status](https://github.com/yiisoft/data-db/workflows/mysql/badge.svg)](https://github.com/yiisoft/data-db/actions?query=workflow%3Amysql)                |
+| PostgreSQL           | [![PostgreSQL status](https://github.com/yiisoft/data-db/workflows/pgsql/badge.svg)](https://github.com/yiisoft/data-db/actions?query=workflow%3Apgsql)           |
+| Microsoft SQL Server | [![Microsoft SQL Server status](https://github.com/yiisoft/data-db/workflows/mssql/badge.svg)](https://github.com/yiisoft/data-db/actions?query=workflow%3Amssql) |
+| Oracle               | [![Oracle status](https://github.com/yiisoft/data-db/workflows/oracle/badge.svg)](https://github.com/yiisoft/data-db/actions?query=workflow%3Aoracle)             |
+
 ## Requirements
 
 - PHP 8.1 or higher.
