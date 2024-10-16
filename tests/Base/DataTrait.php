@@ -88,10 +88,10 @@ trait DataTrait
 
         $fixtures = self::$fixtures;
         foreach ($fixtures as $index => $fixture) {
-            if ($db->getDriverName() === 'oci') {
+            if ($db->getDriverName() === 'oci' && $fixture['born_at'] !== null) {
                 $fixtures[$index]['born_at'] = new Expression(
                     "TO_DATE(:born_at, 'yyyy-mm-dd')",
-                    [':born_at' => $fixtures[$index]['born_at']],
+                    [':born_at' => $fixture['born_at']],
                 );
             }
         }
