@@ -90,7 +90,7 @@ trait DataTrait
         foreach ($fixtures as $index => $fixture) {
             if ($db->getDriverName() === 'oci') {
                 $fixtures[$index]['born_at'] = new Expression(
-                    'TO_DATE(:born_at)',
+                    "TO_DATE(:born_at, 'yyyy-mm-dd')",
                     [':born_at' => $fixtures[$index]['born_at']],
                 );
             }
