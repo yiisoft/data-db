@@ -8,6 +8,7 @@ use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Tests\Common\FixtureTrait;
 use Yiisoft\Db\Driver\Pdo\PdoConnectionInterface;
+use Yiisoft\Db\Expression\Expression;
 use Yiisoft\Db\Query\Query;
 
 trait DataTrait
@@ -87,7 +88,12 @@ trait DataTrait
 
         $fixtures = self::$fixtures;
         foreach ($fixtures as $index => $fixture) {
-            // $fixtures[$index]['balance'] = (string) $fixtures[$index]['balance'];
+            if ($db->getDriverName() === 'oci') {
+                $fixtures[$index]['born_at'] = new Expression(
+                    'TO_DATE(:born_at)',
+                    [':born_at' => $fixtures[$index]['born_at']],
+                );
+            }
         }
 
         $db
