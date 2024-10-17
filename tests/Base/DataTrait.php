@@ -60,8 +60,8 @@ trait DataTrait
             $fixture['number'] = (int) $fixture['number'];
             $fixture['balance'] = (float) $fixture['balance'];
 
-            if ($fixture['born_at'] !== null && $this->getConnection()->getDriverName() === 'oci') {
-                $fixture['born_at'] = DateTime::createFromFormat('d-M-Y', $fixture['born_at'])->format('Y-m-d');
+            if ($fixture['born_at'] !== null && $this->getConnection()->getDriverName() !== 'oci') {
+                $fixture['born_at'] = DateTime::createFromFormat('d-M-y', $fixture['born_at'])->format('Y-m-d');
             }
 
             $processedActualFixtures[$fixture['number'] - 1] = $fixture;
