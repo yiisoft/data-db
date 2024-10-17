@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Tests\Base;
 
+use DateTime;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Tests\Common\FixtureTrait;
@@ -59,6 +60,10 @@ trait DataTrait
             $fixture['number'] = (int) $fixture['number'];
             $fixture['balance'] = (float) $fixture['balance'];
 
+            if ($fixture['born_at'] !== null && $this->getConnection()->getDriverName() === 'oci') {
+                $fixture['born_at'] = DateTime::createFromFormat('d-M-Y', $fixture['born_at'])->format('Y-m-d');
+            }
+
             $processedActualFixtures[$fixture['number'] - 1] = $fixture;
         }
 
@@ -89,7 +94,7 @@ trait DataTrait
 
         $db->transaction(static function (ConnectionInterface $database): void {
             foreach (self::$fixtures as $fixture) {
-                if ($database->getDriverName() === 'oci' && $fixture['born_at'] !== null) {
+                if ($fixture['born_at'] !== null && $database->getDriverName() === 'oci') {
                     $fixture['born_at'] = new Expression(
                         "TO_DATE(:born_at, 'yyyy-mm-dd')",
                         [':born_at' => $fixture['born_at']],
