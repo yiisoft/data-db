@@ -17,8 +17,10 @@ final class ReaderWithLikeTest extends BaseReaderWithLikeTestCase
         $data['search: contains, same case, case sensitive: true'] = ['email', 'ed@be', true, [2]];
         $data['search: contains, different case, case sensitive: true'] = ['email', 'SEED@', true, []];
         // TODO: Remove after changes in yiisoft/db
-        unset($data['search: contains, different case, case sensitive: null'], $data['search: contains, different case, case sensitive: false']);
-
+        unset(
+            $data['search: contains, different case, case sensitive: null'],
+            $data['search: contains, different case, case sensitive: false'],
+        );
 
         return $data;
     }
