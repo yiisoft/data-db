@@ -89,7 +89,7 @@ trait DataTrait
 
         $db->transaction(static function (ConnectionInterface $database): void {
             foreach (self::$fixtures as $fixture) {
-                if ($database->getDriverName() !== 'oci' && $fixture['born_at'] !== null) {
+                if ($database->getDriverName() === 'oci' && $fixture['born_at'] !== null) {
                     $fixture['born_at'] = new Expression(
                         "TO_DATE(:born_at, 'yyyy-mm-dd')",
                         [':born_at' => $fixture['born_at']],
