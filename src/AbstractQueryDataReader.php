@@ -27,6 +27,9 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     private ?Sort $sort = null;
     private ?FilterInterface $filter = null;
     private ?FilterInterface $having = null;
+    /**
+     * @psalm-var non-negative-int|null
+     */
     private ?int $limit = null;
     private int $offset = 0;
 

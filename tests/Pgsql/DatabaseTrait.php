@@ -13,7 +13,7 @@ use Yiisoft\Db\Pgsql\Driver;
 
 trait DatabaseTrait
 {
-    protected function getConnection(): PdoConnectionInterface
+    protected function makeConnection(): PdoConnectionInterface
     {
         $database = getenv('YII_PGSQL_DATABASE');
         $host = getenv('YII_PGSQL_HOST');

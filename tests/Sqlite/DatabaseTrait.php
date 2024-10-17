@@ -13,7 +13,7 @@ use Yiisoft\Db\Sqlite\Driver;
 
 trait DatabaseTrait
 {
-    protected function getConnection(): PdoConnectionInterface
+    protected function makeConnection(): PdoConnectionInterface
     {
         $db = new Connection(
             new Driver('sqlite::memory:'),
