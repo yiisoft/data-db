@@ -8,7 +8,6 @@ use DateTime;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Tests\Common\FixtureTrait;
-use Yiisoft\Db\Connection\ConnectionInterface;
 use Yiisoft\Db\Driver\Pdo\PdoConnectionInterface;
 use Yiisoft\Db\Expression\Expression;
 use Yiisoft\Db\Query\Query;
