@@ -49,6 +49,9 @@
         "yiisoft/db-pgsql": "^1.3",
         "yiisoft/db-sqlite": "^1.2"
     },
+    "provide": {
+        "ext-pdo_pgsql": "*"
+    },
     "autoload": {
         "psr-4": {
             "Yiisoft\\Data\\Db\\": "src"
