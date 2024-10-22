@@ -6,15 +6,26 @@ services:
       - ./tests:/code/tests
       - ./phpunit.xml.dist:/code/phpunit.xml.dist
     command: tail -F anything
-
+    restart: always
+  mysql:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: "yii"
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_ROOT_HOST: "%"
+    command: --authentication-policy=mysql_native_password
+    restart: always
   oracle:
     image: gvenzl/oracle-xe:21
     ports:
-      - 1521:1521
+      - "1521:1521"
     expose:
-      - 1521
+      - "1521"
     environment:
       ORACLE_PASSWORD : root
       ORACLE_DATABASE : yiitest
       APP_USER: yiitest
       APP_USER_PASSWORD: root
+    restart: always
