@@ -56,10 +56,6 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
     && apt-get install -y msodbcsql18 mssql-tools18 unixodbc-dev \
     && rm -rf /var/lib/apt/lists/*
 
-#RUN apt-get update && apt-get install -y unixodbc-dev
-#RUN curl https://packages.microsoft.com/keys/microsoft.asc | tee /etc/apt/trusted.gpg.d/microsoft.asc
-#RUN apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql18
-
 RUN pecl install sqlsrv
 RUN printf "; priority=20\nextension=sqlsrv.so\n" > /usr/local/etc/php/conf.d/php-sqlsrv.ini
 
