@@ -11,6 +11,8 @@ services:
 #        condition: service_healthy
 #      postgres:
 #        condition: service_healthy
+#      mssql:
+#        condition: service_healthy
 #  mysql:
 #    image: mysql:9
 #    ports:
@@ -52,6 +54,12 @@ services:
       - "1433:1433"
     expose:
       - "1433"
+#    healthcheck:
+#      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "SA-PASSWORD" -Q "SELECT 1" -b -o /dev/null
+#      interval: 10s
+#      timeout: 3s
+#      retries: 10
+#      start_period: 10s
 #  oracle:
 #    image: gvenzl/oracle-xe:21
 #    ports:
