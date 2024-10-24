@@ -30,7 +30,8 @@ RUN apt-get update && apt-get install -y unzip libaio1
 # RUN echo 'instantclient,/usr/local/instantclient' | pecl install pdo_oci
 # RUN echo "extension=pdo_oci.so" > /usr/local/etc/php/conf.d/php-pdo-oci.ini
 
-RUN docker-php-ext-install pdo_mysql
+RUN apt-get update && apt-get install -y libpq-dev
+RUN docker-php-ext-install pdo_mysql pdo_pgsql
 
 # Composer
 

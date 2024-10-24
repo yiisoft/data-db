@@ -9,6 +9,8 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+      postgres:
+        condition: service_healthy
   mysql:
     image: mysql:9
     ports:
@@ -25,6 +27,22 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
+  postgres:
+    image: postgres:17
+    ports:
+      - "5432:5432"
+    volumes:
+      - type: tmpfs
+        target: /var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: yii
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   oracle:
     image: gvenzl/oracle-xe:21
     ports:
