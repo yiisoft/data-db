@@ -39,7 +39,7 @@ ENV ACCEPT_EULA=Y
 
 # Install prerequisites required for tools and extensions installed later on.
 RUN apt-get update \
-    && apt-get install -y apt-transport-https gnupg2 libpng-dev libzip-dev nano \
+    && apt-get install -y apt-transport-https gnupg2 libpng-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install prerequisites for the sqlsrv and pdo_sqlsrv PHP extensions.
