@@ -6,45 +6,45 @@ services:
       - ./tests:/code/tests
       - ./phpunit.xml.dist:/code/phpunit.xml.dist
     command: tail -F anything
-#    depends_on:
-#      mysql:
-#        condition: service_healthy
-#      postgres:
-#        condition: service_healthy
-#      mssql:
-#        condition: service_healthy
-#  mysql:
-#    image: mysql:9
-#    ports:
-#      - "3306:3306"
-#    volumes:
-#      - type: tmpfs
-#        target: /var/lib/mysql
-#    environment:
-#      MYSQL_DATABASE: yii
-#      MYSQL_ROOT_PASSWORD: root
-#      MYSQL_ROOT_HOST: "%"
-#    healthcheck:
-#      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost", "-uroot" ]
-#      interval: 5s
-#      timeout: 5s
-#      retries: 20
-#  postgres:
-#    image: postgres:17
-#    ports:
-#      - "5432:5432"
-#    volumes:
-#      - type: tmpfs
-#        target: /var/lib/postgresql/data
-#    environment:
-#      POSTGRES_DB: yii
-#      POSTGRES_USER: postgres
-#      POSTGRES_PASSWORD: postgres
-#    healthcheck:
-#      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-#      interval: 5s
-#      timeout: 5s
-#      retries: 5
+    depends_on:
+      mysql:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      mssql:
+        condition: service_healthy
+  mysql:
+    image: mysql:9
+    ports:
+      - "3306:3306"
+    volumes:
+      - type: tmpfs
+        target: /var/lib/mysql
+    environment:
+      MYSQL_DATABASE: yii
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: "%"
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost", "-uroot" ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  postgres:
+    image: postgres:17
+    ports:
+      - "5432:5432"
+    volumes:
+      - type: tmpfs
+        target: /var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: yii
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
@@ -54,20 +54,20 @@ services:
       - "1433:1433"
     expose:
       - "1433"
-#    healthcheck:
-#      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "SA-PASSWORD" -Q "SELECT 1" -b -o /dev/null
-#      interval: 10s
-#      timeout: 3s
-#      retries: 10
-#      start_period: 10s
-#  oracle:
-#    image: gvenzl/oracle-xe:21
-#    ports:
-#      - "1521:1521"
-#    expose:
-#      - "1521"
-#    environment:
-#      ORACLE_PASSWORD : root
-#      ORACLE_DATABASE : yiitest
-#      APP_USER: yiitest
-#      APP_USER_PASSWORD: root
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "SA-PASSWORD" -Q "SELECT 1" -b -o /dev/null
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+  oracle:
+    image: gvenzl/oracle-xe:21
+    ports:
+      - "1521:1521"
+    expose:
+      - "1521"
+    environment:
+      ORACLE_PASSWORD : root
+      ORACLE_DATABASE : yiitest
+      APP_USER: yiitest
+      APP_USER_PASSWORD: root
