@@ -68,7 +68,7 @@ RUN printf "; priority=30\nextension=pdo_sqlsrv.so\n" > /usr/local/etc/php/conf.
 
 # Composer
 
-COPY --from=composer:2.8.1 /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer/composer:latest-bin:2.8.1 /composer /usr/bin/composer
 
 # Code
 
