@@ -1,3 +1,4 @@
+FROM composer/composer:latest-bin AS composer
 FROM php:8.3-cli
 
 # System packages
@@ -68,7 +69,7 @@ RUN printf "; priority=30\nextension=pdo_sqlsrv.so\n" > /usr/local/etc/php/conf.
 
 # Composer
 
-COPY --from=composer:2.8.1 /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer /composer /usr/bin/composer
 
 # Code
 
