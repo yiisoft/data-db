@@ -53,7 +53,11 @@ RUN echo 'umask 002' >> /root/.bashrc
 
 # PHP extensions
 
-RUN docker-php-ext-install pdo_mysql pdo_pgsql
+RUN docker-php-ext-install \
+    pdo_mysql \
+    pdo_pgsql \
+    # For Psalm, to make use of JIT for a 20%+ performance boost.
+    opcache
 
 RUN echo 'instantclient,/usr/local/instantclient' | pecl install oci8
 RUN echo "extension=oci8.so" > /usr/local/etc/php/conf.d/php-oci8.ini
@@ -66,6 +70,9 @@ RUN printf "; priority=20\nextension=sqlsrv.so\n" > /usr/local/etc/php/conf.d/ph
 
 RUN pecl install pdo_sqlsrv
 RUN printf "; priority=30\nextension=pdo_sqlsrv.so\n" > /usr/local/etc/php/conf.d/php-pdo-sqlsrv.ini
+
+# For code coverage (mutation testing)
+RUN pecl install pcov && docker-php-ext-enable pcov
 
 # Composer
 

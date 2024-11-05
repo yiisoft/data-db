@@ -17,7 +17,7 @@ trait DatabaseTrait
     {
         $database = getenv('YII_MSSQL_DATABASE');
         $host = getenv('YII_MSSQL_HOST');
-        $port = (int) getenv('YII_MSSQL_PORT');
+        $port = getenv('YII_MSSQL_PORT');
         $user = getenv('YII_MSSQL_USER');
         $password = getenv('YII_MSSQL_PASSWORD');
 
