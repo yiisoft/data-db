@@ -17,7 +17,7 @@ trait DatabaseTrait
     {
         $database = getenv('YII_PGSQL_DATABASE');
         $host = getenv('YII_PGSQL_HOST');
-        $port = (int) getenv('YII_PGSQL_PORT');
+        $port = getenv('YII_PGSQL_PORT');
         $user = getenv('YII_PGSQL_USER');
         $password = getenv('YII_PGSQL_PASSWORD');
 

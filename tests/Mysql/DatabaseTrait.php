@@ -17,7 +17,7 @@ trait DatabaseTrait
     {
         $database = getenv('YII_MYSQL_DATABASE');
         $host = getenv('YII_MYSQL_HOST');
-        $port = (int) getenv('YII_MYSQL_PORT');
+        $port = getenv('YII_MYSQL_PORT');
         $user = getenv('YII_MYSQL_USER');
         $password = getenv('YII_MYSQL_PASSWORD');
 
