@@ -16,7 +16,7 @@ test-pgsql: run
 test-mssql: CMD="vendor/bin/phpunit --testsuite Mssql"
 test-mssql: run
 
-test-oracle: CMD="vendor/bin/phpunit --testsuite Oracle --filter testOffset tests/Oracle/QueryDataReaderTest.php"
+test-oracle: CMD="vendor/bin/phpunit --testsuite Oracle"
 test-oracle: run
 
 static-analysis: CMD="vendor/bin/psalm --no-cache"
