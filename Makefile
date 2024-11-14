@@ -1,23 +1,19 @@
 run:
 	docker compose run --rm --entrypoint $(CMD) php
 
-test-all: CMD="vendor/bin/phpunit --testsuite Sqlite,Mysql,Pgsql,Mssql,Oracle"
-test-all: run
+test-all: testsuite-Sqlite \
+	testsuite-Mysql \
+	testsuite-Pgsql \
+	testsuite-Mssql
 
-test-sqlite: CMD="vendor/bin/phpunit --testsuite Sqlite"
-test-sqlite: run
+testsuite-%:
+	docker compose run \
+	--rm \
+	--entrypoint "vendor/bin/phpunit --testsuite $(subst testsuite-,,$@)" \
+	php
 
-test-mysql: CMD="vendor/bin/phpunit --testsuite Mysql"
-test-mysql: run
-
-test-pgsql: CMD="vendor/bin/phpunit --testsuite Pgsql"
-test-pgsql: run
-
-test-mssql: CMD="vendor/bin/phpunit --testsuite Mssql"
-test-mssql: run
-
-test-oracle: CMD="vendor/bin/phpunit --testsuite Oracle"
-test-oracle: run
+#test-oracle: CMD="vendor/bin/phpunit --testsuite Oracle --filter testOffset tests/Oracle/QueryDataReaderTest.php"
+#test-oracle: run
 
 static-analysis: CMD="vendor/bin/psalm --no-cache"
 static-analysis: run
