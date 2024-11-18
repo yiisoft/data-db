@@ -80,7 +80,7 @@ services:
       test: ["CMD", "healthcheck.sh"]
       interval: 10s
       timeout: 5s
-      retries: 50
+      retries: 100
       start_period: 5s
       start_interval: 5s
 volumes:
