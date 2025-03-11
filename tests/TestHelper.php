@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Db\Tests;
 
 use Yiisoft\Db\Connection\ConnectionInterface;
 use Yiisoft\Db\Exception\Exception;
-use Yiisoft\Db\Schema\SchemaInterface;
+use Yiisoft\Db\Schema\Column\ColumnBuilder;
 
 final class TestHelper
 {
@@ -19,12 +19,12 @@ final class TestHelper
         $db->createCommand()->createTable(
             'customer',
             [
-                'id' => $db->getSchema()->createColumn(SchemaInterface::TYPE_INTEGER)->notNull(),
-                'name' => $db->getSchema()->createColumn(SchemaInterface::TYPE_STRING, 128)->notNull(),
-                'email' => $db->getSchema()->createColumn(SchemaInterface::TYPE_STRING, 128),
-                'address' => $db->getSchema()->createColumn(SchemaInterface::TYPE_TEXT),
-                'status' => $db->getSchema()->createColumn(SchemaInterface::TYPE_INTEGER)->defaultValue(0),
-                'profile_id' => $db->getSchema()->createColumn(SchemaInterface::TYPE_INTEGER),
+                'id' => ColumnBuilder::integer()->notNull(),
+                'name' => ColumnBuilder::string(128)->notNull(),
+                'email' => ColumnBuilder::string(128),
+                'address' => ColumnBuilder::text(),
+                'status' => ColumnBuilder::integer()->defaultValue(0),
+                'profile_id' => ColumnBuilder::integer(),
             ]
         )->execute();
         $db->createCommand()->batchInsert(

@@ -212,11 +212,11 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
             ],
             'greater than or equal' => [
                 new GreaterThanOrEqual('column', 3.5),
-                '[[column]] >= \'3.5\'',
+                '[[column]] >= 3.5',
             ],
             'less than' => [
                 new LessThan('column', 10.7),
-                '[[column]] < \'10.7\'',
+                '[[column]] < 10.7',
             ],
             'less-than-or-equal' => [
                 new LessThanOrEqual('column', 100),
@@ -224,7 +224,7 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
             ],
             'in' => [
                 new In('column', [10, 20.5, 30]),
-                '[[column]] IN (10, \'20.5\', 30)',
+                '[[column]] IN (10, 20.5, 30)',
             ],
             'like' => [
                 new Like('column', 'foo'),
@@ -245,11 +245,11 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
             ],
             'not greater than or equal' => [
                 new Not(new GreaterThanOrEqual('column', 3.5)),
-                '[[column]] < \'3.5\'',
+                '[[column]] < 3.5',
             ],
             'not less than' => [
                 new Not(new LessThan('column', 10.7)),
-                '[[column]] >= \'10.7\'',
+                '[[column]] >= 10.7',
             ],
             'not less than or equal' => [
                 new Not(new LessThanOrEqual('column', 100)),
