@@ -12,6 +12,7 @@
          failOnWarning="true"
          stopOnFailure="false"
          colors="true"
+         displayDetailsOnPhpunitDeprecations="true"
 >
     <php>
         <ini name="error_reporting" value="-1" />
