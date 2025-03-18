@@ -3,6 +3,7 @@
     errorLevel="1"
     findUnusedBaselineEntry="true"
     findUnusedCode="false"
+    ensureOverrideAttribute="false"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
@@ -16,10 +17,5 @@
     <issueHandlers>
         <MixedAssignment errorLevel="suppress" />
         <RiskyTruthyFalsyComparison errorLevel="suppress" />
-        <PropertyNotSetInConstructor>
-            <errorLevel type="suppress">
-                <file name="src/Filter/*.php" />
-            </errorLevel>
-        </PropertyNotSetInConstructor>
     </issueHandlers>
 </psalm>
