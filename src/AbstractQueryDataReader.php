@@ -74,6 +74,7 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
 
             /** @var array|object $row */
             foreach ($iterator as $index => $row) {
+                $this->reachRow($row);
                 yield $index => $this->createItem($row);
             }
         }
@@ -282,11 +283,15 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
     {
         if ($this->data === null) {
             $this->data = [];
+
+            $rows = $this->getPreparedQuery()->all();
+            $this->reachRows($rows);
+
             /**
              * @psalm-var TKey $key
              * @psalm-var array $row
              */
-            foreach ($this->getPreparedQuery()->all() as $key => $row) {
+            foreach ($rows as $key => $row) {
                 $this->data[$key] = $this->createItem($row);
             }
         }
@@ -316,6 +321,30 @@ abstract class AbstractQueryDataReader implements QueryDataReaderInterface
      * @psalm-return TValue
      */
     abstract protected function createItem(array|object $row): array|object;
+
+    /**
+     * This method is called before processing the query results ({@see read()}).
+     *
+     * It allows modifying the array of rows before passing them to the {@see createItem()} method.
+     *
+     * @param array $rows An array of query result rows.
+     *
+     * @psalm-param array<array|object> $rows
+     */
+    protected function reachRows(array &$rows): void
+    {
+    }
+
+    /**
+     * This method is called before processing each individual row of the query result ({@see getIterator()}).
+     *
+     * It allows modifying the row before passing it to the {@see createItem()} method.
+     *
+     * @param array|object $row A single row from the query result.
+     */
+    protected function reachRow(array|object &$row): void
+    {
+    }
 
     public function getFilter(): ?FilterInterface
     {
