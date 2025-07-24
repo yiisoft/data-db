@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db;
 
 use LogicException;
-use Yiisoft\Data\Db\FilterHandler\AllFilterHandler;
-use Yiisoft\Data\Db\FilterHandler\AnyFilterHandler;
+use Yiisoft\Data\Db\FilterHandler\AndXFilterHandler;
+use Yiisoft\Data\Db\FilterHandler\OrXFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\BetweenFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\Criteria;
 use Yiisoft\Data\Db\FilterHandler\Context;
@@ -48,8 +48,8 @@ final class FilterHandler
     ) {
         if (empty($handlers)) {
             $handlers = [
-                new AllFilterHandler(),
-                new AnyFilterHandler(),
+                new AndXFilterHandler(),
+                new OrXFilterHandler(),
                 new EqualsFilterHandler(),
                 new GreaterThanFilterHandler(),
                 new GreaterThanOrEqualFilterHandler(),
