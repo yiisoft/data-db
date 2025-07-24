@@ -76,6 +76,12 @@ jobs:
       - name: Run tests with phpunit with code coverage.
         run: vendor/bin/phpunit --coverage-clover=coverage.xml --colors=always --configuration phpunit.xml.dist
 
+      - name: Install Yii Data
+        uses: yiisoft/actions/install-packages@master
+        with:
+          packages: >-
+            ['data']
+
       - name: Upload coverage to Codecov.
         if: matrix.os == 'ubuntu-latest'
         uses: codecov/codecov-action@v3
