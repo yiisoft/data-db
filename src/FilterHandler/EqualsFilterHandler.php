@@ -19,7 +19,7 @@ final class EqualsFilterHandler implements QueryFilterHandlerInterface
         /** @var Equals $filter */
 
         return new Criteria(
-            ['=', $filter->getField(), $context->normalizeValueToScalar($filter->getValue())],
+            ['=', $filter->field, $context->normalizeValueToScalar($filter->value)],
         );
     }
 }
