@@ -18,6 +18,6 @@ final class EqualsExpressionFilterHandler implements QueryFilterHandlerInterface
     {
         /** @var EqualsExpression $filter */
 
-        return new Criteria(['=', $filter->getField(), $filter->getExpression()]);
+        return new Criteria(['=', $filter->field, $filter->expression]);
     }
 }

@@ -21,6 +21,6 @@ final class ExistsFilterHandler implements QueryFilterHandlerInterface
             throw new InvalidArgumentException('Incorrect filter.');
         }
 
-        return new Criteria(['EXISTS', $filter->getQuery()]);
+        return new Criteria(['EXISTS', $filter->query]);
     }
 }
