@@ -18,6 +18,6 @@ final class EqualsNullFilterHandler implements QueryFilterHandlerInterface
     {
         /** @var EqualsNull $filter */
 
-        return new Criteria(['IS', $filter->getField(), null]);
+        return new Criteria(['IS', $filter->field, null]);
     }
 }

@@ -18,6 +18,6 @@ final class InFilterHandler implements QueryFilterHandlerInterface
     {
         /** @var In $filter */
 
-        return new Criteria(['IN', $filter->getField(), $filter->getValues()]);
+        return new Criteria(['IN', $filter->field, $filter->values]);
     }
 }

@@ -10,18 +10,8 @@ use Yiisoft\Db\Expression\ExpressionInterface;
 final class EqualsExpression implements FilterInterface
 {
     public function __construct(
-        private readonly string $field,
-        private readonly ExpressionInterface $expression,
+        public readonly string $field,
+        public readonly ExpressionInterface $expression,
     ) {
-    }
-
-    public function getField(): string
-    {
-        return $this->field;
-    }
-
-    public function getExpression(): ExpressionInterface
-    {
-        return $this->expression;
     }
 }

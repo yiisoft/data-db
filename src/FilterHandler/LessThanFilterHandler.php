@@ -19,7 +19,7 @@ final class LessThanFilterHandler implements QueryFilterHandlerInterface
         /** @var LessThan $filter */
 
         return new Criteria(
-            ['<', $filter->getField(), $context->normalizeValueToScalar($filter->getValue())],
+            ['<', $filter->field, $context->normalizeValueToScalar($filter->value)],
         );
     }
 }
