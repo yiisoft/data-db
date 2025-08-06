@@ -10,12 +10,7 @@ use Yiisoft\Db\Query\QueryInterface;
 final class Exists implements FilterInterface
 {
     public function __construct(
-        private readonly QueryInterface $query,
+        public readonly QueryInterface $query,
     ) {
-    }
-
-    public function getQuery(): QueryInterface
-    {
-        return $this->query;
     }
 }

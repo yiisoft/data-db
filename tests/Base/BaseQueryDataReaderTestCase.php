@@ -10,8 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Db\Tests\Support\CustomerDataReader;
 use Yiisoft\Data\Db\Tests\Support\CustomerDTO;
-use Yiisoft\Data\Reader\Filter\All;
-use Yiisoft\Data\Reader\Filter\Any;
+use Yiisoft\Data\Reader\Filter\AndX;
 use Yiisoft\Data\Reader\Filter\Between;
 use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Filter\EqualsNull;
@@ -22,6 +21,7 @@ use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Filter\Not;
+use Yiisoft\Data\Reader\Filter\OrX;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Db\Expression\Expression;
@@ -264,12 +264,12 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
                 "[[column]] NOT LIKE '%foo%'",
             ],
             // Group
-            'all, any' => [
-                new All(
+            'and, or' => [
+                new AndX(
                     new EqualsNull('null_column'),
                     new Equals('equals', 10),
                     new Between('between', 10, 20),
-                    new Any(
+                    new OrX(
                         new Equals('id', 8),
                         new Like('name', 'foo')
                     )
@@ -279,12 +279,12 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
                 '([[between]] BETWEEN 10 AND 20) AND ' .
                 "(([[id]] = 8) OR ([[name]] LIKE '%foo%'))",
             ],
-            'any, all' => [
-                new Any(
+            'or, and' => [
+                new OrX(
                     new GreaterThan('greater_than', 15),
                     new LessThanOrEqual('less_than_or_equal', 10),
                     new Not(new Equals('not_equals', 'test')),
-                    new All(
+                    new AndX(
                         new Equals('id', 8),
                         new Like('name', 'bar')
                     )
@@ -294,40 +294,40 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
                 "([[not_equals]] != 'test') OR " .
                 "(([[id]] = 8) AND ([[name]] LIKE '%bar%'))",
             ],
-            'all, any 2' => [
-                new All(
+            'and, or 2' => [
+                new AndX(
                     new GreaterThan('id', 88),
-                    new Any(
+                    new OrX(
                         new Equals('state', 2),
                         new Like('name', 'eva'),
                     )
                 ),
                 "([[id]] > 88) AND (([[state]] = 2) OR ([[name]] LIKE '%eva%'))",
             ],
-            'any, all 2' => [
-                new Any(
+            'or, and 2' => [
+                new OrX(
                     new GreaterThan('id', 88),
-                    new All(
+                    new AndX(
                         new Equals('state', 2),
                         new Like('name', 'eva'),
                     )
                 ),
                 "([[id]] > 88) OR (([[state]] = 2) AND ([[name]] LIKE '%eva%'))",
             ],
-            'any, any' => [
-                new Any(
+            'or, or' => [
+                new OrX(
                     new GreaterThan('id', 88),
-                    new Any(
+                    new OrX(
                         new Equals('state', 2),
                         new Like('name', 'eva'),
                     )
                 ),
                 "([[id]] > 88) OR (([[state]] = 2) OR ([[name]] LIKE '%eva%'))",
             ],
-            'all, all' => [
-                new All(
+            'and, and' => [
+                new AndX(
                     new GreaterThan('id', 88),
-                    new All(
+                    new AndX(
                         new Equals('state', 2),
                         new Like('name', 'eva'),
                     )

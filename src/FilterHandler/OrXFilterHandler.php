@@ -4,29 +4,28 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\FilterHandler;
 
-use Yiisoft\Data\Reader\Filter\All;
+use Yiisoft\Data\Reader\Filter\OrX;
 use Yiisoft\Data\Reader\FilterInterface;
 
-final class AllFilterHandler implements QueryFilterHandlerInterface
+final class OrXFilterHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {
-        return All::class;
+        return OrX::class;
     }
 
     public function getCriteria(FilterInterface $filter, Context $context): ?Criteria
     {
-        /** @var All $filter */
+        /** @var OrX $filter */
 
-        $filters = $filter->getFilters();
-        if (empty($filters)) {
+        if (empty($filter->filters)) {
             return null;
         }
 
-        $condition = ['AND'];
+        $condition = ['OR'];
         $params = [];
 
-        foreach ($filters as $subFilter) {
+        foreach ($filter->filters as $subFilter) {
             $criteria = $context->handleFilter($subFilter);
             if ($criteria !== null) {
                 $condition[] = $criteria->condition;
