@@ -68,7 +68,7 @@ class QueryDataReader implements QueryDataReaderInterface
         } elseif ($this->batchSize === null) {
             yield from $this->read();
         } else {
-            $iterator = $this->getPreparedQuery()->each($this->batchSize);
+            $iterator = $this->getPreparedQuery()->batch($this->batchSize);
 
             /** @var array|object $row */
             foreach ($iterator as $index => $row) {
