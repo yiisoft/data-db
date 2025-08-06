@@ -14,7 +14,7 @@ final class QueryDataReaderTest extends BaseQueryDataReaderTestCase
     {
         return [
             [
-                'SELECT * FROM `customer` LIMIT 9223372036854775807 OFFSET 2',
+                'SELECT * FROM "customer" LIMIT 9223372036854775807 OFFSET 2',
             ],
         ];
     }
