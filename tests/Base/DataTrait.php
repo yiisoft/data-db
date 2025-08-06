@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Tests\Base;
 
-use DateTime;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Tests\Common\FixtureTrait;
@@ -12,6 +11,8 @@ use Yiisoft\Db\Connection\ConnectionInterface;
 use Yiisoft\Db\Driver\Pdo\PdoConnectionInterface;
 use Yiisoft\Db\Expression\Expression;
 use Yiisoft\Db\Query\Query;
+
+use function is_object;
 
 trait DataTrait
 {
@@ -59,10 +60,6 @@ trait DataTrait
             unset($fixture['id']);
             $fixture['number'] = (int) $fixture['number'];
             $fixture['balance'] = (float) $fixture['balance'];
-
-            if ($fixture['born_at'] !== null && $this->getConnection()->getDriverName() === 'oci') {
-                $fixture['born_at'] = DateTime::createFromFormat('d-M-y', $fixture['born_at'])->format('Y-m-d');
-            }
 
             $processedActualFixtures[$fixture['number'] - 1] = $fixture;
         }
