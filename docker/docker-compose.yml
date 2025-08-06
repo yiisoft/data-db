@@ -1,3 +1,4 @@
+name: yiisoft-data-db
 services:
   php:
     build:
@@ -6,6 +7,7 @@ services:
     volumes:
       - ./../src:/code/src
       - ./../tests:/code/tests
+      - ./../composer.json:/code/composer.json
       - ./../phpunit.xml.dist:/code/phpunit.xml.dist
     command: tail -F anything
     depends_on:
@@ -51,9 +53,6 @@ services:
       retries: 5
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    environment:
-      SA_PASSWORD: YourStrong!Passw0rd
-      ACCEPT_EULA: Y
     ports:
       - "1433:1433"
     user: root
@@ -61,6 +60,9 @@ services:
       - mssql-data:/var/opt/mssql/data
       - mssql-log:/var/opt/mssql/log
       - mssql-secrets:/var/opt/mssql/secrets
+    environment:
+      SA_PASSWORD: YourStrong!Passw0rd
+      ACCEPT_EULA: Y
     healthcheck:
       test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$${SA_PASSWORD}" -Q "SELECT 1" -b -C -o /dev/null
       interval: 10s
@@ -76,9 +78,9 @@ services:
       - ./oracle/init.sql:/docker-entrypoint-initdb.d/init.sql
       - oracle-data:/opt/oracle/oradata
     environment:
-       ORACLE_PASSWORD: sys_user_password
-       APP_USER: my_user
-       APP_USER_PASSWORD: password_i_should_change
+      ORACLE_PASSWORD: sys_user_password
+      APP_USER: my_user
+      APP_USER_PASSWORD: password_i_should_change
     healthcheck:
       test: ["CMD", "healthcheck.sh"]
       interval: 10s
