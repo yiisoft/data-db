@@ -233,7 +233,7 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
             // Not
             'not equals' => [
                 new Not(new Equals('equals', 1)),
-                '[[equals]] != 1',
+                '[[equals]] <> 1',
             ],
             'not between' => [
                 new Not(new Between('column', 100, 300)),
@@ -291,7 +291,7 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
                 ),
                 '([[greater_than]] > 15) OR ' .
                 '([[less_than_or_equal]] <= 10) OR ' .
-                "([[not_equals]] != 'test') OR " .
+                "([[not_equals]] <> 'test') OR " .
                 "(([[id]] = 8) AND ([[name]] LIKE '%bar%'))",
             ],
             'and, or 2' => [
