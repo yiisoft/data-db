@@ -31,7 +31,7 @@ final class QueryDataReaderTest extends BaseQueryDataReaderTestCase
                 "(([[id]] = 8) OR ([[name]] LIKE '%foo%' ESCAPE '\'))",
             'or, and' => '([[greater_than]] > 15) OR ' .
                 '([[less_than_or_equal]] <= 10) OR ' .
-                "([[not_equals]] != 'test') OR " .
+                "([[not_equals]] <> 'test') OR " .
                 "(([[id]] = 8) AND ([[name]] LIKE '%bar%' ESCAPE '\'))",
             'and, or 2' => "([[id]] > 88) AND (([[state]] = 2) OR ([[name]] LIKE '%eva%' ESCAPE '\'))",
             'or, and 2' => "([[id]] > 88) OR (([[state]] = 2) AND ([[name]] LIKE '%eva%' ESCAPE '\'))",
