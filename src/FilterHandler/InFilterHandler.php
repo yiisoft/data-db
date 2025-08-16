@@ -6,6 +6,8 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use Yiisoft\Data\Reader\Filter\In;
 use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
+use Yiisoft\Db\QueryBuilder\Condition\In as DbInCondition;
 
 final class InFilterHandler implements QueryFilterHandlerInterface
 {
@@ -14,10 +16,10 @@ final class InFilterHandler implements QueryFilterHandlerInterface
         return In::class;
     }
 
-    public function getCriteria(FilterInterface $filter, Context $context): ?Criteria
+    public function getCondition(FilterInterface $filter, Context $context): ConditionInterface
     {
         /** @var In $filter */
 
-        return new Criteria(['IN', $filter->field, $filter->values]);
+        return new DbInCondition($filter->field, $filter->values);
     }
 }

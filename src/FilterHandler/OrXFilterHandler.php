@@ -6,6 +6,8 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use Yiisoft\Data\Reader\Filter\OrX;
 use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
+use Yiisoft\Db\QueryBuilder\Condition\OrX as DbOrXCondition;
 
 final class OrXFilterHandler implements QueryFilterHandlerInterface
 {
@@ -14,24 +16,15 @@ final class OrXFilterHandler implements QueryFilterHandlerInterface
         return OrX::class;
     }
 
-    public function getCriteria(FilterInterface $filter, Context $context): ?Criteria
+    public function getCondition(FilterInterface $filter, Context $context): ConditionInterface
     {
         /** @var OrX $filter */
 
-        if (empty($filter->filters)) {
-            return null;
-        }
-
-        $condition = ['OR'];
-        $params = [];
-
-        foreach ($filter->filters as $subFilter) {
-            $criteria = $context->handleFilter($subFilter);
-            if ($criteria !== null) {
-                $condition[] = $criteria->condition;
-                $params = array_merge($params, $criteria->params);
-            }
-        }
-        return new Criteria($condition, $params);
+        return new DbOrXCondition(
+            ...array_map(
+                static fn(FilterInterface $subFilter) => $context->handleFilter($subFilter),
+                $filter->filters,
+            ),
+        );
     }
 }

@@ -6,6 +6,8 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Filter\Not;
+use Yiisoft\Db\QueryBuilder\Condition\Not as DbNotCondition;
+use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
 
 final class NotFilterHandler implements QueryFilterHandlerInterface
 {
@@ -14,39 +16,12 @@ final class NotFilterHandler implements QueryFilterHandlerInterface
         return Not::class;
     }
 
-    public function getCriteria(FilterInterface $filter, Context $context): ?Criteria
+    public function getCondition(FilterInterface $filter, Context $context): ConditionInterface
     {
         /** @var Not $filter */
 
-        $subCriteria = $context->handleFilter($filter->filter);
-        if ($subCriteria === null) {
-            return null;
-        }
-
-        $condition = $subCriteria->condition;
-        $params = $subCriteria->params;
-
-        if (isset($condition[0]) && is_string($condition[0])) {
-            $convert = [
-                'IS' => 'IS NOT',
-                'IN' => 'NOT IN',
-                'EXISTS' => 'NOT EXISTS',
-                'BETWEEN' => 'NOT BETWEEN',
-                'LIKE' => 'NOT LIKE',
-                'ILIKE' => 'NOT ILIKE',
-                '>' => '<=',
-                '>=' => '<',
-                '<' => '>=',
-                '<=' => '>',
-                '=' => '!=',
-            ];
-            $operator = strtoupper($condition[0]);
-            if (isset($convert[$operator])) {
-                $condition[0] = $convert[$operator];
-                return new Criteria($condition, $params);
-            }
-        }
-
-        return new Criteria(['NOT', $condition], $params);
+        return new DbNotCondition(
+            $context->handleFilter($filter->filter)
+        );
     }
 }

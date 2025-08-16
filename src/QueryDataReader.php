@@ -6,6 +6,7 @@ namespace Yiisoft\Data\Db;
 
 use Generator;
 use InvalidArgumentException;
+use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Sort;
@@ -28,8 +29,8 @@ class QueryDataReader implements QueryDataReaderInterface
     private FilterHandler $filterHandler;
 
     private ?Sort $sort = null;
-    private ?FilterInterface $filter = null;
-    private ?FilterInterface $having = null;
+    private FilterInterface $filter;
+    private FilterInterface $having;
 
     /**
      * @psalm-var non-negative-int|null
@@ -55,6 +56,8 @@ class QueryDataReader implements QueryDataReaderInterface
         ?FilterHandler $filterHandler = null,
     ) {
         $this->filterHandler = $filterHandler ?? new FilterHandler();
+        $this->filter = new All();
+        $this->having = new All();
     }
 
     /**
@@ -100,8 +103,13 @@ class QueryDataReader implements QueryDataReaderInterface
 
     final public function getPreparedQuery(): QueryInterface
     {
-        $query = $this->applyFilter(clone $this->query);
-        $query = $this->applyHaving($query);
+        $query = (clone $this->query)
+            ->andWhere(
+                $this->filterHandler->handle($this->filter)
+            )
+            ->andHaving(
+                $this->filterHandler->handle($this->having)
+            );
 
         if ($this->limit) {
             $query->limit($this->limit);
@@ -182,7 +190,7 @@ class QueryDataReader implements QueryDataReaderInterface
      * @psalm-mutation-free
      * @psalm-return static<TKey, TValue>
      */
-    final public function withFilter(?FilterInterface $filter): static
+    final public function withFilter(FilterInterface $filter): static
     {
         $new = clone $this;
         $new->filter = $filter;
@@ -195,7 +203,7 @@ class QueryDataReader implements QueryDataReaderInterface
      * @psalm-mutation-free
      * @psalm-return static<TKey, TValue>
      */
-    final public function withHaving(?FilterInterface $having): static
+    final public function withHaving(FilterInterface $having): static
     {
         $new = clone $this;
         $new->having = $having;
@@ -269,7 +277,7 @@ class QueryDataReader implements QueryDataReaderInterface
         return $this->withLimit(1)->getIterator()->current();
     }
 
-    final public function getFilter(): ?FilterInterface
+    final public function getFilter(): FilterInterface
     {
         return $this->filter;
     }
@@ -291,29 +299,5 @@ class QueryDataReader implements QueryDataReaderInterface
     {
         /** @psalm-var TValue */
         return $row;
-    }
-
-    private function applyFilter(QueryInterface $query): QueryInterface
-    {
-        if ($this->filter !== null) {
-            $criteria = $this->filterHandler->handle($this->filter);
-            if ($criteria !== null) {
-                $query = $query->andWhere($criteria->condition, $criteria->params);
-            }
-        }
-
-        return $query;
-    }
-
-    private function applyHaving(QueryInterface $query): QueryInterface
-    {
-        if ($this->having !== null) {
-            $criteria = $this->filterHandler->handle($this->having);
-            if ($criteria !== null) {
-                $query = $query->andHaving($criteria->condition, $criteria->params);
-            }
-        }
-
-        return $query;
     }
 }

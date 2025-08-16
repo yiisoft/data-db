@@ -6,6 +6,8 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use Yiisoft\Data\Reader\Filter\Between;
 use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
+use Yiisoft\Db\QueryBuilder\Condition\Between as DbBetweenCondition;
 
 final class BetweenFilterHandler implements QueryFilterHandlerInterface
 {
@@ -14,15 +16,10 @@ final class BetweenFilterHandler implements QueryFilterHandlerInterface
         return Between::class;
     }
 
-    public function getCriteria(FilterInterface $filter, Context $context): ?Criteria
+    public function getCondition(FilterInterface $filter, Context $context): ConditionInterface
     {
         /** @var Between $filter */
 
-        return new Criteria([
-            'BETWEEN',
-            $filter->field,
-            $context->normalizeValueToScalar($filter->minValue),
-            $context->normalizeValueToScalar($filter->maxValue),
-        ]);
+        return new DbBetweenCondition($filter->field, $filter->minValue, $filter->maxValue);
     }
 }

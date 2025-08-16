@@ -6,6 +6,8 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
+use Yiisoft\Db\QueryBuilder\Condition\LessThanOrEqual as DbLessThanOrEqual;
 
 final class LessThanOrEqualFilterHandler implements QueryFilterHandlerInterface
 {
@@ -14,12 +16,10 @@ final class LessThanOrEqualFilterHandler implements QueryFilterHandlerInterface
         return LessThanOrEqual::class;
     }
 
-    public function getCriteria(FilterInterface $filter, Context $context): ?Criteria
+    public function getCondition(FilterInterface $filter, Context $context): ConditionInterface
     {
         /** @var LessThanOrEqual $filter */
 
-        return new Criteria(
-            ['<=', $filter->field, $context->normalizeValueToScalar($filter->value)],
-        );
+        return new DbLessThanOrEqual($filter->field, $filter->value);
     }
 }

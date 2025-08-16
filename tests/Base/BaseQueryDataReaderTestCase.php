@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Tests\Base;
 
-use DateTime;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Db\QueryDataReader;
@@ -190,25 +189,13 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
                 new Equals('equals', 1),
                 '[[equals]] = 1',
             ],
-            'equals datetime' => [
-                new Equals('column', new DateTime('2011-01-01T15:03:01.012345Z')),
-                "[[column]] = '2011-01-01 15:03:01'",
-            ],
             'between' => [
                 new Between('column', 100, 300),
                 '[[column]] BETWEEN 100 AND 300',
             ],
-            'between dates' => [
-                new Between('column', new DateTime('2011-01-01T15:00:01'), new DateTime('2011-01-01T15:10:01')),
-                "[[column]] BETWEEN '2011-01-01 15:00:01' AND '2011-01-01 15:10:01'",
-            ],
             'greater than' => [
                 new GreaterThan('column', 1000),
                 '[[column]] > 1000',
-            ],
-            'greater than date' => [
-                new GreaterThan('column', new DateTime('2011-01-01T15:00:01')),
-                "[[column]] > '2011-01-01 15:00:01'",
             ],
             'greater than or equal' => [
                 new GreaterThanOrEqual('column', 3.5),

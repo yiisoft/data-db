@@ -6,6 +6,8 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
+use Yiisoft\Db\QueryBuilder\Condition\Equals as DbEqualsCondition;
 
 final class EqualsFilterHandler implements QueryFilterHandlerInterface
 {
@@ -14,12 +16,10 @@ final class EqualsFilterHandler implements QueryFilterHandlerInterface
         return Equals::class;
     }
 
-    public function getCriteria(FilterInterface $filter, Context $context): ?Criteria
+    public function getCondition(FilterInterface $filter, Context $context): ConditionInterface
     {
         /** @var Equals $filter */
 
-        return new Criteria(
-            ['=', $filter->field, $context->normalizeValueToScalar($filter->value)],
-        );
+        return new DbEqualsCondition($filter->field, $filter->value);
     }
 }
