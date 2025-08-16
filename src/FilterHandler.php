@@ -46,7 +46,8 @@ final class FilterHandler
     /**
      * @param QueryFilterHandlerInterface[]|null $handlers
      */
-    public function __construct(array|null $handlers = null) {
+    public function __construct(array|null $handlers = null)
+    {
         if (empty($handlers)) {
             $handlers = [
                 new AllFilterHandler(),

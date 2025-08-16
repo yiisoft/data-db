@@ -8,7 +8,6 @@ use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
 use Yiisoft\Db\QueryBuilder\Condition\GreaterThan as DbGreaterThan;
-use Yiisoft\Db\QueryBuilder\Condition\Simple;
 
 final class GreaterThanFilterHandler implements QueryFilterHandlerInterface
 {
