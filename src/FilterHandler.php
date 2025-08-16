@@ -31,8 +31,8 @@ use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
 use function sprintf;
 
 /**
- * `FilterHandler` processes filters into {@see Criteria} object that is used in {@see QueryPartsInterface::andWhere()}
- * and {@see QueryPartsInterface::andHaving()}.
+ * `FilterHandler` processes filters into {@see ConditionInterface} object that is used in
+ * {@see QueryPartsInterface::andWhere()} and {@see QueryPartsInterface::andHaving()}.
  */
 final class FilterHandler
 {
