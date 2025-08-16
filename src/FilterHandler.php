@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db;
 
 use LogicException;
+use Yiisoft\Data\Db\FilterHandler\AllFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\AndXFilterHandler;
+use Yiisoft\Data\Db\FilterHandler\EqualsExpressionFilterHandler;
+use Yiisoft\Data\Db\FilterHandler\NoneFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\OrXFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\BetweenFilterHandler;
-use Yiisoft\Data\Db\FilterHandler\Criteria;
 use Yiisoft\Data\Db\FilterHandler\Context;
 use Yiisoft\Data\Db\FilterHandler\EqualsFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\EqualsNullFilterHandler;
@@ -24,10 +26,13 @@ use Yiisoft\Data\Db\FilterHandler\QueryFilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\Query\QueryPartsInterface;
+use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
+
+use function sprintf;
 
 /**
- * `FilterHandler` processes filters into {@see Criteria} object that is used in {@see QueryPartsInterface::andWhere()}
- * and {@see QueryPartsInterface::andHaving()}.
+ * `FilterHandler` processes filters into {@see ConditionInterface} object that is used in
+ * {@see QueryPartsInterface::andWhere()} and {@see QueryPartsInterface::andHaving()}.
  */
 final class FilterHandler
 {
@@ -40,14 +45,13 @@ final class FilterHandler
 
     /**
      * @param QueryFilterHandlerInterface[]|null $handlers
-     * @param ValueNormalizerInterface|null $valueNormalizer
      */
-    public function __construct(
-        ?array $handlers = null,
-        ValueNormalizerInterface $valueNormalizer = null,
-    ) {
+    public function __construct(array|null $handlers = null)
+    {
         if (empty($handlers)) {
             $handlers = [
+                new AllFilterHandler(),
+                new NoneFilterHandler(),
                 new AndXFilterHandler(),
                 new OrXFilterHandler(),
                 new EqualsFilterHandler(),
@@ -61,11 +65,12 @@ final class FilterHandler
                 new NotFilterHandler(),
                 new BetweenFilterHandler(),
                 new EqualsNullFilterHandler(),
+                new EqualsExpressionFilterHandler(),
             ];
         }
 
         $this->handlers = $this->prepareHandlers($handlers);
-        $this->context = new Context($this, $valueNormalizer ?? new ValueNormalizer());
+        $this->context = new Context($this);
     }
 
     public function withFilterHandlers(FilterHandlerInterface ...$handlers): self
@@ -90,9 +95,9 @@ final class FilterHandler
         return $new;
     }
 
-    public function handle(FilterInterface $filter): ?Criteria
+    public function handle(FilterInterface $filter): ConditionInterface
     {
-        return $this->getHandlerByOperator($filter::class)->getCriteria($filter, $this->context);
+        return $this->getHandlerByOperator($filter::class)->getCondition($filter, $this->context);
     }
 
     private function getHandlerByOperator(string $operator): QueryFilterHandlerInterface

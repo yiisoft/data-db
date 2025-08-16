@@ -6,8 +6,9 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
 
 interface QueryFilterHandlerInterface extends FilterHandlerInterface
 {
-    public function getCriteria(FilterInterface $filter, Context $context): ?Criteria;
+    public function getCondition(FilterInterface $filter, Context $context): ConditionInterface;
 }

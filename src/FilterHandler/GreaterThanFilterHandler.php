@@ -6,6 +6,8 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
+use Yiisoft\Db\QueryBuilder\Condition\GreaterThan as DbGreaterThan;
 
 final class GreaterThanFilterHandler implements QueryFilterHandlerInterface
 {
@@ -14,12 +16,10 @@ final class GreaterThanFilterHandler implements QueryFilterHandlerInterface
         return GreaterThan::class;
     }
 
-    public function getCriteria(FilterInterface $filter, Context $context): ?Criteria
+    public function getCondition(FilterInterface $filter, Context $context): ConditionInterface
     {
         /** @var GreaterThan $filter */
 
-        return new Criteria(
-            ['>', $filter->field, $context->normalizeValueToScalar($filter->value)],
-        );
+        return new DbGreaterThan($filter->field, $filter->value);
     }
 }

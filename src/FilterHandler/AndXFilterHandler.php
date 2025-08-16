@@ -6,6 +6,8 @@ namespace Yiisoft\Data\Db\FilterHandler;
 
 use Yiisoft\Data\Reader\Filter\AndX;
 use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Db\QueryBuilder\Condition\AndX as DbAndXCondition;
+use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
 
 final class AndXFilterHandler implements QueryFilterHandlerInterface
 {
@@ -14,24 +16,15 @@ final class AndXFilterHandler implements QueryFilterHandlerInterface
         return AndX::class;
     }
 
-    public function getCriteria(FilterInterface $filter, Context $context): ?Criteria
+    public function getCondition(FilterInterface $filter, Context $context): ConditionInterface
     {
         /** @var AndX $filter */
 
-        if (empty($filter->filters)) {
-            return null;
-        }
-
-        $condition = ['AND'];
-        $params = [];
-
-        foreach ($filter->filters as $subFilter) {
-            $criteria = $context->handleFilter($subFilter);
-            if ($criteria !== null) {
-                $condition[] = $criteria->condition;
-                $params = array_merge($params, $criteria->params);
-            }
-        }
-        return new Criteria($condition, $params);
+        return new DbAndXCondition(
+            ...array_map(
+                static fn(FilterInterface $subFilter) => $context->handleFilter($subFilter),
+                $filter->filters,
+            ),
+        );
     }
 }

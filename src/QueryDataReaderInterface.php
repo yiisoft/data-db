@@ -20,7 +20,7 @@ interface QueryDataReaderInterface extends DataReaderInterface
 
     public function withCountParam(?string $countParam): static;
 
-    public function withHaving(?FilterInterface $having): static;
+    public function withHaving(FilterInterface $having): static;
 
     public function withBatchSize(?int $batchSize): static;
 }

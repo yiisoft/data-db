@@ -4,22 +4,20 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\FilterHandler;
 
-use Yiisoft\Data\Db\Filter\Exists;
+use Yiisoft\Data\Reader\Filter\None;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
-use Yiisoft\Db\QueryBuilder\Condition\Exists as DbExists;
+use Yiisoft\Db\QueryBuilder\Condition\None as DbNone;
 
-final class ExistsFilterHandler implements QueryFilterHandlerInterface
+final class NoneFilterHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {
-        return Exists::class;
+        return None::class;
     }
 
     public function getCondition(FilterInterface $filter, Context $context): ConditionInterface
     {
-        /** @var Exists $filter */
-
-        return new DbExists($filter->query);
+        return new DbNone();
     }
 }
