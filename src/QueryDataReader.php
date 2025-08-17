@@ -26,17 +26,9 @@ use function is_array;
  */
 class QueryDataReader implements QueryDataReaderInterface
 {
+    public const DEFAULT_BATCH_SIZE = 100;
+
     private FilterHandler $filterHandler;
-
-    private ?Sort $sort = null;
-    private FilterInterface $filter;
-    private FilterInterface $having;
-
-    /**
-     * @psalm-var non-negative-int|null
-     */
-    private ?int $limit = null;
-    private int $offset = 0;
 
     /**
      * @psalm-var non-negative-int|null
@@ -48,16 +40,22 @@ class QueryDataReader implements QueryDataReaderInterface
      * @psalm-var array<TKey, TValue>|null
      */
     private ?array $data = null;
-    private ?int $batchSize = 100;
-    private ?string $countParam = null;
 
+    /**
+     * @psalm-param non-negative-int|null $limit
+     */
     public function __construct(
         private readonly QueryInterface $query,
+        private ?Sort $sort = null,
+        private int $offset = 0,
+        private ?int $limit = null,
+        private ?string $countParam = null,
+        private FilterInterface $filter = new All(),
+        private FilterInterface $having = new All(),
+        private ?int $batchSize = self::DEFAULT_BATCH_SIZE,
         ?FilterHandler $filterHandler = null,
     ) {
         $this->filterHandler = $filterHandler ?? new FilterHandler();
-        $this->filter = new All();
-        $this->having = new All();
     }
 
     /**
