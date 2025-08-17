@@ -26,6 +26,7 @@ use function is_array;
  */
 class QueryDataReader implements QueryDataReaderInterface
 {
+    /** @psalm-suppress MissingClassConstType */
     final public const DEFAULT_BATCH_SIZE = 100;
 
     private FilterHandler $filterHandler;
