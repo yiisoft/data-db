@@ -7,8 +7,6 @@ namespace Yiisoft\Data\Db\Tests\Base;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Db\QueryDataReader;
-use Yiisoft\Data\Db\Tests\Support\CustomerDataReader;
-use Yiisoft\Data\Db\Tests\Support\CustomerDTO;
 use Yiisoft\Data\Reader\Filter\AndX;
 use Yiisoft\Data\Reader\Filter\Between;
 use Yiisoft\Data\Reader\Filter\Equals;
@@ -150,22 +148,9 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
     public function testCount(): void
     {
         $query = (new Query($this->getConnection()))->from('customer');
-        $dataReader = (new CustomerDataReader($query));
+        $dataReader = (new QueryDataReader($query));
 
         $this->assertEquals($query->count(), $dataReader->count());
-    }
-
-    public function testDtoCreateItem(): void
-    {
-        $query = (new Query($this->getConnection()))->from('customer');
-        $dataReader = (new CustomerDataReader($query))
-            ->withBatchSize(null);
-
-        $this->assertInstanceOf(CustomerDTO::class, $dataReader->readOne());
-
-        foreach ($dataReader->read() as $row) {
-            $this->assertInstanceOf(CustomerDTO::class, $row);
-        }
     }
 
     public function testArrayCreateItem(): void
