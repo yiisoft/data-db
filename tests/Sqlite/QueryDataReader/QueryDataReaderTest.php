@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Db\Tests\Sqlite;
+namespace Yiisoft\Data\Db\Tests\Sqlite\QueryDataReader;
 
 use Yiisoft\Data\Db\Tests\Base\BaseQueryDataReaderTestCase;
+use Yiisoft\Data\Db\Tests\Sqlite\DatabaseTrait;
 
 final class QueryDataReaderTest extends BaseQueryDataReaderTestCase
 {

@@ -6,6 +6,7 @@ namespace Yiisoft\Data\Db;
 
 use Generator;
 use InvalidArgumentException;
+use RuntimeException;
 use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
@@ -15,6 +16,8 @@ use Yiisoft\Db\Query\QueryInterface;
 use function array_key_first;
 use function count;
 use function is_array;
+use function is_string;
+use function sprintf;
 
 /**
  * @template TKey as array-key
@@ -87,8 +90,17 @@ class QueryDataReader implements QueryDataReaderInterface
                 $query->limit(null);
                 $query->orderBy('');
 
-                /** @psalm-var non-negative-int */
-                $this->count = (int) $query->count($q);
+                $count = $query->count($q);
+                if (is_string($count)) {
+                    throw new RuntimeException(
+                        sprintf(
+                            'Number of records is too large to fit into a PHP integer. Got %s.',
+                            $count,
+                        ),
+                    );
+                }
+
+                $this->count = $count;
             }
         }
 
