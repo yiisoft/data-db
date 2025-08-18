@@ -71,12 +71,7 @@ class QueryDataReader implements QueryDataReaderInterface
         } elseif ($this->batchSize === null) {
             yield from $this->read();
         } else {
-            $iterator = $this->getPreparedQuery()->batch($this->batchSize);
-
-            /** @var array|object $row */
-            foreach ($iterator as $index => $row) {
-                yield $index => $this->createItem($row);
-            }
+            yield from $this->getPreparedQuery()->batch($this->batchSize);
         }
     }
 
@@ -250,14 +245,8 @@ class QueryDataReader implements QueryDataReaderInterface
     final public function read(): array
     {
         if ($this->data === null) {
-            $this->data = [];
-            /**
-             * @psalm-var TKey $key
-             * @psalm-var array $row
-             */
-            foreach ($this->getPreparedQuery()->all() as $key => $row) {
-                $this->data[$key] = $this->createItem($row);
-            }
+            /** @psalm-var array<TKey, TValue> */
+            $this->data = $this->getPreparedQuery()->all();
         }
 
         return $this->data;
@@ -290,14 +279,5 @@ class QueryDataReader implements QueryDataReaderInterface
     final public function getOffset(): int
     {
         return $this->offset;
-    }
-
-    /**
-     * @psalm-return TValue
-     */
-    protected function createItem(array|object $row): array|object
-    {
-        /** @psalm-var TValue */
-        return $row;
     }
 }
