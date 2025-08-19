@@ -7,7 +7,6 @@ namespace Yiisoft\Data\Db\Tests\Base;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Tests\Common\FixtureTrait;
-use Yiisoft\Db\Connection\ConnectionInterface;
 use Yiisoft\Db\Driver\Pdo\PdoConnectionInterface;
 use Yiisoft\Db\Expression\Expression;
 use Yiisoft\Db\Query\Query;
@@ -89,18 +88,24 @@ trait DataTrait
             )
             ->execute();
 
-        $db->transaction(static function (ConnectionInterface $database): void {
-            foreach (self::$fixtures as $fixture) {
-                if ($fixture['born_at'] !== null && $database->getDriverName() === 'oci') {
-                    $fixture['born_at'] = new Expression(
-                        "TO_DATE(:born_at, 'yyyy-mm-dd')",
-                        [':born_at' => $fixture['born_at']],
-                    );
-                }
-
-                $database->createCommand()->insert('{{%user}}', $fixture)->execute();
+        $fixtures = self::$fixtures;
+        foreach ($fixtures as $index => $fixture) {
+            if ($fixture['born_at'] !== null && $db->getDriverName() === 'oci') {
+                $fixtures[$index]['born_at'] = new Expression(
+                    "TO_DATE(:born_at, 'yyyy-mm-dd')",
+                    [':born_at' => $fixture['born_at']],
+                );
             }
-        });
+        }
+
+        $db
+            ->createCommand()
+            ->batchInsert(
+                '{{%user}}',
+                ['number', 'email', 'balance', 'born_at'],
+                $fixtures,
+            )
+            ->execute();
     }
 
     protected function dropDatabase(): void
