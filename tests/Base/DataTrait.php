@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Tests\Base;
 
+use DateTimeImmutable;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Tests\Common\FixtureTrait;
@@ -60,6 +61,9 @@ trait DataTrait
             unset($fixture['id']);
             $fixture['number'] = (int) $fixture['number'];
             $fixture['balance'] = (float) $fixture['balance'];
+            $fixture['born_at'] = $fixture['born_at'] === null
+                ? null
+                : new DateTimeImmutable($fixture['born_at']);
 
             $processedActualFixtures[$fixture['number'] - 1] = $fixture;
         }
@@ -75,29 +79,23 @@ trait DataTrait
             return;
         }
 
+        $columnBuilder = $db->getColumnBuilderClass();
         $db
             ->createCommand()
             ->createTable(
                 '{{%user}}',
                 [
-                    'id' => 'pk',
-                    'number' => 'integer NOT NULL',
-                    'email' => 'string(255) NOT NULL',
-                    'balance' => 'float DEFAULT 0.0 NOT NULL',
-                    'born_at' => 'date',
+                    'id' => $columnBuilder::primaryKey(),
+                    'number' => $columnBuilder::integer()->notNull(),
+                    'email' => $columnBuilder::string()->notNull(),
+                    'balance' => $columnBuilder::float()->defaultValue(0.0)->notNull(),
+                    'born_at' => $columnBuilder::datetimeWithTimezone(),
                 ],
             )
             ->execute();
 
-        $db->transaction(static function (ConnectionInterface $database): void {
-            foreach (self::$fixtures as $fixture) {
-                if ($fixture['born_at'] !== null && $database->getDriverName() === 'oci') {
-                    $fixture['born_at'] = new Expression(
-                        "TO_DATE(:born_at, 'yyyy-mm-dd')",
-                        [':born_at' => $fixture['born_at']],
-                    );
-                }
-
+        $db->transaction(function (ConnectionInterface $database): void {
+            foreach ($this->getFixtures() as $fixture) {
                 $database->createCommand()->insert('{{%user}}', $fixture)->execute();
             }
         });
