@@ -13,7 +13,7 @@ final class EqualsExpressionFilterHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {
-        return self::class;
+        return EqualsExpression::class;
     }
 
     public function getCondition(FilterInterface $filter, Context $context): ConditionInterface
