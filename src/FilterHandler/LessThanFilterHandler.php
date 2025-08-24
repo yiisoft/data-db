@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\FilterHandler;
 
+use DateTimeInterface;
 use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Db\Expression\Value\DateTimeValue;
 use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
 use Yiisoft\Db\QueryBuilder\Condition\LessThan as DbLessThan;
 
@@ -20,6 +22,10 @@ final class LessThanFilterHandler implements QueryFilterHandlerInterface
     {
         /** @var LessThan $filter */
 
-        return new DbLessThan($filter->field, $filter->value);
+        $value = $filter->value instanceof DateTimeInterface
+            ? new DateTimeValue($filter->value)
+            : $filter->value;
+
+        return new DbLessThan($filter->field, $value);
     }
 }
