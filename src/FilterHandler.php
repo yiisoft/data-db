@@ -73,20 +73,8 @@ final class FilterHandler
         $this->context = new Context($this);
     }
 
-    public function withFilterHandlers(FilterHandlerInterface ...$handlers): self
+    public function withFilterHandlers(QueryFilterHandlerInterface ...$handlers): self
     {
-        foreach ($handlers as $handler) {
-            if (!$handler instanceof QueryFilterHandlerInterface) {
-                throw new LogicException(
-                    sprintf(
-                        'Filter handler must implement "%s".',
-                        QueryFilterHandlerInterface::class,
-                    )
-                );
-            }
-        }
-        /** @var QueryFilterHandlerInterface[] $handlers */
-
         $new = clone $this;
         $new->handlers = array_merge(
             $this->handlers,
