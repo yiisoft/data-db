@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Db\Filter\Exists;
 use Yiisoft\Data\Db\FilterHandler\ExistsFilterHandler;
 use Yiisoft\Data\Db\Tests\TestHelper;
-
 use Yiisoft\Db\QueryBuilder\Condition\Exists as DbExistsCondition;
 
 use function PHPUnit\Framework\assertInstanceOf;

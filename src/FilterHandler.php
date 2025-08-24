@@ -23,7 +23,6 @@ use Yiisoft\Data\Db\FilterHandler\LessThanOrEqualFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\LikeFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\NotFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\QueryFilterHandlerInterface;
-use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\Query\QueryPartsInterface;
 use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
