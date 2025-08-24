@@ -13,7 +13,7 @@ use Yiisoft\Data\Reader\Iterable\FilterHandler\NoneHandler;
 
 final class QueryDataReaderTest extends TestCase
 {
-    public function testWithFilterHandlersThrowsExceptionForIncorrectHandler(): void
+    public function testWithAddedFilterHandlersWithIncorrectHandler(): void
     {
         $dataReader = new QueryDataReader(
             TestHelper::createSqliteConnection()->createQuery(),
