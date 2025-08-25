@@ -11,9 +11,6 @@ use Yiisoft\Data\Db\Tests\TestHelper;
 use Yiisoft\Db\Expression\Expression;
 use Yiisoft\Db\QueryBuilder\Condition\Equals as DbEqualsCondition;
 
-use function PHPUnit\Framework\assertInstanceOf;
-use function PHPUnit\Framework\assertSame;
-
 final class EqualsExpressionFilterHandlerTest extends TestCase
 {
     public function testBase(): void
@@ -25,9 +22,9 @@ final class EqualsExpressionFilterHandlerTest extends TestCase
         /** @var DbEqualsCondition $condition */
         $condition = $handler->getCondition($filter, TestHelper::createContext());
 
-        assertSame(EqualsExpression::class, $handler->getFilterClass());
-        assertInstanceOf(DbEqualsCondition::class, $condition);
-        assertSame('created_at', $condition->column);
-        assertSame($expression, $condition->value);
+        $this->assertSame(EqualsExpression::class, $handler->getFilterClass());
+        $this->assertInstanceOf(DbEqualsCondition::class, $condition);
+        $this->assertSame('created_at', $condition->column);
+        $this->assertSame($expression, $condition->value);
     }
 }

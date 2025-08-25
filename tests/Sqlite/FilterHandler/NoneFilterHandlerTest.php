@@ -10,9 +10,6 @@ use Yiisoft\Data\Db\Tests\TestHelper;
 use Yiisoft\Data\Reader\Filter\None;
 use Yiisoft\Db\QueryBuilder\Condition\None as DbNoneCondition;
 
-use function PHPUnit\Framework\assertInstanceOf;
-use function PHPUnit\Framework\assertSame;
-
 final class NoneFilterHandlerTest extends TestCase
 {
     public function testBase(): void
@@ -23,7 +20,7 @@ final class NoneFilterHandlerTest extends TestCase
         /** @var DbNoneCondition $condition */
         $condition = $handler->getCondition($filter, TestHelper::createContext());
 
-        assertSame(None::class, $handler->getFilterClass());
-        assertInstanceOf(DbNoneCondition::class, $condition);
+        $this->assertSame(None::class, $handler->getFilterClass());
+        $this->assertInstanceOf(DbNoneCondition::class, $condition);
     }
 }
