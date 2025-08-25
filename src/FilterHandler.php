@@ -5,23 +5,23 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db;
 
 use LogicException;
-use Yiisoft\Data\Db\FilterHandler\AllFilterHandler;
-use Yiisoft\Data\Db\FilterHandler\AndXFilterHandler;
-use Yiisoft\Data\Db\FilterHandler\EqualsExpressionFilterHandler;
-use Yiisoft\Data\Db\FilterHandler\NoneFilterHandler;
-use Yiisoft\Data\Db\FilterHandler\OrXFilterHandler;
-use Yiisoft\Data\Db\FilterHandler\BetweenFilterHandler;
+use Yiisoft\Data\Db\FilterHandler\AllHandler;
+use Yiisoft\Data\Db\FilterHandler\AndXHandler;
+use Yiisoft\Data\Db\FilterHandler\EqualsExpressionHandler;
+use Yiisoft\Data\Db\FilterHandler\NoneHandler;
+use Yiisoft\Data\Db\FilterHandler\OrXHandler;
+use Yiisoft\Data\Db\FilterHandler\BetweenHandler;
 use Yiisoft\Data\Db\FilterHandler\Context;
-use Yiisoft\Data\Db\FilterHandler\EqualsFilterHandler;
-use Yiisoft\Data\Db\FilterHandler\EqualsNullFilterHandler;
-use Yiisoft\Data\Db\FilterHandler\ExistsFilterHandler;
-use Yiisoft\Data\Db\FilterHandler\GreaterThanFilterHandler;
-use Yiisoft\Data\Db\FilterHandler\GreaterThanOrEqualFilterHandler;
-use Yiisoft\Data\Db\FilterHandler\InFilterHandler;
-use Yiisoft\Data\Db\FilterHandler\LessThanFilterHandler;
-use Yiisoft\Data\Db\FilterHandler\LessThanOrEqualFilterHandler;
-use Yiisoft\Data\Db\FilterHandler\LikeFilterHandler;
-use Yiisoft\Data\Db\FilterHandler\NotFilterHandler;
+use Yiisoft\Data\Db\FilterHandler\EqualsHandler;
+use Yiisoft\Data\Db\FilterHandler\EqualsNullHandler;
+use Yiisoft\Data\Db\FilterHandler\ExistsHandler;
+use Yiisoft\Data\Db\FilterHandler\GreaterThanHandler;
+use Yiisoft\Data\Db\FilterHandler\GreaterThanOrEqualHandler;
+use Yiisoft\Data\Db\FilterHandler\InHandler;
+use Yiisoft\Data\Db\FilterHandler\LessThanHandler;
+use Yiisoft\Data\Db\FilterHandler\LessThanOrEqualHandler;
+use Yiisoft\Data\Db\FilterHandler\LikeHandler;
+use Yiisoft\Data\Db\FilterHandler\NotHandler;
 use Yiisoft\Data\Db\FilterHandler\QueryFilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\Query\QueryPartsInterface;
@@ -49,22 +49,22 @@ final class FilterHandler
     {
         if (empty($handlers)) {
             $handlers = [
-                new AllFilterHandler(),
-                new NoneFilterHandler(),
-                new AndXFilterHandler(),
-                new OrXFilterHandler(),
-                new EqualsFilterHandler(),
-                new GreaterThanFilterHandler(),
-                new GreaterThanOrEqualFilterHandler(),
-                new LessThanFilterHandler(),
-                new LessThanOrEqualFilterHandler(),
-                new LikeFilterHandler(),
-                new InFilterHandler(),
-                new ExistsFilterHandler(),
-                new NotFilterHandler(),
-                new BetweenFilterHandler(),
-                new EqualsNullFilterHandler(),
-                new EqualsExpressionFilterHandler(),
+                new AllHandler(),
+                new NoneHandler(),
+                new AndXHandler(),
+                new OrXHandler(),
+                new EqualsHandler(),
+                new GreaterThanHandler(),
+                new GreaterThanOrEqualHandler(),
+                new LessThanHandler(),
+                new LessThanOrEqualHandler(),
+                new LikeHandler(),
+                new InHandler(),
+                new ExistsHandler(),
+                new NotHandler(),
+                new BetweenHandler(),
+                new EqualsNullHandler(),
+                new EqualsExpressionHandler(),
             ];
         }
 

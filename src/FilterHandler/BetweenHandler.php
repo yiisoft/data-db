@@ -11,7 +11,7 @@ use Yiisoft\Db\Expression\Value\DateTimeValue;
 use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
 use Yiisoft\Db\QueryBuilder\Condition\Between as DbBetweenCondition;
 
-final class BetweenFilterHandler implements QueryFilterHandlerInterface
+final class BetweenHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {

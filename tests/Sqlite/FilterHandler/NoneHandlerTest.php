@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Tests\Sqlite\FilterHandler;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Data\Db\FilterHandler\NoneFilterHandler;
+use Yiisoft\Data\Db\FilterHandler\NoneHandler;
 use Yiisoft\Data\Db\Tests\TestHelper;
 use Yiisoft\Data\Reader\Filter\None;
 use Yiisoft\Db\QueryBuilder\Condition\None as DbNoneCondition;
 
-final class NoneFilterHandlerTest extends TestCase
+final class NoneHandlerTest extends TestCase
 {
     public function testBase(): void
     {
         $filter = new None();
-        $handler = new NoneFilterHandler();
+        $handler = new NoneHandler();
 
         /** @var DbNoneCondition $condition */
         $condition = $handler->getCondition($filter, TestHelper::createContext());

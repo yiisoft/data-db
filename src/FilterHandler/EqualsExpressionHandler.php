@@ -9,7 +9,7 @@ use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
 use Yiisoft\Db\QueryBuilder\Condition\Equals as DbEqualsCondition;
 
-final class EqualsExpressionFilterHandler implements QueryFilterHandlerInterface
+final class EqualsExpressionHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {
