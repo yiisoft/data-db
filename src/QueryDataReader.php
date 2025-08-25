@@ -255,7 +255,7 @@ class QueryDataReader implements QueryDataReaderInterface
 
         $new = clone $this;
         $new->count = $new->data = null;
-        $new->filterHandler = $this->filterHandler->withFilterHandlers(...$filterHandlers);
+        $new->filterHandler = $this->filterHandler->withAddedFilterHandlers(...$filterHandlers);
         return $new;
     }
 

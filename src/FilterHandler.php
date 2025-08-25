@@ -72,7 +72,7 @@ final class FilterHandler
         $this->context = new Context($this);
     }
 
-    public function withFilterHandlers(QueryFilterHandlerInterface ...$handlers): self
+    public function withAddedFilterHandlers(QueryFilterHandlerInterface ...$handlers): self
     {
         $new = clone $this;
         $new->handlers = array_merge(
@@ -90,7 +90,9 @@ final class FilterHandler
     private function getHandlerByOperator(string $operator): QueryFilterHandlerInterface
     {
         if (!isset($this->handlers[$operator])) {
-            throw new LogicException(sprintf('Operator "%s" is not supported', $operator));
+            throw new LogicException(
+                sprintf('Operator "%s" is not supported.', $operator)
+            );
         }
 
         return $this->handlers[$operator];
