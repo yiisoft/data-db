@@ -11,7 +11,7 @@ use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
 use Yiisoft\Db\QueryBuilder\Condition\Like as DbLikeCondition;
 use Yiisoft\Db\QueryBuilder\Condition\LikeMode as DbLikeMode;
 
-final class LikeFilterHandler implements QueryFilterHandlerInterface
+final class LikeHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {

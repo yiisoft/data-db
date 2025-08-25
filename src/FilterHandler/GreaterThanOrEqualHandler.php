@@ -11,7 +11,7 @@ use Yiisoft\Db\Expression\Value\DateTimeValue;
 use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
 use Yiisoft\Db\QueryBuilder\Condition\GreaterThanOrEqual as DbGreaterThanOrEqual;
 
-final class GreaterThanOrEqualFilterHandler implements QueryFilterHandlerInterface
+final class GreaterThanOrEqualHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {

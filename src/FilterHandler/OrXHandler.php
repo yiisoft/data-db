@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\FilterHandler;
 
-use Yiisoft\Data\Reader\Filter\AndX;
+use Yiisoft\Data\Reader\Filter\OrX;
 use Yiisoft\Data\Reader\FilterInterface;
-use Yiisoft\Db\QueryBuilder\Condition\AndX as DbAndXCondition;
 use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
+use Yiisoft\Db\QueryBuilder\Condition\OrX as DbOrXCondition;
 
-final class AndXFilterHandler implements QueryFilterHandlerInterface
+final class OrXHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {
-        return AndX::class;
+        return OrX::class;
     }
 
     public function getCondition(FilterInterface $filter, Context $context): ConditionInterface
     {
-        /** @var AndX $filter */
+        /** @var OrX $filter */
 
-        return new DbAndXCondition(
+        return new DbOrXCondition(
             ...array_map(
                 static fn(FilterInterface $subFilter) => $context->handleFilter($subFilter),
                 $filter->filters,

@@ -4,20 +4,22 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\FilterHandler;
 
-use Yiisoft\Data\Reader\Filter\None;
+use Yiisoft\Data\Reader\Filter\In;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
-use Yiisoft\Db\QueryBuilder\Condition\None as DbNone;
+use Yiisoft\Db\QueryBuilder\Condition\In as DbInCondition;
 
-final class NoneFilterHandler implements QueryFilterHandlerInterface
+final class InHandler implements QueryFilterHandlerInterface
 {
     public function getFilterClass(): string
     {
-        return None::class;
+        return In::class;
     }
 
     public function getCondition(FilterInterface $filter, Context $context): ConditionInterface
     {
-        return new DbNone();
+        /** @var In $filter */
+
+        return new DbInCondition($filter->field, $filter->values);
     }
 }
