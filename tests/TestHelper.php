@@ -4,12 +4,33 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Tests;
 
+use Yiisoft\Cache\NullCache;
+use Yiisoft\Data\Db\FilterHandler;
+use Yiisoft\Data\Db\FilterHandler\Context;
+use Yiisoft\Db\Cache\SchemaCache;
 use Yiisoft\Db\Connection\ConnectionInterface;
 use Yiisoft\Db\Exception\Exception;
 use Yiisoft\Db\Schema\Column\ColumnBuilder;
+use Yiisoft\Db\Sqlite\Connection;
+use Yiisoft\Db\Sqlite\Driver;
 
 final class TestHelper
 {
+    public static function createSqliteConnection(): Connection
+    {
+        return new Connection(
+            new Driver('sqlite::memory:'),
+            new SchemaCache(new NullCache()),
+        );
+    }
+
+    public static function createContext(): Context
+    {
+        return new Context(
+            new FilterHandler()
+        );
+    }
+
     public static function loadFixtures(ConnectionInterface $db): void
     {
         try {

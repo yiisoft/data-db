@@ -23,7 +23,6 @@ use Yiisoft\Data\Db\FilterHandler\LessThanOrEqualFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\LikeFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\NotFilterHandler;
 use Yiisoft\Data\Db\FilterHandler\QueryFilterHandlerInterface;
-use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\Query\QueryPartsInterface;
 use Yiisoft\Db\QueryBuilder\Condition\ConditionInterface;
@@ -73,20 +72,8 @@ final class FilterHandler
         $this->context = new Context($this);
     }
 
-    public function withFilterHandlers(FilterHandlerInterface ...$handlers): self
+    public function withFilterHandlers(QueryFilterHandlerInterface ...$handlers): self
     {
-        foreach ($handlers as $handler) {
-            if (!$handler instanceof QueryFilterHandlerInterface) {
-                throw new LogicException(
-                    sprintf(
-                        'Filter handler must implement "%s".',
-                        QueryFilterHandlerInterface::class,
-                    )
-                );
-            }
-        }
-        /** @var QueryFilterHandlerInterface[] $handlers */
-
         $new = clone $this;
         $new->handlers = array_merge(
             $this->handlers,

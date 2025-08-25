@@ -6,7 +6,9 @@ namespace Yiisoft\Data\Db;
 
 use Generator;
 use InvalidArgumentException;
+use LogicException;
 use RuntimeException;
+use Yiisoft\Data\Db\FilterHandler\QueryFilterHandlerInterface;
 use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
@@ -239,6 +241,18 @@ class QueryDataReader implements QueryDataReaderInterface
      */
     final public function withAddedFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
     {
+        foreach ($filterHandlers as $handler) {
+            if (!$handler instanceof QueryFilterHandlerInterface) {
+                throw new LogicException(
+                    sprintf(
+                        'Filter handler must implement "%s".',
+                        QueryFilterHandlerInterface::class,
+                    )
+                );
+            }
+        }
+        /** @var QueryFilterHandlerInterface[] $filterHandlers */
+
         $new = clone $this;
         $new->count = $new->data = null;
         $new->filterHandler = $this->filterHandler->withFilterHandlers(...$filterHandlers);
