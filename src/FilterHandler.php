@@ -79,6 +79,7 @@ final class FilterHandler
             $this->handlers,
             $this->prepareHandlers($handlers),
         );
+        $new->context = new Context($new);
         return $new;
     }
 
