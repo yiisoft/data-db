@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Tests\Sqlite;
 
+use InvalidArgumentException;
 use LogicException;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Db\FilterHandler\QueryFilterHandlerInterface;
@@ -95,5 +96,16 @@ final class QueryDataReaderTest extends TestCase
         $this->assertCount(1, $logger->getMessages()); // Only one query should be logged
         $this->assertSame($data, $result);
         $this->assertSame(2, $count);
+    }
+
+    public function testWithLimitInvalidValue(): void
+    {
+        $dataReader = new QueryDataReader(
+            TestHelper::createSqliteConnection()->createQuery(),
+        );
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('$limit must not be less than 0.');
+        $dataReader->withLimit(-1);
     }
 }
