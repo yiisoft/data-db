@@ -139,4 +139,15 @@ final class QueryDataReaderTest extends TestCase
 
         $this->assertSame($dataReader1, $dataReader2);
     }
+
+    public function testWithBatchSizeInvalidValue(): void
+    {
+        $dataReader = new QueryDataReader(
+            TestHelper::createSqliteConnection()->createQuery(),
+        );
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('$batchSize cannot be less than 1.');
+        $dataReader->withBatchSize(0);
+    }
 }
