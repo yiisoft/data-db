@@ -11,7 +11,6 @@ use Yiisoft\Data\Db\FilterHandler\QueryFilterHandlerInterface;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Db\Tests\TestHelper;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\NoneHandler;
-use Yiisoft\Db\Query\QueryInterface;
 use Yiisoft\Test\Support\Log\SimpleLogger;
 
 final class QueryDataReaderTest extends TestCase
@@ -107,5 +106,37 @@ final class QueryDataReaderTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('$limit must not be less than 0.');
         $dataReader->withLimit(-1);
+    }
+
+    public function testCustomCountParam(): void
+    {
+        $data = [['id' => 1], ['id' => 2], ['id' => 1]];
+
+        $db = TestHelper::createSqliteConnection();
+        $columnBuilder = $db->getColumnBuilderClass();
+        $db->createCommand()->createTable('test', ['id' => $columnBuilder::integer()])->execute();
+        $db->createCommand()->insertBatch('test', $data)->execute();
+
+        $dataReader = new QueryDataReader(
+            $db->createQuery()->from('test'),
+        );
+
+        $newDataReader = $dataReader->withCountParam('DISTINCT id');
+        $count = $newDataReader->count();
+
+        $this->assertNotSame($newDataReader, $dataReader);
+        $this->assertSame(2, $count);
+    }
+
+    public function testDoNotCloneWithCountParamWithSameValue(): void
+    {
+        $dataReader = new QueryDataReader(
+            TestHelper::createSqliteConnection()->createQuery(),
+        );
+
+        $dataReader1 = $dataReader->withCountParam('DISTINCT id');
+        $dataReader2 = $dataReader1->withCountParam('DISTINCT id');
+
+        $this->assertSame($dataReader1, $dataReader2);
     }
 }
