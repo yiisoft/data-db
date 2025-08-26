@@ -27,11 +27,12 @@ services:
       - type: tmpfs
         target: /var/lib/mysql
     environment:
-      MYSQL_DATABASE: yii
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_ROOT_HOST: "%"
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
+      MYSQL_DATABASE: data-db-test
+      MYSQL_USER: yii
+      MYSQL_PASSWORD: 'q1w2e3r4'
     healthcheck:
-      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost", "-uroot" ]
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost", "-uyii" ]
       interval: 5s
       timeout: 5s
       retries: 20
@@ -43,7 +44,7 @@ services:
       - type: tmpfs
         target: /var/lib/postgresql/data
     environment:
-      POSTGRES_DB: yii
+      POSTGRES_DB: data-db-test
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     healthcheck:
