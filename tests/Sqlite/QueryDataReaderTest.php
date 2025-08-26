@@ -74,4 +74,26 @@ final class QueryDataReaderTest extends TestCase
 
         $this->assertSame($data, $result);
     }
+
+    public function testCountInCommonCaseAfterRead(): void
+    {
+        $data = [['id' => '1'], ['id' => '2']];
+
+        $db = TestHelper::createSqliteConnection();
+        $columnBuilder = $db->getColumnBuilderClass();
+        $db->createCommand()->createTable('test', ['id' => $columnBuilder::text()])->execute();
+        $db->createCommand()->insertBatch('test', $data)->execute();
+
+        $logger = new SimpleLogger();
+        $db->setLogger($logger);
+
+        $dataReader = new QueryDataReader($db->createQuery()->from('test'));
+
+        $result = $dataReader->read();
+        $count = $dataReader->count();
+
+        $this->assertCount(1, $logger->getMessages()); // Only one query should be logged
+        $this->assertSame($data, $result);
+        $this->assertSame(2, $count);
+    }
 }
