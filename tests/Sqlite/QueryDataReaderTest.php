@@ -141,10 +141,7 @@ final class QueryDataReaderTest extends TestCase
             batchSize: 1,
         );
 
-        $results = [];
-        foreach ($dataReader->getIterator() as $item) {
-            $results[] = $item;
-        }
+        $results = iterator_to_array($dataReader->getIterator());
         $result = array_merge(...$results);
 
         $this->assertSame($data, $result);
