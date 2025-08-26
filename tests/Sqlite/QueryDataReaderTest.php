@@ -51,4 +51,27 @@ final class QueryDataReaderTest extends TestCase
         $this->assertSame($data, $read2Result);
         $this->assertSame($data, $getIteratorResult);
     }
+
+    public function testBatchReading(): void
+    {
+        $data = [['id' => '1'], ['id' => '2']];
+
+        $db = TestHelper::createSqliteConnection();
+        $columnBuilder = $db->getColumnBuilderClass();
+        $db->createCommand()->createTable('test', ['id' => $columnBuilder::text()])->execute();
+        $db->createCommand()->insertBatch('test', $data)->execute();
+
+        $dataReader = new QueryDataReader(
+            $db->createQuery()->from('test'),
+            batchSize: 1,
+        );
+
+        $results = [];
+        foreach ($dataReader->getIterator() as $item) {
+            $results[] = $item;
+        }
+        $result = array_merge(...$results);
+
+        $this->assertSame($data, $result);
+    }
 }
