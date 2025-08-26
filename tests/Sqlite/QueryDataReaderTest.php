@@ -10,7 +10,6 @@ use Yiisoft\Data\Db\FilterHandler\QueryFilterHandlerInterface;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Db\Tests\TestHelper;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\NoneHandler;
-use Yiisoft\Db\Query\QueryInterface;
 use Yiisoft\Test\Support\Log\SimpleLogger;
 
 final class QueryDataReaderTest extends TestCase
