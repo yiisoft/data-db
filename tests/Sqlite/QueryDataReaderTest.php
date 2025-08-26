@@ -7,21 +7,56 @@ namespace Yiisoft\Data\Db\Tests\Sqlite;
 use InvalidArgumentException;
 use LogicException;
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Data\Db\FilterHandler;
+use Yiisoft\Data\Db\FilterHandler\AllHandler;
+use Yiisoft\Data\Db\FilterHandler\AndXHandler;
+use Yiisoft\Data\Db\FilterHandler\NoneHandler;
 use Yiisoft\Data\Db\FilterHandler\QueryFilterHandlerInterface;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Db\Tests\TestHelper;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\NoneHandler;
+use Yiisoft\Data\Reader\Filter\All;
+use Yiisoft\Data\Reader\Filter\AndX;
+use Yiisoft\Data\Reader\Filter\Equals;
+use Yiisoft\Data\Reader\Filter\None;
 use Yiisoft\Test\Support\Log\SimpleLogger;
 
 final class QueryDataReaderTest extends TestCase
 {
+    public function testWithAddedFilterHandlers(): void
+    {
+        $db = TestHelper::createSqliteConnection();
+        $columnBuilder = $db->getColumnBuilderClass();
+        $db->createCommand()->createTable('test', ['id' => $columnBuilder::text()])->execute();
+
+        $handler1 = new AllHandler();
+        $handler2 = new NoneHandler();
+        $handler3 = new AndXHandler();
+
+        $dataReader = new QueryDataReader(
+            $db->createQuery()->from('test'),
+            filterHandler: new FilterHandler([$handler1]),
+        );
+
+        $dataReaderWithAdded = $dataReader->withAddedFilterHandlers($handler2, $handler3);
+
+        $this->assertNotSame($dataReader, $dataReaderWithAdded);
+
+        $dataReaderWithFilters = $dataReaderWithAdded->withFilter(new AndX(new All(), new None()));
+        $dataReaderWithFilters->read(); // No errors
+
+        $dataReaderWithUnsupportedFilter = $dataReaderWithAdded->withFilter(new Equals('id', 'test'));
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Operator "' . Equals::class . '" is not supported.');
+        $dataReaderWithUnsupportedFilter->read();
+    }
+
     public function testWithAddedFilterHandlersWithIncorrectHandler(): void
     {
         $dataReader = new QueryDataReader(
             TestHelper::createSqliteConnection()->createQuery(),
         );
 
-        $iterableHandler = new NoneHandler();
+        $iterableHandler = new \Yiisoft\Data\Reader\Iterable\FilterHandler\AllHandler();
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Filter handler must implement "' . QueryFilterHandlerInterface::class . '".');
