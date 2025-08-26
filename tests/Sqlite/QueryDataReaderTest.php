@@ -10,6 +10,8 @@ use Yiisoft\Data\Db\FilterHandler\QueryFilterHandlerInterface;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Db\Tests\TestHelper;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\NoneHandler;
+use Yiisoft\Db\Query\QueryInterface;
+use Yiisoft\Test\Support\Log\SimpleLogger;
 
 final class QueryDataReaderTest extends TestCase
 {
@@ -24,5 +26,29 @@ final class QueryDataReaderTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Filter handler must implement "' . QueryFilterHandlerInterface::class . '".');
         $dataReader->withAddedFilterHandlers($iterableHandler);
+    }
+
+    public function testGetIteratorAfterRead(): void
+    {
+        $data = [['id' => '1'], ['id' => '2']];
+
+        $db = TestHelper::createSqliteConnection();
+        $columnBuilder = $db->getColumnBuilderClass();
+        $db->createCommand()->createTable('test', ['id' => $columnBuilder::text()])->execute();
+        $db->createCommand()->insertBatch('test', $data)->execute();
+
+        $logger = new SimpleLogger();
+        $db->setLogger($logger);
+
+        $dataReader = new QueryDataReader($db->createQuery()->from('test'));
+
+        $readResult = $dataReader->read();
+        $read2Result = $dataReader->read();
+        $getIteratorResult = iterator_to_array($dataReader->getIterator());
+
+        $this->assertCount(1, $logger->getMessages()); // Only one query should be logged
+        $this->assertSame($data, $readResult);
+        $this->assertSame($data, $read2Result);
+        $this->assertSame($data, $getIteratorResult);
     }
 }
