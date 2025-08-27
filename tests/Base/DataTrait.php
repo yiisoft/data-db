@@ -18,17 +18,23 @@ trait DataTrait
 {
     use FixtureTrait;
 
-    protected static ?PdoConnectionInterface $connection = null;
+    /**
+     * @psalm-var array<string, PdoConnectionInterface>
+     */
+    private static array $connection = [];
 
     abstract protected function makeConnection(): PdoConnectionInterface;
 
+    abstract protected function getConnectionId(): string;
+
     protected function getConnection(): PdoConnectionInterface
     {
-        if (self::$connection === null) {
-            self::$connection = $this->makeConnection();
+        $connectionId = $this->getConnectionId();
+        if (!isset(self::$connection[$connectionId])) {
+            self::$connection[$connectionId] = $this->makeConnection();
         }
 
-        return self::$connection;
+        return self::$connection[$connectionId];
     }
 
     protected function setUp(): void
