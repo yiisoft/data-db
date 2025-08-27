@@ -22,4 +22,9 @@ trait DatabaseTrait
         TestHelper::loadFixtures($db);
         return $db;
     }
+
+    protected function getConnectionId(): string
+    {
+        return 'sqlite';
+    }
 }

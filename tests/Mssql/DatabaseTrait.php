@@ -34,4 +34,9 @@ trait DatabaseTrait
 
         return $db;
     }
+
+    protected function getConnectionId(): string
+    {
+        return 'mssql';
+    }
 }
