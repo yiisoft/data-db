@@ -1,23 +1,30 @@
 name: yiisoft-data-db
+
+x-php-base: &php-base
+  build:
+    context: ./..
+    dockerfile: ./docker/Dockerfile
+  image: yiisoft-data-db-php-test
+  volumes:
+    - ./../src:/code/src
+    - ./../tests:/code/tests
+    - ./../composer.json:/code/composer.json
+    - ./../phpunit.xml.dist:/code/phpunit.xml.dist
+  command: tail -F anything
+
 services:
   php:
-    build:
-      context: ./..
-      dockerfile: ./docker/Dockerfile
-    volumes:
-      - ./../src:/code/src
-      - ./../tests:/code/tests
-      - ./../composer.json:/code/composer.json
-      - ./../phpunit.xml.dist:/code/phpunit.xml.dist
-    command: tail -F anything
+    <<: *php-base
+    profiles:
+      - php
+      - all
+  php-mysql:
+    <<: *php-base
+    profiles:
+      - mysql
+      - all
     depends_on:
       mysql:
-        condition: service_healthy
-      postgres:
-        condition: service_healthy
-      mssql:
-        condition: service_healthy
-      oracle:
         condition: service_healthy
   mysql:
     image: mysql:9
@@ -35,6 +42,17 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
+    profiles:
+      - mysql
+      - all
+  php-pgsql:
+    <<: *php-base
+    profiles:
+      - pgsql
+      - all
+    depends_on:
+      postgres:
+        condition: service_healthy
   postgres:
     image: postgres:17
     ports:
@@ -51,6 +69,17 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    profiles:
+      - pgsql
+      - all
+  php-mssql:
+    <<: *php-base
+    profiles:
+      - mssql
+      - all
+    depends_on:
+      mssql:
+        condition: service_healthy
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     ports:
@@ -69,6 +98,17 @@ services:
       timeout: 3s
       retries: 100
       start_period: 10s
+    profiles:
+      - mssql
+      - all
+  php-oracle:
+    <<: *php-base
+    profiles:
+      - oracle
+      - all
+    depends_on:
+      oracle:
+        condition: service_healthy
   oracle:
     build:
       context: oracle
@@ -88,6 +128,9 @@ services:
       retries: 100
       start_period: 5s
       start_interval: 5s
+    profiles:
+      - oracle
+      - all
 volumes:
   mssql-data:
   mssql-log:
