@@ -53,8 +53,10 @@ jobs:
         ports:
           - 1521:1521
         env:
-          ORACLE_DATABASE: yiitest
-          ORACLE_PASSWORD: root
+          ORACLE_RANDOM_PASSWORD: yes
+          ORACLE_DATABASE: data_db_test
+          APP_USER: yii
+          APP_USER_PASSWORD: q1w2e3r4
         options: >-
           --name=oci
           --health-cmd healthcheck.sh
@@ -105,11 +107,11 @@ jobs:
         run: vendor/bin/phpunit --testsuite Oracle --coverage-clover=coverage.xml --colors=always
         env:
           ENVIRONMENT: ci
-          YII_ORACLE_SID: XE
+          YII_ORACLE_DATABASE: data_db_test
           YII_ORACLE_HOST: localhost
           YII_ORACLE_PORT: 1521
-          YII_ORACLE_USER: system
-          YII_ORACLE_PASSWORD: root
+          YII_ORACLE_USER: yii
+          YII_ORACLE_PASSWORD: q1w2e3r4
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3

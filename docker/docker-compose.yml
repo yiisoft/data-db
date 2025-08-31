@@ -113,17 +113,16 @@ services:
       oracle:
         condition: service_healthy
   oracle:
-    build:
-      context: oracle
+    image: gvenzl/oracle-free:23
     ports:
       - "1521:1521"
     volumes:
-      - ./oracle/init.sql:/docker-entrypoint-initdb.d/init.sql
       - oracle-data:/opt/oracle/oradata
     environment:
-      ORACLE_PASSWORD: sys_user_password
-      APP_USER: my_user
-      APP_USER_PASSWORD: password_i_should_change
+      ORACLE_RANDOM_PASSWORD: yes
+      ORACLE_DATABASE: data_db_test
+      APP_USER: yii
+      APP_USER_PASSWORD: q1w2e3r4
     healthcheck:
       test: ["CMD", "healthcheck.sh"]
       interval: 10s
