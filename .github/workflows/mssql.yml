@@ -72,7 +72,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Create MS SQL Database
-        run: docker exec -i mssql /opt/mssql-tools${{ matrix.mssql.odbc-version }}/bin/sqlcmd ${{ matrix.mssql.flag }} -S localhost -U SA -P 'YourStrong!Passw0rd' -Q 'CREATE DATABASE yiitest'
+        run: docker exec -i mssql /opt/mssql-tools${{ matrix.mssql.odbc-version }}/bin/sqlcmd ${{ matrix.mssql.flag }} -S localhost -U SA -P 'YourStrong!Passw0rd' -Q 'CREATE DATABASE data-db-test'
 
       - name: Install PHP with extensions
         uses: shivammathur/setup-php@v2
@@ -116,8 +116,8 @@ jobs:
           YII_MSSQL_DATABASE: data-db-test
           YII_MSSQL_HOST: 127.0.0.1
           YII_MSSQL_PORT: 1433
-          YII_MSSQL_USER: yii
-          YII_MSSQL_PASSWORD: q1w2e3r4
+          YII_MSSQL_USER: SA
+          YII_MSSQL_PASSWORD: YourStrong!Passw0rd
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
