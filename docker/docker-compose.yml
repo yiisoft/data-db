@@ -65,11 +65,30 @@ services:
       SA_PASSWORD: YourStrong!Passw0rd
       ACCEPT_EULA: Y
     healthcheck:
-      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$${SA_PASSWORD}" -Q "SELECT 1" -b -C -o /dev/null
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U yii -P "q1w2e3r4!" -Q "SELECT 1" -b -C -o /dev/null
       interval: 10s
       timeout: 3s
       retries: 100
       start_period: 10s
+    command: /bin/bash -c "
+      /opt/mssql/bin/sqlservr &
+      pid=$$!;
+      sleep 20;
+      /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'YourStrong!Passw0rd' -C -Q \"
+        IF NOT EXISTS (SELECT * FROM sys.sql_logins WHERE name = N'yii')
+          CREATE LOGIN yii WITH PASSWORD = 'q1w2e3r4!';
+      \";
+      /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'YourStrong!Passw0rd' -C -Q \"
+        IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = N'data-db-test')
+          CREATE DATABASE [data-db-test];
+      \";
+      /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'YourStrong!Passw0rd' -C -d data-db-test -Q \"
+        IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = N'yii')
+          CREATE USER yii FOR LOGIN yii;
+        ALTER ROLE db_owner ADD MEMBER yii;
+      \";
+      wait $pid
+      "
   oracle:
     build:
       context: oracle
