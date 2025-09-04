@@ -7,7 +7,6 @@ namespace Yiisoft\Data\Db\Tests\Sqlite;
 use InvalidArgumentException;
 use LogicException;
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Data\Db\FilterHandler;
 use Yiisoft\Data\Db\FilterHandler\AllHandler;
 use Yiisoft\Data\Db\FilterHandler\AndXHandler;
 use Yiisoft\Data\Db\FilterHandler\NoneHandler;
