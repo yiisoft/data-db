@@ -30,7 +30,6 @@ final class ArrayFieldMapper implements FieldMapperInterface
      * @psalm-param array<string, string|ExpressionInterface> $map
      *
      * @example
-     *
      */
     public function __construct(
         private readonly array $map,

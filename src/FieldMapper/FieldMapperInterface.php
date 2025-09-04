@@ -16,7 +16,7 @@ interface FieldMapperInterface
      *
      * @param string $field The field name to map.
      *
-     * @return string|ExpressionInterface The mapped column name or expression.
+     * @return ExpressionInterface|string The mapped column name or expression.
      */
     public function map(string $field): string|ExpressionInterface;
 }
