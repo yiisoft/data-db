@@ -23,7 +23,7 @@ final class BetweenHandler implements QueryFilterHandlerInterface
         /** @var Between $filter */
 
         return new DbBetweenCondition(
-            $filter->field,
+            $context->mapField($filter->field),
             $this->prepareValue($filter->minValue),
             $this->prepareValue($filter->maxValue),
         );

@@ -26,6 +26,6 @@ final class EqualsHandler implements QueryFilterHandlerInterface
             ? new DateTimeValue($filter->value)
             : $filter->value;
 
-        return new DbEqualsCondition($filter->field, $value);
+        return new DbEqualsCondition($context->mapField($filter->field), $value);
     }
 }

@@ -8,11 +8,31 @@ use Generator;
 use InvalidArgumentException;
 use LogicException;
 use RuntimeException;
+use Yiisoft\Data\Db\FieldMapper\ArrayFieldMapper;
+use Yiisoft\Data\Db\FieldMapper\FieldMapperInterface;
+use Yiisoft\Data\Db\FilterHandler\AllHandler;
+use Yiisoft\Data\Db\FilterHandler\AndXHandler;
+use Yiisoft\Data\Db\FilterHandler\BetweenHandler;
+use Yiisoft\Data\Db\FilterHandler\EqualsExpressionHandler;
+use Yiisoft\Data\Db\FilterHandler\EqualsHandler;
+use Yiisoft\Data\Db\FilterHandler\EqualsNullHandler;
+use Yiisoft\Data\Db\FilterHandler\ExistsHandler;
+use Yiisoft\Data\Db\FilterHandler\GreaterThanHandler;
+use Yiisoft\Data\Db\FilterHandler\GreaterThanOrEqualHandler;
+use Yiisoft\Data\Db\FilterHandler\InHandler;
+use Yiisoft\Data\Db\FilterHandler\LessThanHandler;
+use Yiisoft\Data\Db\FilterHandler\LessThanOrEqualHandler;
+use Yiisoft\Data\Db\FilterHandler\LikeHandler;
+use Yiisoft\Data\Db\FilterHandler\NoneHandler;
+use Yiisoft\Data\Db\FilterHandler\NotHandler;
+use Yiisoft\Data\Db\FilterHandler\OrXHandler;
 use Yiisoft\Data\Db\FilterHandler\QueryFilterHandlerInterface;
 use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Db\Expression\CompositeExpression;
+use Yiisoft\Db\Expression\ExpressionInterface;
 use Yiisoft\Db\Query\QueryInterface;
 
 use function array_key_first;
@@ -35,6 +55,7 @@ class QueryDataReader implements QueryDataReaderInterface
     final public const DEFAULT_BATCH_SIZE = 100;
 
     private FilterHandler $filterHandler;
+    private FieldMapperInterface $fieldMapper;
 
     /**
      * @psalm-var non-negative-int|null
@@ -49,6 +70,8 @@ class QueryDataReader implements QueryDataReaderInterface
 
     /**
      * @psalm-param non-negative-int|null $limit
+     * @psalm-param list<QueryFilterHandlerInterface>|null $filterHandlers
+     * @psalm-param array<string, string|ExpressionInterface>|FieldMapperInterface $fieldMapper
      */
     public function __construct(
         private readonly QueryInterface $query,
@@ -59,9 +82,30 @@ class QueryDataReader implements QueryDataReaderInterface
         private FilterInterface $filter = new All(),
         private FilterInterface $having = new All(),
         private ?int $batchSize = self::DEFAULT_BATCH_SIZE,
-        ?FilterHandler $filterHandler = null,
+        array|null $filterHandlers = null,
+        array|FieldMapperInterface $fieldMapper = [],
     ) {
-        $this->filterHandler = $filterHandler ?? new FilterHandler();
+        $this->fieldMapper = is_array($fieldMapper) ? new ArrayFieldMapper($fieldMapper) : $fieldMapper;
+
+        $filterHandlers ??= [
+            new AllHandler(),
+            new NoneHandler(),
+            new AndXHandler(),
+            new OrXHandler(),
+            new EqualsHandler(),
+            new GreaterThanHandler(),
+            new GreaterThanOrEqualHandler(),
+            new LessThanHandler(),
+            new LessThanOrEqualHandler(),
+            new LikeHandler(),
+            new InHandler(),
+            new ExistsHandler(),
+            new NotHandler(),
+            new BetweenHandler(),
+            new EqualsNullHandler(),
+            new EqualsExpressionHandler(),
+        ];
+        $this->filterHandler = new FilterHandler($filterHandlers, $this->fieldMapper);
     }
 
     /**
@@ -127,8 +171,10 @@ class QueryDataReader implements QueryDataReaderInterface
             $query->offset($this->offset);
         }
 
-        if ($criteria = $this->sort?->getCriteria()) {
-            $query->addOrderBy($criteria);
+        if ($this->sort !== null) {
+            $query->addOrderBy(
+                $this->convertSortToOrderBy($this->sort)
+            );
         }
 
         return $query;
@@ -304,5 +350,22 @@ class QueryDataReader implements QueryDataReaderInterface
     final public function getOffset(): int
     {
         return $this->offset;
+    }
+
+    private function convertSortToOrderBy(Sort $sort): array
+    {
+        $result = [];
+        foreach ($sort->getCriteria() as $field => $direction) {
+            $field = $this->fieldMapper->map($field);
+            if (is_string($field)) {
+                $result[$field] = $direction;
+            } else {
+                $result[] = new CompositeExpression([
+                    $field,
+                    $direction === SORT_ASC ? 'ASC' : 'DESC',
+                ]);
+            }
+        }
+        return $result;
     }
 }

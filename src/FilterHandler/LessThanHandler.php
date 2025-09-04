@@ -26,6 +26,6 @@ final class LessThanHandler implements QueryFilterHandlerInterface
             ? new DateTimeValue($filter->value)
             : $filter->value;
 
-        return new DbLessThan($filter->field, $value);
+        return new DbLessThan($context->mapField($filter->field), $value);
     }
 }
