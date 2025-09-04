@@ -87,24 +87,7 @@ class QueryDataReader implements QueryDataReaderInterface
     ) {
         $this->fieldMapper = is_array($fieldMapper) ? new ArrayFieldMapper($fieldMapper) : $fieldMapper;
 
-        $filterHandlers ??= [
-            new AllHandler(),
-            new NoneHandler(),
-            new AndXHandler(),
-            new OrXHandler(),
-            new EqualsHandler(),
-            new GreaterThanHandler(),
-            new GreaterThanOrEqualHandler(),
-            new LessThanHandler(),
-            new LessThanOrEqualHandler(),
-            new LikeHandler(),
-            new InHandler(),
-            new ExistsHandler(),
-            new NotHandler(),
-            new BetweenHandler(),
-            new EqualsNullHandler(),
-            new EqualsExpressionHandler(),
-        ];
+        $filterHandlers ??= $this->getDefaultFilterHandlers();
         $this->filterHandler = new FilterHandler($filterHandlers, $this->fieldMapper);
     }
 
@@ -350,6 +333,31 @@ class QueryDataReader implements QueryDataReaderInterface
     final public function getOffset(): int
     {
         return $this->offset;
+    }
+
+    /**
+     * @psalm-return list<QueryFilterHandlerInterface>
+     */
+    private function getDefaultFilterHandlers(): array
+    {
+        return [
+            new AllHandler(),
+            new NoneHandler(),
+            new AndXHandler(),
+            new OrXHandler(),
+            new EqualsHandler(),
+            new GreaterThanHandler(),
+            new GreaterThanOrEqualHandler(),
+            new LessThanHandler(),
+            new LessThanOrEqualHandler(),
+            new LikeHandler(),
+            new InHandler(),
+            new ExistsHandler(),
+            new NotHandler(),
+            new BetweenHandler(),
+            new EqualsNullHandler(),
+            new EqualsExpressionHandler(),
+        ];
     }
 
     private function convertSortToOrderBy(Sort $sort): array
