@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Tests\Sqlite;
 
 use LogicException;
+use Yiisoft\Data\Db\FieldMapper\ArrayFieldMapper;
 use Yiisoft\Data\Db\FilterHandler;
 use Yiisoft\Data\Db\FilterHandler\AllHandler;
 use Yiisoft\Data\Db\FilterHandler\EqualsHandler;
@@ -23,7 +24,7 @@ final class FilterHandlerTest extends TestCase
         $handler1 = new EqualsHandler();
         $handler2 = new NoneHandler();
         $handler3 = new AllHandler();
-        $handler = new FilterHandler([$handler1]);
+        $handler = new FilterHandler([$handler1], new ArrayFieldMapper([]));
 
         $handlerWithAdded = $handler->withAddedFilterHandlers($handler2, $handler3);
 

@@ -35,7 +35,7 @@ final class QueryDataReaderTest extends TestCase
 
         $dataReader = new QueryDataReader(
             $db->createQuery()->from('test'),
-            filterHandler: new FilterHandler([$handler1]),
+            filterHandlers: [$handler1],
         );
 
         $dataReaderWithAdded = $dataReader->withAddedFilterHandlers($handler2, $handler3);

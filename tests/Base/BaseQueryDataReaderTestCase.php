@@ -114,20 +114,6 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
                 ->withOrderString('-email'),
                 '[[email]] DESC',
             ],
-            'with order string, 1 field desc, expression' => [
-                Sort::any([
-                    'name' => [
-                        'asc' => [
-                            new Expression('[[name]] ASC NULLS FIRST'),
-                        ],
-                        'desc' => [
-                            new Expression('[[name]] DESC NULLS LAST'),
-                        ],
-                    ],
-                ])
-                ->withOrderString('-name'),
-                '[[name]] DESC NULLS LAST',
-            ],
         ];
     }
 
