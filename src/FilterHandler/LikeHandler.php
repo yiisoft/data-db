@@ -23,7 +23,7 @@ final class LikeHandler implements QueryFilterHandlerInterface
         /** @var Like $filter */
 
         return new DbLikeCondition(
-            $filter->field,
+            $context->mapField($filter->field),
             $filter->value,
             $filter->caseSensitive,
             mode: $this->mapMode($filter->mode),

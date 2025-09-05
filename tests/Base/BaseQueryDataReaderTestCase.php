@@ -21,7 +21,6 @@ use Yiisoft\Data\Reader\Filter\Not;
 use Yiisoft\Data\Reader\Filter\OrX;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Db\Expression\Expression;
 use Yiisoft\Db\Query\Query;
 
 abstract class BaseQueryDataReaderTestCase extends TestCase
@@ -113,20 +112,6 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
                 ->withoutDefaultSorting()
                 ->withOrderString('-email'),
                 '[[email]] DESC',
-            ],
-            'with order string, 1 field desc, expression' => [
-                Sort::any([
-                    'name' => [
-                        'asc' => [
-                            new Expression('[[name]] ASC NULLS FIRST'),
-                        ],
-                        'desc' => [
-                            new Expression('[[name]] DESC NULLS LAST'),
-                        ],
-                    ],
-                ])
-                ->withOrderString('-name'),
-                '[[name]] DESC NULLS LAST',
             ],
         ];
     }

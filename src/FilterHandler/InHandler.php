@@ -20,6 +20,6 @@ final class InHandler implements QueryFilterHandlerInterface
     {
         /** @var In $filter */
 
-        return new DbInCondition($filter->field, $filter->values);
+        return new DbInCondition($context->mapField($filter->field), $filter->values);
     }
 }

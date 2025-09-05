@@ -7,7 +7,6 @@ namespace Yiisoft\Data\Db\Tests\Sqlite;
 use InvalidArgumentException;
 use LogicException;
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Data\Db\FilterHandler;
 use Yiisoft\Data\Db\FilterHandler\AllHandler;
 use Yiisoft\Data\Db\FilterHandler\AndXHandler;
 use Yiisoft\Data\Db\FilterHandler\NoneHandler;
@@ -35,7 +34,7 @@ final class QueryDataReaderTest extends TestCase
 
         $dataReader = new QueryDataReader(
             $db->createQuery()->from('test'),
-            filterHandler: new FilterHandler([$handler1]),
+            filterHandlers: [$handler1],
         );
 
         $dataReaderWithAdded = $dataReader->withAddedFilterHandlers($handler2, $handler3);

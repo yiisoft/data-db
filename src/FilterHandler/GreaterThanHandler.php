@@ -26,6 +26,6 @@ final class GreaterThanHandler implements QueryFilterHandlerInterface
             ? new DateTimeValue($filter->value)
             : $filter->value;
 
-        return new DbGreaterThan($filter->field, $value);
+        return new DbGreaterThan($context->mapField($filter->field), $value);
     }
 }

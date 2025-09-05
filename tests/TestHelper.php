@@ -5,8 +5,25 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Tests;
 
 use Yiisoft\Cache\NullCache;
+use Yiisoft\Data\Db\FieldMapper\ArrayFieldMapper;
 use Yiisoft\Data\Db\FilterHandler;
+use Yiisoft\Data\Db\FilterHandler\AllHandler;
+use Yiisoft\Data\Db\FilterHandler\AndXHandler;
+use Yiisoft\Data\Db\FilterHandler\BetweenHandler;
 use Yiisoft\Data\Db\FilterHandler\Context;
+use Yiisoft\Data\Db\FilterHandler\EqualsExpressionHandler;
+use Yiisoft\Data\Db\FilterHandler\EqualsHandler;
+use Yiisoft\Data\Db\FilterHandler\EqualsNullHandler;
+use Yiisoft\Data\Db\FilterHandler\ExistsHandler;
+use Yiisoft\Data\Db\FilterHandler\GreaterThanHandler;
+use Yiisoft\Data\Db\FilterHandler\GreaterThanOrEqualHandler;
+use Yiisoft\Data\Db\FilterHandler\InHandler;
+use Yiisoft\Data\Db\FilterHandler\LessThanHandler;
+use Yiisoft\Data\Db\FilterHandler\LessThanOrEqualHandler;
+use Yiisoft\Data\Db\FilterHandler\LikeHandler;
+use Yiisoft\Data\Db\FilterHandler\NoneHandler;
+use Yiisoft\Data\Db\FilterHandler\NotHandler;
+use Yiisoft\Data\Db\FilterHandler\OrXHandler;
 use Yiisoft\Db\Cache\SchemaCache;
 use Yiisoft\Db\Connection\ConnectionInterface;
 use Yiisoft\Db\Exception\Exception;
@@ -26,8 +43,30 @@ final class TestHelper
 
     public static function createContext(): Context
     {
+        $fieldMapper = new ArrayFieldMapper([]);
         return new Context(
-            new FilterHandler()
+            new FilterHandler(
+                [
+                    new AllHandler(),
+                    new NoneHandler(),
+                    new AndXHandler(),
+                    new OrXHandler(),
+                    new EqualsHandler(),
+                    new GreaterThanHandler(),
+                    new GreaterThanOrEqualHandler(),
+                    new LessThanHandler(),
+                    new LessThanOrEqualHandler(),
+                    new LikeHandler(),
+                    new InHandler(),
+                    new ExistsHandler(),
+                    new NotHandler(),
+                    new BetweenHandler(),
+                    new EqualsNullHandler(),
+                    new EqualsExpressionHandler(),
+                ],
+                $fieldMapper,
+            ),
+            $fieldMapper,
         );
     }
 

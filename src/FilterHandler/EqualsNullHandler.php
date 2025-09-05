@@ -20,6 +20,6 @@ final class EqualsNullHandler implements QueryFilterHandlerInterface
     {
         /** @var EqualsNull $filter */
 
-        return new DbEquals($filter->field, null);
+        return new DbEquals($context->mapField($filter->field), null);
     }
 }

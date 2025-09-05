@@ -20,6 +20,9 @@ final class EqualsExpressionHandler implements QueryFilterHandlerInterface
     {
         /** @var EqualsExpression $filter */
 
-        return new DbEqualsCondition($filter->field, $filter->expression);
+        return new DbEqualsCondition(
+            $context->mapField($filter->field),
+            $filter->expression,
+        );
     }
 }
