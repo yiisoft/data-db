@@ -16,7 +16,7 @@ use Yiisoft\Db\Expression\ExpressionInterface;
 final class ArrayFieldMapper implements FieldMapperInterface
 {
     /**
-     * @param array $map The field mapping array where keys are field names and values are column names or expressions.
+     * @param (ExpressionInterface|string)[] $map The field mapping array where keys are field names and values are column names or expressions.
      * For example:
      *
      * ```php
