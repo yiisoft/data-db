@@ -57,9 +57,9 @@ jobs:
       postgres:
         image: postgres:${{ matrix.pgsql }}
         env:
-          POSTGRES_USER: root
-          POSTGRES_PASSWORD: root
-          POSTGRES_DB: yiitest
+          POSTGRES_DB: data-db-test
+          POSTGRES_USER: yii
+          POSTGRES_PASSWORD: q1w2e3r4
         ports:
           - 5432:5432
         options: --name=postgres --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -108,11 +108,11 @@ jobs:
         run: vendor/bin/phpunit --testsuite Pgsql --coverage-clover=coverage.xml --colors=always
         env:
           ENVIRONMENT: ci
-          YII_PGSQL_DATABASE: yiitest
+          YII_PGSQL_DATABASE: data-db-test
           YII_PGSQL_HOST: 127.0.0.1
           YII_PGSQL_PORT: 5432
-          YII_PGSQL_USER: root
-          YII_PGSQL_PASSWORD: root
+          YII_PGSQL_USER: yii
+          YII_PGSQL_PASSWORD: q1w2e3r4
 
       - name: Upload coverage to Codecov
         if: matrix.os == 'ubuntu-latest'

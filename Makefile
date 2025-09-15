@@ -46,7 +46,7 @@ test-pgsql: ## Run PostgreSQL tests
 test-mssql: ## Run MSSQL tests
 	docker compose -f docker/docker-compose.yml -f docker/docker-compose.override.yml --profile mssql up -d
 	docker compose -f docker/docker-compose.yml -f docker/docker-compose.override.yml exec php-mssql \
-		vendor/bin/phpunit --testsuite Pgsql $(RUN_ARGS)
+		vendor/bin/phpunit --testsuite Mssql $(RUN_ARGS)
 test-oracle: ## Run Oracle tests
 	docker compose -f docker/docker-compose.yml -f docker/docker-compose.override.yml --profile oracle up -d
 	docker compose -f docker/docker-compose.yml -f docker/docker-compose.override.yml exec php-oracle \
