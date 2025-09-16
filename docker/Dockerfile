@@ -89,8 +89,9 @@ COPY --from=composer /composer /usr/bin/composer
 # Code
 
 COPY . /code
+RUN rm -f /code/composer.lock
 WORKDIR /code
 
 # PHP packages
 
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer install
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-cache
