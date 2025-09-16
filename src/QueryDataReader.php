@@ -164,6 +164,8 @@ class QueryDataReader implements QueryDataReaderInterface
     }
 
     /**
+     * @return static The new instance with the specified offset.
+     *
      * @psalm-mutation-free
      * @psalm-return static<TKey, TValue>
      */
@@ -172,11 +174,12 @@ class QueryDataReader implements QueryDataReaderInterface
         $new = clone $this;
         $new->data = null;
         $new->offset = $offset;
-
         return $new;
     }
 
     /**
+     * @return static The new instance with the specified limit.
+     *
      * @psalm-mutation-free
      * @psalm-return static<TKey, TValue>
      */
@@ -189,11 +192,12 @@ class QueryDataReader implements QueryDataReaderInterface
         $new = clone $this;
         $new->data = null;
         $new->limit = $limit;
-
         return $new;
     }
 
     /**
+     * @return static The new instance with the specified count parameter.
+     *
      * @psalm-mutation-free
      * @psalm-return static<TKey, TValue>
      */
@@ -206,11 +210,12 @@ class QueryDataReader implements QueryDataReaderInterface
         $new = clone $this;
         $new->count = null;
         $new->countParam = $countParam;
-
         return $new;
     }
 
     /**
+     * @return static The new instance with the specified sort.
+     *
      * @psalm-mutation-free
      * @psalm-return static<TKey, TValue>
      */
@@ -219,11 +224,12 @@ class QueryDataReader implements QueryDataReaderInterface
         $new = clone $this;
         $new->data = null;
         $new->sort = $sort;
-
         return $new;
     }
 
     /**
+     * @return static The new instance with the specified filter.
+     *
      * @psalm-mutation-free
      * @psalm-return static<TKey, TValue>
      */
@@ -232,11 +238,12 @@ class QueryDataReader implements QueryDataReaderInterface
         $new = clone $this;
         $new->filter = $filter;
         $new->count = $new->data = null;
-
         return $new;
     }
 
     /**
+     * @return static The new instance with the specified having condition.
+     *
      * @psalm-mutation-free
      * @psalm-return static<TKey, TValue>
      */
@@ -245,11 +252,12 @@ class QueryDataReader implements QueryDataReaderInterface
         $new = clone $this;
         $new->having = $having;
         $new->count = $new->data = null;
-
         return $new;
     }
 
     /**
+     * @return static The new instance with the specified batch size.
+     *
      * @psalm-mutation-free
      * @psalm-return static<TKey, TValue>
      */
@@ -261,11 +269,12 @@ class QueryDataReader implements QueryDataReaderInterface
 
         $new = clone $this;
         $new->batchSize = $batchSize;
-
         return $new;
     }
 
     /**
+     * @return static The new instance with the specified filter handlers added.
+     *
      * @psalm-return static<TKey, TValue>
      */
     final public function withAddedFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
