@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\FilterHandler;
 
 use DateTimeInterface;
+use Stringable;
 use Yiisoft\Data\Reader\Filter\Between;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Db\Expression\Value\DateTimeValue;
@@ -29,7 +30,7 @@ final class BetweenHandler implements QueryFilterHandlerInterface
         );
     }
 
-    private function prepareValue(bool|DateTimeInterface|float|int|string $value): mixed
+    private function prepareValue(bool|DateTimeInterface|float|int|string|Stringable $value): mixed
     {
         return $value instanceof DateTimeInterface
             ? new DateTimeValue($value)
