@@ -140,9 +140,18 @@ final class QueryDataReaderTest extends TestCase
             batchSize: 1,
         );
 
-        $result = iterator_to_array($dataReader->getIterator());
-
-        $this->assertSame($data, $result);
+        $this->assertSame(
+            $data,
+            iterator_to_array($dataReader->read()),
+        );
+        $this->assertSame(
+            $data[0],
+            $dataReader->readOne(),
+        );
+        $this->assertSame(
+            $data,
+            iterator_to_array($dataReader->getIterator()),
+        );
     }
 
     public function testCountInCommonCaseAfterRead(): void
