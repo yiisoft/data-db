@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Tests\Base;
 
 use DateTimeImmutable;
+use Traversable;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Tests\Common\FixtureTrait;
@@ -55,8 +56,10 @@ trait DataTrait
         return new QueryDataReader((new Query($db))->from('user'));
     }
 
-    protected function assertFixtures(array $expectedFixtureIndexes, array $actualFixtures): void
+    protected function assertFixtures(array $expectedFixtureIndexes, iterable $actualFixtures): void
     {
+        $actualFixtures = $actualFixtures instanceof Traversable ? iterator_to_array($actualFixtures) : $actualFixtures;
+
         $processedActualFixtures = [];
         foreach ($actualFixtures as $fixture) {
             if (is_object($fixture)) {
