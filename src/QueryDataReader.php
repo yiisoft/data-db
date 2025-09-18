@@ -51,9 +51,6 @@ use function sprintf;
  */
 class QueryDataReader implements QueryDataReaderInterface
 {
-    /** @psalm-suppress MissingClassConstType */
-    final public const DEFAULT_BATCH_SIZE = 100;
-
     private FilterHandler $filterHandler;
     private FieldMapperInterface $fieldMapper;
 
@@ -66,7 +63,7 @@ class QueryDataReader implements QueryDataReaderInterface
      * @var array[]|object[]|null
      * @psalm-var array<TKey, TValue>|null
      */
-    private ?array $data = null;
+    private array|null $cache = null;
 
     /**
      * @psalm-param non-negative-int|null $limit
@@ -81,7 +78,7 @@ class QueryDataReader implements QueryDataReaderInterface
         private ?string $countParam = null,
         private FilterInterface $filter = new All(),
         private FilterInterface $having = new All(),
-        private ?int $batchSize = self::DEFAULT_BATCH_SIZE,
+        private int|null $batchSize = null,
         array|null $filterHandlers = null,
         array|FieldMapperInterface $fieldMapper = [],
     ) {
@@ -93,17 +90,46 @@ class QueryDataReader implements QueryDataReaderInterface
 
     /**
      * @psalm-return Generator<TKey, TValue, mixed, void>
-     * @psalm-suppress InvalidReturnType
      */
     final public function getIterator(): Generator
     {
-        if (is_array($this->data)) {
-            yield from $this->data;
-        } elseif ($this->batchSize === null) {
-            yield from $this->read();
-        } else {
-            yield from $this->getPreparedQuery()->batch($this->batchSize);
+        if ($this->batchSize !== null) {
+            foreach ($this->getPreparedQuery()->batch($this->batchSize) as $data) {
+                /** @psalm-var array<TKey, TValue> $data */
+                yield from $data;
+            }
+            return;
         }
+
+        if (is_array($this->cache)) {
+            yield from $this->cache;
+            return;
+        }
+
+        /** @psalm-var array<TKey, TValue> */
+        $this->cache = $this->getPreparedQuery()->all();
+        yield from $this->cache;
+    }
+
+    /**
+     * @psalm-return Generator<TKey, TValue, mixed, void>
+     */
+    final public function read(): Generator
+    {
+        return $this->getIterator();
+    }
+
+    /**
+     * @psalm-return TValue|null
+     */
+    final public function readOne(): array|object|null
+    {
+        if (is_array($this->cache)) {
+            $key = array_key_first($this->cache);
+            return $key === null ? null : $this->cache[$key];
+        }
+
+        return $this->withLimit(1)->getIterator()->current();
     }
 
     final public function count(): int
@@ -111,8 +137,8 @@ class QueryDataReader implements QueryDataReaderInterface
         if ($this->count === null) {
             $q = $this->countParam ?? '*';
 
-            if ($q === '*' && is_array($this->data) && !$this->limit && !$this->offset) {
-                $this->count = count($this->data);
+            if ($q === '*' && is_array($this->cache) && !$this->limit && !$this->offset) {
+                $this->count = count($this->cache);
             } else {
                 $query = $this->getPreparedQuery();
                 $query->offset(null);
@@ -172,7 +198,7 @@ class QueryDataReader implements QueryDataReaderInterface
     final public function withOffset(int $offset): static
     {
         $new = clone $this;
-        $new->data = null;
+        $new->cache = null;
         $new->offset = $offset;
         return $new;
     }
@@ -190,7 +216,7 @@ class QueryDataReader implements QueryDataReaderInterface
         }
 
         $new = clone $this;
-        $new->data = null;
+        $new->cache = null;
         $new->limit = $limit;
         return $new;
     }
@@ -222,7 +248,7 @@ class QueryDataReader implements QueryDataReaderInterface
     final public function withSort(?Sort $sort): static
     {
         $new = clone $this;
-        $new->data = null;
+        $new->cache = null;
         $new->sort = $sort;
         return $new;
     }
@@ -237,7 +263,7 @@ class QueryDataReader implements QueryDataReaderInterface
     {
         $new = clone $this;
         $new->filter = $filter;
-        $new->count = $new->data = null;
+        $new->count = $new->cache = null;
         return $new;
     }
 
@@ -251,7 +277,7 @@ class QueryDataReader implements QueryDataReaderInterface
     {
         $new = clone $this;
         $new->having = $having;
-        $new->count = $new->data = null;
+        $new->count = $new->cache = null;
         return $new;
     }
 
@@ -292,7 +318,7 @@ class QueryDataReader implements QueryDataReaderInterface
         /** @var QueryFilterHandlerInterface[] $filterHandlers */
 
         $new = clone $this;
-        $new->count = $new->data = null;
+        $new->count = $new->cache = null;
         $new->filterHandler = $this->filterHandler->withAddedFilterHandlers(...$filterHandlers);
         return $new;
     }
@@ -300,33 +326,6 @@ class QueryDataReader implements QueryDataReaderInterface
     final public function getSort(): ?Sort
     {
         return $this->sort;
-    }
-
-    /**
-     * @psalm-return array<TKey, TValue>
-     */
-    final public function read(): array
-    {
-        if ($this->data === null) {
-            /** @psalm-var array<TKey, TValue> */
-            $this->data = $this->getPreparedQuery()->all();
-        }
-
-        return $this->data;
-    }
-
-    /**
-     * @psalm-return TValue|null
-     */
-    final public function readOne(): array|object|null
-    {
-        if (is_array($this->data)) {
-            $key = array_key_first($this->data);
-
-            return $key === null ? null : $this->data[$key];
-        }
-
-        return $this->withLimit(1)->getIterator()->current();
     }
 
     final public function getFilter(): FilterInterface

@@ -47,7 +47,7 @@ final class QueryDataReaderTest extends TestCase
         $dataReaderWithUnsupportedFilter = $dataReaderWithAdded->withFilter(new Equals('id', 'test'));
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Operator "' . Equals::class . '" is not supported.');
-        $dataReaderWithUnsupportedFilter->read();
+        iterator_to_array($dataReaderWithUnsupportedFilter->read());
     }
 
     public function testWithAddedFilterHandlersWithIncorrectHandler(): void
@@ -77,8 +77,8 @@ final class QueryDataReaderTest extends TestCase
 
         $dataReader = new QueryDataReader($db->createQuery()->from('test'));
 
-        $readResult = $dataReader->read();
-        $read2Result = $dataReader->read();
+        $readResult = iterator_to_array($dataReader->read());
+        $read2Result = iterator_to_array($dataReader->read());
         $getIteratorResult = iterator_to_array($dataReader->getIterator());
 
         $this->assertCount(1, $logger->getMessages()); // Only one query should be logged
@@ -140,10 +140,18 @@ final class QueryDataReaderTest extends TestCase
             batchSize: 1,
         );
 
-        $results = iterator_to_array($dataReader->getIterator());
-        $result = array_merge(...$results);
-
-        $this->assertSame($data, $result);
+        $this->assertSame(
+            $data,
+            iterator_to_array($dataReader->read()),
+        );
+        $this->assertSame(
+            $data[0],
+            $dataReader->readOne(),
+        );
+        $this->assertSame(
+            $data,
+            iterator_to_array($dataReader->getIterator()),
+        );
     }
 
     public function testCountInCommonCaseAfterRead(): void
@@ -160,7 +168,7 @@ final class QueryDataReaderTest extends TestCase
 
         $dataReader = new QueryDataReader($db->createQuery()->from('test'));
 
-        $result = $dataReader->read();
+        $result = iterator_to_array($dataReader->read());
         $count = $dataReader->count();
 
         $this->assertCount(1, $logger->getMessages()); // Only one query should be logged
