@@ -63,4 +63,14 @@ final class QueryDataReaderTest extends BaseQueryDataReaderTestCase
         $this->assertCount(1, $messages);
         $this->assertStringContainsString(' LIMIT 1', $messages[0]['message']);
     }
+
+    public function testBatchSizeOne(): void
+    {
+        $query = (new Query($this->getConnection()))->from('customer');
+        $dataReader = (new QueryDataReader($query))->withBatchSize(1);
+
+        $items = iterator_to_array($dataReader->read());
+
+        $this->assertCount(3, $items);
+    }
 }
