@@ -176,9 +176,7 @@ class QueryDataReader implements QueryDataReaderInterface
             $query->limit($this->limit);
         }
 
-        if ($this->offset !== 0) {
-            $query->offset($this->offset);
-        }
+        $query->offset($this->offset);
 
         if ($this->sort !== null) {
             $query->addOrderBy(
