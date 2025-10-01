@@ -31,8 +31,7 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
     {
         $db = $this->getConnection();
 
-        $query = (new Query($db))
-            ->from('customer');
+        $query = (new Query($db))->from('customer');
         $dataReader = new QueryDataReader($query);
 
         $this->assertSame(
@@ -138,6 +137,14 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
         $dataReader = (new QueryDataReader($query));
 
         $this->assertEquals($query->count(), $dataReader->count());
+    }
+
+    public function testCountWithOffset(): void
+    {
+        $query = (new Query($this->getConnection()))->from('customer');
+        $dataReader = (new QueryDataReader($query))->withOffset(2);
+
+        $this->assertSame(3, $dataReader->count());
     }
 
     public function testArrayCreateItem(): void
