@@ -7,6 +7,7 @@ namespace Yiisoft\Data\Db\Tests\Sqlite\QueryDataReader;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Db\Tests\Base\BaseQueryDataReaderTestCase;
 use Yiisoft\Data\Db\Tests\Sqlite\DatabaseTrait;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Db\Query\Query;
 use Yiisoft\Test\Support\Log\SimpleLogger;
 
@@ -82,5 +83,26 @@ final class QueryDataReaderTest extends BaseQueryDataReaderTestCase
         $this->assertSame(3, $dataReader->count());
         $this->assertCount(0, iterator_to_array($dataReader->read()));
         $this->assertNull($dataReader->readOne());
+    }
+
+    public function testCountQuery(): void
+    {
+        $logger = new SimpleLogger();
+        $db = $this->makeConnection();
+        $db->setLogger($logger);
+        $query = (new Query($db))->from('customer');
+        $dataReader = (new QueryDataReader($query))
+            ->withLimit(2)
+            ->withOffset(1)
+            ->withSort(Sort::any()->withOrderString('id'));
+
+        $dataReader->count();
+
+        $messages = $logger->getMessages();
+        $this->assertCount(1, $messages);
+        $this->assertStringContainsString(
+            'SELECT COUNT(*) FROM (SELECT * FROM "customer") "c"',
+            $messages[0]['message'],
+        );
     }
 }
