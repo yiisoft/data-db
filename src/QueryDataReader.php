@@ -137,7 +137,7 @@ class QueryDataReader implements QueryDataReaderInterface
         if ($this->count === null) {
             $q = $this->countParam ?? '*';
 
-            if ($q === '*' && is_array($this->cache) && !$this->limit && !$this->offset) {
+            if ($q === '*' && is_array($this->cache) && $this->limit === null && $this->offset === 0) {
                 $this->count = count($this->cache);
             } else {
                 $query = $this->getPreparedQuery();
@@ -172,11 +172,11 @@ class QueryDataReader implements QueryDataReaderInterface
                 $this->filterHandler->handle($this->having)
             );
 
-        if ($this->limit) {
+        if ($this->limit !== null) {
             $query->limit($this->limit);
         }
 
-        if ($this->offset) {
+        if ($this->offset !== 0) {
             $query->offset($this->offset);
         }
 

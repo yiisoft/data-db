@@ -73,4 +73,14 @@ final class QueryDataReaderTest extends BaseQueryDataReaderTestCase
 
         $this->assertCount(3, $items);
     }
+
+    public function testLimitZero(): void
+    {
+        $query = (new Query($this->getConnection()))->from('customer');
+        $dataReader = (new QueryDataReader($query))->withLimit(0);
+
+        $this->assertSame(3, $dataReader->count());
+        $this->assertCount(0, iterator_to_array($dataReader->read()));
+        $this->assertNull($dataReader->readOne());
+    }
 }
