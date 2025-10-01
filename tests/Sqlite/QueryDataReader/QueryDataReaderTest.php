@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Tests\Sqlite\QueryDataReader;
 
+use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Db\Tests\Base\BaseQueryDataReaderTestCase;
 use Yiisoft\Data\Db\Tests\Sqlite\DatabaseTrait;
+use Yiisoft\Db\Query\Query;
+use Yiisoft\Test\Support\Log\SimpleLogger;
 
 final class QueryDataReaderTest extends BaseQueryDataReaderTestCase
 {
@@ -44,5 +47,20 @@ final class QueryDataReaderTest extends BaseQueryDataReaderTestCase
         }
 
         return $data;
+    }
+
+    public function testLimitOnReadOne(): void
+    {
+        $logger = new SimpleLogger();
+        $db = $this->makeConnection();
+        $db->setLogger($logger);
+        $query = (new Query($db))->from('customer');
+        $dataReader = new QueryDataReader($query);
+
+        $dataReader->readOne();
+
+        $messages = $logger->getMessages();
+        $this->assertCount(1, $messages);
+        $this->assertStringContainsString(' LIMIT 1', $messages[0]['message']);
     }
 }
