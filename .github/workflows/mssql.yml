@@ -43,10 +43,6 @@ jobs:
         include:
           - php: 8.3
             mssql:
-              server: 2017-latest
-              os: ubuntu-20.04
-          - php: 8.3
-            mssql:
               server: 2019-latest
               odbc-version: 18
               flag: "-C"
@@ -120,7 +116,7 @@ jobs:
           YII_MSSQL_PASSWORD: YourStrong!Passw0rd
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml
