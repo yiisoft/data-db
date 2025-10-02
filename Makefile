@@ -57,7 +57,7 @@ psalm: run
 
 mutation: CMD="\
 vendor/bin/roave-infection-static-analysis-plugin \
---threads=2 \
+--threads=$(shell nproc) \
 --min-msi=0 \
 --min-covered-msi=100 \
 --ignore-msi-with-no-mutations \

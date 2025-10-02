@@ -31,8 +31,7 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
     {
         $db = $this->getConnection();
 
-        $query = (new Query($db))
-            ->from('customer');
+        $query = (new Query($db))->from('customer');
         $dataReader = new QueryDataReader($query);
 
         $this->assertSame(
@@ -49,10 +48,11 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
         $db = $this->getConnection();
         $query = (new Query($db))->from('customer');
         $dataReader = (new QueryDataReader($query))->withOffset(2);
-        $query->offset(2);
 
         $this->assertSame($expectedSql, $dataReader->getPreparedQuery()->createCommand()->getRawSql());
-        $this->assertSame($expectedSql, $query->createCommand()->getRawSql());
+
+        $sameQuery = (clone $query)->offset(2);
+        $this->assertSame($expectedSql, $sameQuery->createCommand()->getRawSql());
     }
 
     public static function dataLimit(): array
@@ -70,11 +70,12 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
         $db = $this->getConnection();
         $query = (new Query($db))->from('customer');
         $dataReader = (new QueryDataReader($query))->withOffset(1)->withLimit(1);
-        $query->offset(1)->limit(1);
         $expectedSql = $db->getQuoter()->quoteSql($expectedSql);
 
         $this->assertSame($expectedSql, $dataReader->getPreparedQuery()->createCommand()->getRawSql());
-        $this->assertSame($expectedSql, $query->createCommand()->getRawSql());
+
+        $sameQuery = (clone $query)->offset(1)->limit(1);
+        $this->assertSame($expectedSql, $sameQuery->createCommand()->getRawSql());
     }
 
     public static function dataSort(): array
@@ -136,6 +137,14 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
         $dataReader = (new QueryDataReader($query));
 
         $this->assertEquals($query->count(), $dataReader->count());
+    }
+
+    public function testCountWithOffset(): void
+    {
+        $query = (new Query($this->getConnection()))->from('customer');
+        $dataReader = (new QueryDataReader($query))->withOffset(2);
+
+        $this->assertSame(3, $dataReader->count());
     }
 
     public function testArrayCreateItem(): void

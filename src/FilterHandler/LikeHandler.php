@@ -30,7 +30,7 @@ final class LikeHandler implements QueryFilterHandlerInterface
         );
     }
 
-    public function mapMode(LikeMode $dataMode): DbLikeMode
+    private function mapMode(LikeMode $dataMode): DbLikeMode
     {
         return match ($dataMode) {
             LikeMode::Contains => DbLikeMode::Contains,
