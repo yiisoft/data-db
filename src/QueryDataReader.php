@@ -63,7 +63,7 @@ class QueryDataReader implements QueryDataReaderInterface
      * @var array[]|object[]|null
      * @psalm-var array<TKey, TValue>|null
      */
-    private array|null $cache = null;
+    private ?array $cache = null;
 
     /**
      * @psalm-param non-negative-int|null $limit
@@ -78,8 +78,8 @@ class QueryDataReader implements QueryDataReaderInterface
         private ?string $countParam = null,
         private FilterInterface $filter = new All(),
         private FilterInterface $having = new All(),
-        private int|null $batchSize = null,
-        array|null $filterHandlers = null,
+        private ?int $batchSize = null,
+        ?array $filterHandlers = null,
         array|FieldMapperInterface $fieldMapper = [],
     ) {
         $this->fieldMapper = is_array($fieldMapper) ? new ArrayFieldMapper($fieldMapper) : $fieldMapper;
@@ -166,10 +166,10 @@ class QueryDataReader implements QueryDataReaderInterface
     {
         $query = (clone $this->query)
             ->andWhere(
-                $this->filterHandler->handle($this->filter)
+                $this->filterHandler->handle($this->filter),
             )
             ->andHaving(
-                $this->filterHandler->handle($this->having)
+                $this->filterHandler->handle($this->having),
             );
 
         if ($this->limit !== null) {
@@ -180,7 +180,7 @@ class QueryDataReader implements QueryDataReaderInterface
 
         if ($this->sort !== null) {
             $query->addOrderBy(
-                $this->convertSortToOrderBy($this->sort)
+                $this->convertSortToOrderBy($this->sort),
             );
         }
 
@@ -309,7 +309,7 @@ class QueryDataReader implements QueryDataReaderInterface
                     sprintf(
                         'Filter handler must implement "%s".',
                         QueryFilterHandlerInterface::class,
-                    )
+                    ),
                 );
             }
         }

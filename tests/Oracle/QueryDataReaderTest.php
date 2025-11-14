@@ -14,9 +14,9 @@ final class QueryDataReaderTest extends BaseQueryDataReaderTestCase
     {
         return [
             [
-                'WITH USER_SQL AS (SELECT * FROM "customer"), ' .
-                'PAGINATION AS (SELECT USER_SQL.*, rownum as rowNumId FROM USER_SQL)' . "\n" .
-                'SELECT * FROM PAGINATION WHERE rowNumId > 2',
+                'WITH USER_SQL AS (SELECT * FROM "customer"), '
+                . 'PAGINATION AS (SELECT USER_SQL.*, rownum as rowNumId FROM USER_SQL)' . "\n"
+                . 'SELECT * FROM PAGINATION WHERE rowNumId > 2',
             ],
         ];
     }
@@ -25,9 +25,9 @@ final class QueryDataReaderTest extends BaseQueryDataReaderTestCase
     {
         return [
             [
-                'WITH USER_SQL AS (SELECT * FROM "customer"), ' .
-                'PAGINATION AS (SELECT USER_SQL.*, rownum as rowNumId FROM USER_SQL)' . "\n" .
-                'SELECT * FROM PAGINATION WHERE rowNumId > 1 AND rownum <= 1',
+                'WITH USER_SQL AS (SELECT * FROM "customer"), '
+                . 'PAGINATION AS (SELECT USER_SQL.*, rownum as rowNumId FROM USER_SQL)' . "\n"
+                . 'SELECT * FROM PAGINATION WHERE rowNumId > 1 AND rownum <= 1',
             ],
         ];
     }
@@ -38,14 +38,14 @@ final class QueryDataReaderTest extends BaseQueryDataReaderTestCase
         $replacementMap = [
             'like' => "[[column]] LIKE '%foo%' ESCAPE '!'",
             'not like' => "[[column]] NOT LIKE '%foo%' ESCAPE '!'",
-            'and, or' => '([[null_column]] IS NULL) AND ' .
-                '([[equals]] = 10) AND ' .
-                '([[between]] BETWEEN 10 AND 20) AND ' .
-                "(([[id]] = 8) OR ([[name]] LIKE '%foo%' ESCAPE '!'))",
-            'or, and' => '([[greater_than]] > 15) OR ' .
-                '([[less_than_or_equal]] <= 10) OR ' .
-                "([[not_equals]] <> 'test') OR " .
-                "(([[id]] = 8) AND ([[name]] LIKE '%bar%' ESCAPE '!'))",
+            'and, or' => '([[null_column]] IS NULL) AND '
+                . '([[equals]] = 10) AND '
+                . '([[between]] BETWEEN 10 AND 20) AND '
+                . "(([[id]] = 8) OR ([[name]] LIKE '%foo%' ESCAPE '!'))",
+            'or, and' => '([[greater_than]] > 15) OR '
+                . '([[less_than_or_equal]] <= 10) OR '
+                . "([[not_equals]] <> 'test') OR "
+                . "(([[id]] = 8) AND ([[name]] LIKE '%bar%' ESCAPE '!'))",
             'and, or 2' => "([[id]] > 88) AND (([[state]] = 2) OR ([[name]] LIKE '%eva%' ESCAPE '!'))",
             'or, and 2' => "([[id]] > 88) OR (([[state]] = 2) AND ([[name]] LIKE '%eva%' ESCAPE '!'))",
             'or, or' => "([[id]] > 88) OR (([[state]] = 2) OR ([[name]] LIKE '%eva%' ESCAPE '!'))",

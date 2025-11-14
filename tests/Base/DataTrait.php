@@ -24,6 +24,16 @@ trait DataTrait
      */
     private static array $connection = [];
 
+    protected function setUp(): void
+    {
+        $this->populateDatabase();
+    }
+
+    protected function tearDown(): void
+    {
+        $this->dropDatabase();
+    }
+
     abstract protected function makeConnection(): PdoConnectionInterface;
 
     abstract protected function getConnectionId(): string;
@@ -36,16 +46,6 @@ trait DataTrait
         }
 
         return self::$connection[$connectionId];
-    }
-
-    protected function setUp(): void
-    {
-        $this->populateDatabase();
-    }
-
-    protected function tearDown(): void
-    {
-        $this->dropDatabase();
     }
 
     protected function getReader(): DataReaderInterface

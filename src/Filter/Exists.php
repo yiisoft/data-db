@@ -11,6 +11,5 @@ final class Exists implements FilterInterface
 {
     public function __construct(
         public readonly QueryInterface $query,
-    ) {
-    }
+    ) {}
 }

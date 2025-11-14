@@ -36,7 +36,7 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
 
         $this->assertSame(
             $query->createCommand()->getRawSql(),
-            $dataReader->getPreparedQuery()->createCommand()->getRawSql()
+            $dataReader->getPreparedQuery()->createCommand()->getRawSql(),
         );
     }
 
@@ -237,13 +237,13 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
                     new Between('between', 10, 20),
                     new OrX(
                         new Equals('id', 8),
-                        new Like('name', 'foo')
-                    )
+                        new Like('name', 'foo'),
+                    ),
                 ),
-                '([[null_column]] IS NULL) AND ' .
-                '([[equals]] = 10) AND ' .
-                '([[between]] BETWEEN 10 AND 20) AND ' .
-                "(([[id]] = 8) OR ([[name]] LIKE '%foo%'))",
+                '([[null_column]] IS NULL) AND '
+                . '([[equals]] = 10) AND '
+                . '([[between]] BETWEEN 10 AND 20) AND '
+                . "(([[id]] = 8) OR ([[name]] LIKE '%foo%'))",
             ],
             'or, and' => [
                 new OrX(
@@ -252,13 +252,13 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
                     new Not(new Equals('not_equals', 'test')),
                     new AndX(
                         new Equals('id', 8),
-                        new Like('name', 'bar')
-                    )
+                        new Like('name', 'bar'),
+                    ),
                 ),
-                '([[greater_than]] > 15) OR ' .
-                '([[less_than_or_equal]] <= 10) OR ' .
-                "([[not_equals]] <> 'test') OR " .
-                "(([[id]] = 8) AND ([[name]] LIKE '%bar%'))",
+                '([[greater_than]] > 15) OR '
+                . '([[less_than_or_equal]] <= 10) OR '
+                . "([[not_equals]] <> 'test') OR "
+                . "(([[id]] = 8) AND ([[name]] LIKE '%bar%'))",
             ],
             'and, or 2' => [
                 new AndX(
@@ -266,7 +266,7 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
                     new OrX(
                         new Equals('state', 2),
                         new Like('name', 'eva'),
-                    )
+                    ),
                 ),
                 "([[id]] > 88) AND (([[state]] = 2) OR ([[name]] LIKE '%eva%'))",
             ],
@@ -276,7 +276,7 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
                     new AndX(
                         new Equals('state', 2),
                         new Like('name', 'eva'),
-                    )
+                    ),
                 ),
                 "([[id]] > 88) OR (([[state]] = 2) AND ([[name]] LIKE '%eva%'))",
             ],
@@ -286,7 +286,7 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
                     new OrX(
                         new Equals('state', 2),
                         new Like('name', 'eva'),
-                    )
+                    ),
                 ),
                 "([[id]] > 88) OR (([[state]] = 2) OR ([[name]] LIKE '%eva%'))",
             ],
@@ -296,7 +296,7 @@ abstract class BaseQueryDataReaderTestCase extends TestCase
                     new AndX(
                         new Equals('state', 2),
                         new Like('name', 'eva'),
-                    )
+                    ),
                 ),
                 "([[id]] > 88) AND (([[state]] = 2) AND ([[name]] LIKE '%eva%'))",
             ],
