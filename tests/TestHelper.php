@@ -87,14 +87,14 @@ final class TestHelper
                 'profile_id' => ColumnBuilder::integer(),
             ],
         )->execute();
-        $db->createCommand()->batchInsert(
+        $db->createCommand()->insertBatch(
             'customer',
-            ['id', 'email', 'name', 'address', 'status', 'profile_id'],
             [
                 [1, 'user1@example.com', 'user1', 'address1', 1, 1],
                 [2, 'user2@example.com', 'user2', 'address2', 1, null],
                 [3, 'user3@example.com', 'user3', 'address3', 2, 2],
             ],
+            ['id', 'email', 'name', 'address', 'status', 'profile_id'],
         )->execute();
     }
 }
