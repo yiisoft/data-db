@@ -85,7 +85,7 @@ final class TestHelper
                 'address' => ColumnBuilder::text(),
                 'status' => ColumnBuilder::integer()->defaultValue(0),
                 'profile_id' => ColumnBuilder::integer(),
-            ]
+            ],
         )->execute();
         $db->createCommand()->batchInsert(
             'customer',

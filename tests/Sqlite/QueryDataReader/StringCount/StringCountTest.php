@@ -16,7 +16,7 @@ final class StringCountTest extends TestCase
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
-            'Number of records is too large to fit into a PHP integer. Got 9223372036854775808.'
+            'Number of records is too large to fit into a PHP integer. Got 9223372036854775808.',
         );
         $dataReader->count();
     }

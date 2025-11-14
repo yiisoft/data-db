@@ -21,7 +21,7 @@ final class NotHandler implements QueryFilterHandlerInterface
         /** @var Not $filter */
 
         return new DbNotCondition(
-            $context->handleFilter($filter->filter)
+            $context->handleFilter($filter->filter),
         );
     }
 }

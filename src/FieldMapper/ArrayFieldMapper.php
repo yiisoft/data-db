@@ -33,8 +33,7 @@ final class ArrayFieldMapper implements FieldMapperInterface
      */
     public function __construct(
         private readonly array $map,
-    ) {
-    }
+    ) {}
 
     public function map(string $field): string|ExpressionInterface
     {

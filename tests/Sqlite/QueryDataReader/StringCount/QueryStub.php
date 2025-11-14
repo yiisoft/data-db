@@ -8,9 +8,7 @@ use Yiisoft\Db\Query\Query;
 
 final class QueryStub extends Query
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function count(string $sql = '*'): int|string
     {

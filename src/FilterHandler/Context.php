@@ -15,8 +15,7 @@ final class Context
     public function __construct(
         private readonly FilterHandler $filterHandler,
         private readonly FieldMapperInterface $fieldMapper,
-    ) {
-    }
+    ) {}
 
     public function handleFilter(FilterInterface $filter): ConditionInterface
     {

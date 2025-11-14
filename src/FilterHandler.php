@@ -60,7 +60,7 @@ final class FilterHandler
     {
         if (!isset($this->handlers[$operator])) {
             throw new LogicException(
-                sprintf('Operator "%s" is not supported.', $operator)
+                sprintf('Operator "%s" is not supported.', $operator),
             );
         }
 
