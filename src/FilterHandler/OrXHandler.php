@@ -22,7 +22,7 @@ final class OrXHandler implements QueryFilterHandlerInterface
 
         return new DbOrXCondition(
             ...array_map(
-                static fn(FilterInterface $subFilter) => $context->handleFilter($subFilter),
+                $context->handleFilter(...),
                 $filter->filters,
             ),
         );
