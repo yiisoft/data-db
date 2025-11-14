@@ -22,7 +22,7 @@ final class AndXHandler implements QueryFilterHandlerInterface
 
         return new DbAndXCondition(
             ...array_map(
-                static fn(FilterInterface $subFilter) => $context->handleFilter($subFilter),
+                $context->handleFilter(...),
                 $filter->filters,
             ),
         );
