@@ -116,6 +116,7 @@ class QueryDataReader implements QueryDataReaderInterface
                 /** @psalm-var array<TKey, TValue> $data */
                 yield from $data;
             }
+            /** @infection-ignore-all */
             return;
         }
 
