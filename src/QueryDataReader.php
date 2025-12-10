@@ -66,7 +66,7 @@ class QueryDataReader implements QueryDataReaderInterface
 
     /**
      * @psalm-param non-negative-int|null $limit
-     * @psalm-param list<QueryFilterHandlerInterface>|null $addFilterHandlers
+     * @psalm-param list<QueryFilterHandlerInterface> $addFilterHandlers
      * @psalm-param array<string, string|ExpressionInterface>|FieldMapperInterface $fieldMapper
      */
     public function __construct(
