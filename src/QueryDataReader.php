@@ -6,7 +6,6 @@ namespace Yiisoft\Data\Db;
 
 use Generator;
 use InvalidArgumentException;
-use LogicException;
 use RuntimeException;
 use Yiisoft\Data\Db\FieldMapper\ArrayFieldMapper;
 use Yiisoft\Data\Db\FieldMapper\FieldMapperInterface;
