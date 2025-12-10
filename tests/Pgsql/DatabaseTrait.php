@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Tests\Pgsql;
 
-use Yiisoft\Cache\ArrayCache;
 use Yiisoft\Data\Db\Tests\TestHelper;
 use Yiisoft\Db\Cache\SchemaCache;
 use Yiisoft\Db\Driver\Pdo\PdoConnectionInterface;
 use Yiisoft\Db\Pgsql\Connection;
 use Yiisoft\Db\Pgsql\Driver;
+use Yiisoft\Test\Support\SimpleCache\MemorySimpleCache;
 
 trait DatabaseTrait
 {
@@ -24,7 +24,7 @@ trait DatabaseTrait
         $pdoDriver = new Driver("pgsql:host=$host;dbname=$database;port=$port", $user, $password);
         $pdoDriver->charset('UTF8');
 
-        $db = new Connection($pdoDriver, new SchemaCache(new ArrayCache()));
+        $db = new Connection($pdoDriver, new SchemaCache(new MemorySimpleCache()));
 
         TestHelper::loadFixtures($db);
 
