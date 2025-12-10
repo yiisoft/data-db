@@ -22,7 +22,7 @@ use function sprintf;
  */
 final class FilterHandler
 {
-    private Context $context;
+    private readonly Context $context;
 
     /**
      * @psalm-var array<string, QueryFilterHandlerInterface>

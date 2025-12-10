@@ -5,17 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Db\Tests\Sqlite;
 
 use InvalidArgumentException;
-use LogicException;
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Data\Db\FilterHandler\AllHandler;
-use Yiisoft\Data\Db\FilterHandler\AndXHandler;
-use Yiisoft\Data\Db\FilterHandler\NoneHandler;
-use Yiisoft\Data\Db\FilterHandler\QueryFilterHandlerInterface;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Db\Tests\TestHelper;
 use Yiisoft\Data\Reader\Filter\All;
-use Yiisoft\Data\Reader\Filter\AndX;
-use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Filter\None;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Test\Support\Log\SimpleLogger;
