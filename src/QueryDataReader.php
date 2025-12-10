@@ -28,7 +28,6 @@ use Yiisoft\Data\Db\FilterHandler\NotHandler;
 use Yiisoft\Data\Db\FilterHandler\OrXHandler;
 use Yiisoft\Data\Db\FilterHandler\QueryFilterHandlerInterface;
 use Yiisoft\Data\Reader\Filter\All;
-use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Db\Expression\CompositeExpression;
@@ -67,7 +66,7 @@ class QueryDataReader implements QueryDataReaderInterface
 
     /**
      * @psalm-param non-negative-int|null $limit
-     * @psalm-param list<QueryFilterHandlerInterface>|null $filterHandlers
+     * @psalm-param list<QueryFilterHandlerInterface>|null $addFilterHandlers
      * @psalm-param array<string, string|ExpressionInterface>|FieldMapperInterface $fieldMapper
      */
     public function __construct(
@@ -79,13 +78,33 @@ class QueryDataReader implements QueryDataReaderInterface
         private FilterInterface $filter = new All(),
         private FilterInterface $having = new All(),
         private ?int $batchSize = null,
-        ?array $filterHandlers = null,
+        array $addFilterHandlers = [],
         array|FieldMapperInterface $fieldMapper = [],
     ) {
         $this->fieldMapper = is_array($fieldMapper) ? new ArrayFieldMapper($fieldMapper) : $fieldMapper;
 
-        $filterHandlers ??= $this->getDefaultFilterHandlers();
-        $this->filterHandler = new FilterHandler($filterHandlers, $this->fieldMapper);
+        $this->filterHandler = new FilterHandler(
+            [
+                new AllHandler(),
+                new NoneHandler(),
+                new AndXHandler(),
+                new OrXHandler(),
+                new EqualsHandler(),
+                new GreaterThanHandler(),
+                new GreaterThanOrEqualHandler(),
+                new LessThanHandler(),
+                new LessThanOrEqualHandler(),
+                new LikeHandler(),
+                new InHandler(),
+                new ExistsHandler(),
+                new NotHandler(),
+                new BetweenHandler(),
+                new EqualsNullHandler(),
+                new EqualsExpressionHandler(),
+                ...$addFilterHandlers,
+            ],
+            $this->fieldMapper,
+        );
     }
 
     /**
@@ -296,31 +315,6 @@ class QueryDataReader implements QueryDataReaderInterface
         return $new;
     }
 
-    /**
-     * @return static The new instance with the specified filter handlers added.
-     *
-     * @psalm-return static<TKey, TValue>
-     */
-    final public function withAddedFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
-    {
-        foreach ($filterHandlers as $handler) {
-            if (!$handler instanceof QueryFilterHandlerInterface) {
-                throw new LogicException(
-                    sprintf(
-                        'Filter handler must implement "%s".',
-                        QueryFilterHandlerInterface::class,
-                    ),
-                );
-            }
-        }
-        /** @var QueryFilterHandlerInterface[] $filterHandlers */
-
-        $new = clone $this;
-        $new->count = $new->cache = null;
-        $new->filterHandler = $this->filterHandler->withAddedFilterHandlers(...$filterHandlers);
-        return $new;
-    }
-
     final public function getSort(): ?Sort
     {
         return $this->sort;
@@ -339,31 +333,6 @@ class QueryDataReader implements QueryDataReaderInterface
     final public function getOffset(): int
     {
         return $this->offset;
-    }
-
-    /**
-     * @psalm-return list<QueryFilterHandlerInterface>
-     */
-    private function getDefaultFilterHandlers(): array
-    {
-        return [
-            new AllHandler(),
-            new NoneHandler(),
-            new AndXHandler(),
-            new OrXHandler(),
-            new EqualsHandler(),
-            new GreaterThanHandler(),
-            new GreaterThanOrEqualHandler(),
-            new LessThanHandler(),
-            new LessThanOrEqualHandler(),
-            new LikeHandler(),
-            new InHandler(),
-            new ExistsHandler(),
-            new NotHandler(),
-            new BetweenHandler(),
-            new EqualsNullHandler(),
-            new EqualsExpressionHandler(),
-        ];
     }
 
     private function convertSortToOrderBy(Sort $sort): array
