@@ -65,7 +65,7 @@ class QueryDataReader implements QueryDataReaderInterface
 
     /**
      * @psalm-param non-negative-int|null $limit
-     * @psalm-param list<QueryFilterHandlerInterface> $addFilterHandlers
+     * @psalm-param list<QueryFilterHandlerInterface> $extraFilterHandlers
      * @psalm-param array<string, string|ExpressionInterface>|FieldMapperInterface $fieldMapper
      */
     public function __construct(
@@ -77,7 +77,7 @@ class QueryDataReader implements QueryDataReaderInterface
         private FilterInterface $filter = new All(),
         private FilterInterface $having = new All(),
         private ?int $batchSize = null,
-        array $addFilterHandlers = [],
+        array $extraFilterHandlers = [],
         array|FieldMapperInterface $fieldMapper = [],
     ) {
         $this->fieldMapper = is_array($fieldMapper) ? new ArrayFieldMapper($fieldMapper) : $fieldMapper;
@@ -100,7 +100,7 @@ class QueryDataReader implements QueryDataReaderInterface
                 new BetweenHandler(),
                 new EqualsNullHandler(),
                 new EqualsExpressionHandler(),
-                ...$addFilterHandlers,
+                ...$extraFilterHandlers,
             ],
             $this->fieldMapper,
         );
