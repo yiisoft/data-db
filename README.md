@@ -20,11 +20,11 @@ Detailed build statuses:
 
 | RDBMS                | Status                                                                                                                                                                                             |
 |----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| SQLite               | [![SQLite status](https://github.com/yiisoft/data-db/workflows/sqlite/badge.svg?branch=master)](https://github.com/yiisoft/data-db/actions/workflows/sqlite.yml?query=branch%3Amaster)             |
-| MySQL                | [![MySQL status](https://github.com/yiisoft/data-db/workflows/mysql/badge.svg?branch=master)](https://github.com/yiisoft/data-db/actions/workflows/mysql.yml?query=branch%3Amaster)                |
-| PostgreSQL           | [![PostgreSQL status](https://github.com/yiisoft/data-db/workflows/pgsql/badge.svg?branch=master)](https://github.com/yiisoft/data-db/actions/workflows/pgsql.yml?query=branch%3Amaster)           |
-| Microsoft SQL Server | [![Microsoft SQL Server status](https://github.com/yiisoft/data-db/workflows/mssql/badge.svg?branch=master)](https://github.com/yiisoft/data-db/actions/workflows/mssql.yml?query=branch%3Amaster) |
-| Oracle               | [![Oracle status](https://github.com/yiisoft/data-db/workflows/oracle/badge.svg?branch=master)](https://github.com/yiisoft/data-db/actions/workflows/oracle.yml?query=branch%3Amaster)             |
+| SQLite               | [![SQLite status](https://github.com/yiisoft/data-db/actions/workflows/sqlite.yml/badge.svg?branch=master)](https://github.com/yiisoft/data-db/actions/workflows/sqlite.yml?query=branch%3Amaster) |
+| MySQL                | [![MySQL status](https://github.com/yiisoft/data-db/actions/workflows/mysql.yml/badge.svg?branch=master)](https://github.com/yiisoft/data-db/actions/workflows/mysql.yml?query=branch%3Amaster)                |
+| PostgreSQL           | [![PostgreSQL status](https://github.com/yiisoft/data-db/actions/workflows/pgsql.yml/badge.svg?branch=master)](https://github.com/yiisoft/data-db/actions/workflows/pgsql.yml?query=branch%3Amaster)           |
+| Microsoft SQL Server | [![Microsoft SQL Server status](https://github.com/yiisoft/data-db/actions/workflows/mssql.yml/badge.svg?branch=master)](https://github.com/yiisoft/data-db/actions/workflows/mssql.yml?query=branch%3Amaster) |
+| Oracle               | [![Oracle status](https://github.com/yiisoft/data-db/actions/workflows/oracle.yml/badge.svg?branch=master)](https://github.com/yiisoft/data-db/actions/workflows/oracle.yml?query=branch%3Amaster)             |
 
 ## Requirements
 
