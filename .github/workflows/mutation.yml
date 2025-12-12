@@ -29,7 +29,7 @@ jobs:
       os: >-
         ['ubuntu-latest']
       php: >-
-        ['8.3']
+        ['8.5']
       required-packages: >-
         ['data']
     secrets:

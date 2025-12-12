@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Tests;
 
-use Yiisoft\Cache\NullCache;
 use Yiisoft\Data\Db\FieldMapper\ArrayFieldMapper;
 use Yiisoft\Data\Db\FilterHandler;
 use Yiisoft\Data\Db\FilterHandler\AllHandler;
@@ -30,6 +29,7 @@ use Yiisoft\Db\Exception\Exception;
 use Yiisoft\Db\Schema\Column\ColumnBuilder;
 use Yiisoft\Db\Sqlite\Connection;
 use Yiisoft\Db\Sqlite\Driver;
+use Yiisoft\Test\Support\SimpleCache\MemorySimpleCache;
 
 final class TestHelper
 {
@@ -37,7 +37,7 @@ final class TestHelper
     {
         return new Connection(
             new Driver('sqlite::memory:'),
-            new SchemaCache(new NullCache()),
+            new SchemaCache(new MemorySimpleCache()),
         );
     }
 

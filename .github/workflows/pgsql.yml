@@ -41,6 +41,7 @@ jobs:
           - 8.2
           - 8.3
           - 8.4
+          - 8.5
 
         pgsql:
           - 9
@@ -52,6 +53,7 @@ jobs:
           - 15
           - 16
           - 17
+          - 18
 
     services:
       postgres:
