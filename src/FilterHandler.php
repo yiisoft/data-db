@@ -22,7 +22,7 @@ use function sprintf;
  */
 final class FilterHandler
 {
-    private Context $context;
+    private readonly Context $context;
 
     /**
      * @psalm-var array<string, QueryFilterHandlerInterface>
@@ -32,23 +32,10 @@ final class FilterHandler
     /**
      * @psalm-param list<QueryFilterHandlerInterface> $handlers
      */
-    public function __construct(
-        array $handlers,
-        private readonly FieldMapperInterface $fieldMapper,
-    ) {
+    public function __construct(array $handlers, FieldMapperInterface $fieldMapper)
+    {
         $this->handlers = $this->prepareHandlers($handlers);
         $this->context = new Context($this, $fieldMapper);
-    }
-
-    public function withAddedFilterHandlers(QueryFilterHandlerInterface ...$handlers): self
-    {
-        $new = clone $this;
-        $new->handlers = array_merge(
-            $this->handlers,
-            $this->prepareHandlers($handlers),
-        );
-        $new->context = new Context($new, $this->fieldMapper);
-        return $new;
     }
 
     public function handle(FilterInterface $filter): ConditionInterface
