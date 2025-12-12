@@ -10,20 +10,21 @@
 [![Total Downloads](https://poser.pugx.org/yiisoft/data-db/downloads)](https://packagist.org/packages/yiisoft/data-db)
 [![Code Coverage](https://codecov.io/gh/yiisoft/data-db/graph/badge.svg?token=9qlfGa4kI1)](https://codecov.io/gh/yiisoft/data-db)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyiisoft%2Fdata-db%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/yiisoft/data-db/master)
-[![static analysis](https://github.com/yiisoft/data-db/workflows/static%20analysis/badge.svg)](https://github.com/yiisoft/data-db/actions?query=workflow%3A%22static+analysis%22)
+[![Static analysis](https://github.com/yiisoft/data-db/actions/workflows/static.yml/badge.svg?branch=master)](https://github.com/yiisoft/data-db/actions/workflows/static.yml?query=branch%3Amaster)
 [![type-coverage](https://shepherd.dev/github/yiisoft/data-db/coverage.svg)](https://shepherd.dev/github/yiisoft/data-db)
+[![psalm-level](https://shepherd.dev/github/yiisoft/data-db/level.svg)](https://shepherd.dev/github/yiisoft/data-db)
 
 The package provides `Yiisoft\Db\Query\Query` bindings for generic data abstractions.
 
 Detailed build statuses:
 
-| RDBMS                | Status                                                                                                                                                            |
-|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| SQLite               | [![SQLite status](https://github.com/yiisoft/data-db/workflows/sqlite/badge.svg)](https://github.com/yiisoft/data-db/actions?query=workflow%3Asqlite)             |
-| MySQL                | [![MYSQL status](https://github.com/yiisoft/data-db/workflows/mysql/badge.svg)](https://github.com/yiisoft/data-db/actions?query=workflow%3Amysql)                |
-| PostgreSQL           | [![PostgreSQL status](https://github.com/yiisoft/data-db/workflows/pgsql/badge.svg)](https://github.com/yiisoft/data-db/actions?query=workflow%3Apgsql)           |
-| Microsoft SQL Server | [![Microsoft SQL Server status](https://github.com/yiisoft/data-db/workflows/mssql/badge.svg)](https://github.com/yiisoft/data-db/actions?query=workflow%3Amssql) |
-| Oracle               | [![Oracle status](https://github.com/yiisoft/data-db/workflows/oracle/badge.svg)](https://github.com/yiisoft/data-db/actions?query=workflow%3Aoracle)             |
+| RDBMS                | Status                                                                                                                                                                                             |
+|----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| SQLite               | [![SQLite status](https://github.com/yiisoft/data-db/workflows/sqlite/badge.svg?branch=master)](https://github.com/yiisoft/data-db/actions/workflows/sqlite.yml?query=branch%3Amaster)             |
+| MySQL                | [![MySQL status](https://github.com/yiisoft/data-db/workflows/mysql/badge.svg?branch=master)](https://github.com/yiisoft/data-db/actions/workflows/mysql.yml?query=branch%3Amaster)                |
+| PostgreSQL           | [![PostgreSQL status](https://github.com/yiisoft/data-db/workflows/pgsql/badge.svg?branch=master)](https://github.com/yiisoft/data-db/actions/workflows/pgsql.yml?query=branch%3Amaster)           |
+| Microsoft SQL Server | [![Microsoft SQL Server status](https://github.com/yiisoft/data-db/workflows/mssql/badge.svg?branch=master)](https://github.com/yiisoft/data-db/actions/workflows/mssql.yml?query=branch%3Amaster) |
+| Oracle               | [![Oracle status](https://github.com/yiisoft/data-db/workflows/oracle/badge.svg?branch=master)](https://github.com/yiisoft/data-db/actions/workflows/oracle.yml?query=branch%3Amaster)             |
 
 ## Requirements
 
