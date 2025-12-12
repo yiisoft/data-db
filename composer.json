@@ -1,7 +1,7 @@
 {
     "name": "yiisoft/data-db",
     "type": "library",
-    "description": "Database query adapter for yiisoft/data data providers",
+    "description": "Database query adapter for Yii Data",
     "keywords": [
         "db",
         "data provider",
@@ -35,10 +35,10 @@
         "yiisoft/db": "^2.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.89.2",
+        "friendsofphp/php-cs-fixer": "^3.92.0",
         "maglnet/composer-require-checker": "^4.7.1",
-        "phpunit/phpunit": "^10.5.52",
-        "rector/rector": "^2.2.8",
+        "phpunit/phpunit": "^10.5.60",
+        "rector/rector": "^2.2.14",
         "roave/infection-static-analysis-plugin": "^1.35",
         "spatie/phpunit-watcher": "^1.24",
         "vimeo/psalm": "^5.26.1 || ^6.9.1",
@@ -49,7 +49,7 @@
         "yiisoft/db-pgsql": "^2.0",
         "yiisoft/db-sqlite": "^2.0",
         "yiisoft/psr-dummy-provider": "^1.0.2",
-        "yiisoft/test-support": "^3.0"
+        "yiisoft/test-support": "^3.1"
     },
     "autoload": {
         "psr-4": {
@@ -63,11 +63,6 @@
         },
         "files": ["tests/bootstrap.php"]
     },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "3.0.x-dev"
-        }
-    },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
@@ -78,6 +73,7 @@
     "scripts": {
         "test": "phpunit --testdox --no-interaction",
         "test-watch": "phpunit-watcher watch",
-        "cs-fix": "php-cs-fixer fix"
+        "cs-fix": "php-cs-fixer fix",
+        "mutation": "roave-infection-static-analysis-plugin --threads=max --min-covered-msi=100"
     }
 }

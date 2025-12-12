@@ -14,7 +14,8 @@
 [![type-coverage](https://shepherd.dev/github/yiisoft/data-db/coverage.svg)](https://shepherd.dev/github/yiisoft/data-db)
 [![psalm-level](https://shepherd.dev/github/yiisoft/data-db/level.svg)](https://shepherd.dev/github/yiisoft/data-db)
 
-The package provides `Yiisoft\Db\Query\Query` bindings for generic data abstractions.
+The package provides [data reader](https://github.com/yiisoft/data?tab=readme-ov-file#reading-data) implementation based
+on [Yii DB](https://github.com/yiisoft/db) query and a set of DB-specific filters.
 
 Detailed build statuses:
 
@@ -40,123 +41,83 @@ composer require yiisoft/data-db
 
 ## General usage
 
+The `QueryDataReader` wraps a database query to provide a flexible data reading interface:
+
 ```php
-use Yiisoft\Data\Db\Filter\All;
-use Yiisoft\Data\Db\Filter\Equals;
+use Yiisoft\Data\Db\QueryDataReader;
+use Yiisoft\Data\Reader\Filter\Equals;
+use Yiisoft\Data\Reader\Filter\GreaterThan;
+use Yiisoft\Data\Reader\Filter\Like;
+use Yiisoft\Data\Reader\Filter\AndX;
+use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Db\Query\Query;
+
+$query = (new Query($db))->from('customer');
+$dataReader = new QueryDataReader($query);
+
+// Iterate through results
+foreach ($dataReader->read() as $customer) {
+    // ... process each customer ...
+}
+
+// Read a single record
+$customer = $dataReader->readOne();
+
+// Get total count
+$total = $dataReader->count();
+
+// Sorting
+$sort = Sort::any(['name', 'email'])->withOrderString('-name,email');
+$dataReader = $dataReader->withSort($sort);
+
+// Filtering
+$filter = new AndX(
+    new Equals('status', 'active'),
+    new GreaterThan('age', 18),
+    new Like('name', 'John')
+);
+$dataReader = $dataReader->withFilter($filter);
+
+// Pagination
+$dataReader = $dataReader
+    ->withOffset(20)
+    ->withLimit(10);
+```
+
+### Field mapping
+
+Map data reader field names to database columns:
+
+```php
+use Yiisoft\Data\Db\QueryDataReader;
+use Yiisoft\Data\Reader\Filter\Equals;
+
+$dataReader = new QueryDataReader(
+    query: $query,
+    fieldMapper: [
+        'userName' => 'user_name',
+        'createdAt' => 'created_at',
+    ]
+);
+
+// Now you can filter and sort by 'userName' and it will use 'user_name' column
+$filter = new Equals('userName', 'admin');
+```
+
+### Batch processing
+
+Process large datasets in batches to reduce memory usage:
+
+```php
 use Yiisoft\Data\Db\QueryDataReader;
 
-$typeId    = filter_input(INPUT_GET, 'type_id', FILTER_VALIDATE_INT);
-$countryId = filter_input(INPUT_GET, 'country_id', FILTER_VALIDATE_INT);
-$parentId  = filter_input(INPUT_GET, 'parent_id', FILTER_VALIDATE_INT);
+$dataReader = new QueryDataReader($query);
+$dataReader = $dataReader->withBatchSize(100);
 
-// OR
-// $typeId    = $_GET['type_id'] ?? null;
-// $countryId = $_GET['country_id'] ?? null;
-// $parentId  = $_GET['parent_id'] ?? null;
-
-// OR
-// $params = $request->getQueryParams();
-// $typeId    = $params['type_id'] ?? null;
-// $countryId = $params['country_id'] ?? null;
-// $parentId  = $params['parent_id'] ?? null;
-
-// OR same with ArrayHelper::getValue();
-
-
-$query = $arFactory->createQueryTo(AR::class);
-
-$filter = new All(
-    (new Equals('type_id', $typeId)),
-    (new Equals('country_id', $countryId)),
-    (new Equals('parent_id', $parentId))
-);
-
-$dataReader = (new QueryDataReader($query))
-            ->withFilter($filter);
+foreach ($dataReader->read() as $item) {
+    // Items are fetched in batches of 100
+}
 ```
-
-If $typeId, $countryId and $parentId equals NULL that generate SQL like:
-
-```sql
-SELECT AR::tableName().* FROM AR::tableName() WHERE type_id IS NULL AND country_id IS NULL AND parent_id IS NULL
-```
-
-If we want ignore not existing arguments (i.e. not set in $_GET/queryParams), we can use withIgnoreNull(true) method:
-
-```php
-$typeId    = 1;
-$countryId = null;
-$parentId  = null;
-
-$filter = new All(
-    (new Equals('type_id', $typeId))->withIgnoreNull(true),
-    (new Equals('country_id', $countryId))->withIgnoreNull(true),
-    (new Equals('parent_id', $parentId))->withIgnoreNull(true)
-);
-
-$dataReader = (new QueryDataReader($query))
-            ->withFilter($filter);
-```
-
-That generate SQL like:
-
-```sql
-SELECT AR::tableName().* FROM AR::tableName() WHERE type_id = 1
-```
-
-If query joins several tables with same column name, pass table name as 3-th filter arguments
-
-```php
-$equalsTableOne = (new Equals('id', 1, 'table_one'))->withIgnoreNull(true);
-$equalsTableTwo = (new Equals('id', 100, 'table_two'))->withIgnoreNull(true);
-```
-
-## Current filters/processors
-
-### Compare
-
-- Equals - =
-- NotEquals - !=
-- GreaterThan - >
-- GreaterThanOrEqual - >=
-- In
-- LessThan - <
-- LessThanOrEqual - <=
-- Not
-- Like\ILIke
-- Exists
-- Between
-
-#### Filter "Like" or "ILike"
-
-This filters has methods `withBoth`, `withoutBoth`, `withStart`, `withoutStart`, `withEnd`, `withoutEnd`
-
-```php
-$filter = new Like('column', 'value');
-$dataReader = (new QueryDataReader($query))->withFilter($filter);
-//column LIKE '%value%'
-
-$filter = (new Like('column', 'value'))->withoutStart();
-$dataReader = (new QueryDataReader($query))->withFilter($filter);
-//column LIKE 'value%'
-
-$filter = (new Like('column', 'value'))->withoutEnd();
-$dataReader = (new QueryDataReader($query))->withFilter($filter);
-//column LIKE '%value'
-```
-
-#### Filter "Exists"
-
-Takes only one argument with type of`Yiisoft\Db\Query\Query`
-
-#### Filter "Not"
-
-Takes only one argument with type of`Yiisoft\Data\Reader\Filter\FilterInterface`
-
-### Group
-
-- All - and
-- Any - or
 
 ## Documentation
 
