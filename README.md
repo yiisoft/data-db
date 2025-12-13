@@ -14,8 +14,9 @@
 [![type-coverage](https://shepherd.dev/github/yiisoft/data-db/coverage.svg)](https://shepherd.dev/github/yiisoft/data-db)
 [![psalm-level](https://shepherd.dev/github/yiisoft/data-db/level.svg)](https://shepherd.dev/github/yiisoft/data-db)
 
-The package provides [data reader](https://github.com/yiisoft/data?tab=readme-ov-file#reading-data) implementation based
-on [Yii DB](https://github.com/yiisoft/db) query and a set of DB-specific filters.
+The package provides [data reader](https://github.com/yiisoft/data?tab=readme-ov-file#reading-data) and 
+[data writer](https://github.com/yiisoft/data?tab=readme-ov-file#writing-data) implementations based
+on [Yii DB](https://github.com/yiisoft/db) and a set of DB-specific filters.
 
 Detailed build statuses:
 
@@ -119,8 +120,59 @@ foreach ($dataReader->read() as $item) {
 }
 ```
 
+### QueryDataWriter
+
+The `QueryDataWriter` allows writing (inserting/updating) and deleting data to/from a database table:
+
+```php
+use Yiisoft\Data\Db\QueryDataWriter;
+
+$writer = new QueryDataWriter($db, 'customer');
+
+// Write items (insert or update)
+$writer->write([
+    ['id' => 1, 'name' => 'John', 'email' => 'john@example.com'],
+    ['id' => 2, 'name' => 'Jane', 'email' => 'jane@example.com'],
+]);
+
+// Delete items
+$writer->delete([
+    ['id' => 1],
+    ['id' => 2],
+]);
+```
+
+By default, `QueryDataWriter` uses UPSERT operations (insert or update). You can configure this behavior:
+
+```php
+// Use plain INSERT instead of UPSERT
+$writer = new QueryDataWriter(
+    db: $db,
+    table: 'customer',
+    primaryKey: ['id'],
+    useUpsert: false
+);
+```
+
+For tables with composite primary keys:
+
+```php
+$writer = new QueryDataWriter(
+    db: $db,
+    table: 'order_items',
+    primaryKey: ['order_id', 'product_id']
+);
+
+// Delete with composite key
+$writer->delete([
+    ['order_id' => 1, 'product_id' => 101],
+    ['order_id' => 1, 'product_id' => 102],
+]);
+```
+
 ## Documentation
 
+- [Usage Guide](docs/guide.md)
 - [Internals](docs/internals.md)
 
 If you need help or have a question, the [Yii Forum](https://forum.yiiframework.com/c/yii-3-0/63) is a good place for
