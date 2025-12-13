@@ -172,6 +172,7 @@ $writer->delete([
 
 ## Documentation
 
+- [Usage Guide](docs/guide.md)
 - [Internals](docs/internals.md)
 
 If you need help or have a question, the [Yii Forum](https://forum.yiiframework.com/c/yii-3-0/63) is a good place for
