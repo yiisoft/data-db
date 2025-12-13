@@ -69,28 +69,28 @@ class QueryDataWriter implements DataWriterInterface
      */
     public function write(iterable $items): void
     {
-        try {
-            foreach ($items as $item) {
-                if (!is_array($item)) {
-                    throw new DataWriterException('Each item must be an array.');
-                }
+        foreach ($items as $item) {
+            if (!is_array($item)) {
+                throw new DataWriterException('Each item must be an array.');
+            }
 
-                if (empty($item)) {
-                    continue;
-                }
+            if (empty($item)) {
+                continue;
+            }
 
+            try {
                 if ($this->useUpsert) {
                     $this->db->createCommand()->upsert($this->table, $item)->execute();
                 } else {
                     $this->db->createCommand()->insert($this->table, $item)->execute();
                 }
+            } catch (Throwable $e) {
+                throw new DataWriterException(
+                    'Failed to write items to table "' . $this->table . '": ' . $e->getMessage(),
+                    $e->getCode(),
+                    $e,
+                );
             }
-        } catch (Throwable $e) {
-            throw new DataWriterException(
-                'Failed to write items to table "' . $this->table . '": ' . $e->getMessage(),
-                $e->getCode(),
-                $e,
-            );
         }
     }
 
@@ -106,36 +106,34 @@ class QueryDataWriter implements DataWriterInterface
      */
     public function delete(iterable $items): void
     {
-        try {
-            foreach ($items as $item) {
-                if (!is_array($item)) {
-                    throw new DataWriterException('Each item must be an array.');
-                }
-
-                if (empty($item)) {
-                    continue;
-                }
-
-                $condition = [];
-                foreach ($this->primaryKey as $key) {
-                    if (!isset($item[$key])) {
-                        throw new DataWriterException(
-                            'Item must contain primary key column "' . $key . '" for deletion.',
-                        );
-                    }
-                    $condition[$key] = $item[$key];
-                }
-
-                $this->db->createCommand()->delete($this->table, $condition)->execute();
+        foreach ($items as $item) {
+            if (!is_array($item)) {
+                throw new DataWriterException('Each item must be an array.');
             }
-        } catch (DataWriterException $e) {
-            throw $e;
-        } catch (Throwable $e) {
-            throw new DataWriterException(
-                'Failed to delete items from table "' . $this->table . '": ' . $e->getMessage(),
-                $e->getCode(),
-                $e,
-            );
+
+            if (empty($item)) {
+                continue;
+            }
+
+            $condition = [];
+            foreach ($this->primaryKey as $key) {
+                if (!isset($item[$key])) {
+                    throw new DataWriterException(
+                        'Item must contain primary key column "' . $key . '" for deletion.',
+                    );
+                }
+                $condition[$key] = $item[$key];
+            }
+
+            try {
+                $this->db->createCommand()->delete($this->table, $condition)->execute();
+            } catch (Throwable $e) {
+                throw new DataWriterException(
+                    'Failed to delete items from table "' . $this->table . '": ' . $e->getMessage(),
+                    $e->getCode(),
+                    $e,
+                );
+            }
         }
     }
 }
