@@ -54,8 +54,7 @@ class QueryDataWriter implements DataWriterInterface
         private readonly string $table,
         private readonly array $primaryKey = ['id'],
         private readonly bool $useUpsert = true,
-    ) {
-    }
+    ) {}
 
     /**
      * Write items to the database table.
