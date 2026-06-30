@@ -28,7 +28,7 @@ jobs:
     env:
       extensions: pdo, pdo_sqlsrv-5.12
 
-    runs-on: ${{ matrix.mssql.os || 'ubuntu-latest' }}
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -41,6 +41,7 @@ jobs:
 
         mssql:
           - server: 2022-latest
+            image: mcr.microsoft.com/mssql/server:2022-latest@sha256:e07b9699a2b749969f19d86563ceeea22bd3a69f7f1db85a8d1ac4bdaf0c6f56
             odbc-version: 18
             flag: "-C"
 
@@ -48,12 +49,13 @@ jobs:
           - php: 8.3
             mssql:
               server: 2019-latest
+              image: mcr.microsoft.com/mssql/server:2019-latest@sha256:5b89fce40832a459ad4d634e9d588ae1e4496e664d9a4a9f8baeed6949b53fef
               odbc-version: 18
               flag: "-C"
 
     services:
       mssql:
-        image: mcr.microsoft.com/mssql/server:${{ matrix.mssql.server }}
+        image: ${{ matrix.mssql.image }}
         env:
           SA_PASSWORD: YourStrong!Passw0rd
           ACCEPT_EULA: Y

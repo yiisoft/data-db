@@ -27,7 +27,7 @@ permissions:
 
 jobs:
   tests:
-    name: PHP ${{ matrix.php }}-pgsql-${{ matrix.pgsql }}
+    name: PHP ${{ matrix.php }}-pgsql-${{ matrix.pgsql.version }}
 
     env:
       extensions: pdo, pdo_pgsql
@@ -47,20 +47,30 @@ jobs:
           - 8.5
 
         pgsql:
-          - 9
-          - 10
-          - 11
-          - 12
-          - 13
-          - 14
-          - 15
-          - 16
-          - 17
-          - 18
+          - version: 9
+            image: postgres:9@sha256:caddd35b05cdd56c614ab1f674e63be778e0abdf54e71a7507ff3e28d4902698
+          - version: 10
+            image: postgres:10@sha256:b2baf8998630663d21370da06387c950e587071bdd307ee34e661cdcc7442bcc
+          - version: 11
+            image: postgres:11@sha256:5d2aa4a7b5f9bdadeddcf87cf7f90a176737a02a30d917de4ab2e6a329bd2d45
+          - version: 12
+            image: postgres:12@sha256:2f2a8c2a7d10862e7fba2602e304523554f9df8244c632dafe2628ccb398fb5c
+          - version: 13
+            image: postgres:13@sha256:4689940c683801b4ab839ab3b0a0a3555a5fe425371422310944e89eca7d8068
+          - version: 14
+            image: postgres:14@sha256:3e7dd0bfd7bfb4fc1278d1a354da44375dfe924bed8eaf83ae14967d84dede5b
+          - version: 15
+            image: postgres:15@sha256:3b0d656f5fff31c7d8a64f500a703dcf3f35e98ce78f602831a73059a5e6a012
+          - version: 16
+            image: postgres:16@sha256:fe03a7605299a34ddf5e4f285dff78c3d7190a576b3c6b46f2fcff69f4bffd54
+          - version: 17
+            image: postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e
+          - version: 18
+            image: postgres:18@sha256:4aabea78cf39b90e834caf3af7d602a18565f6fe2508705c8d01aa63245c2e20
 
     services:
       postgres:
-        image: postgres:${{ matrix.pgsql }}
+        image: ${{ matrix.pgsql.image }}
         env:
           POSTGRES_DB: data-db-test
           POSTGRES_USER: yii

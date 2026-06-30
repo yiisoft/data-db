@@ -27,7 +27,7 @@ permissions:
 
 jobs:
   tests:
-    name: PHP ${{ matrix.php }}-mysql-${{ matrix.mysql }}
+    name: PHP ${{ matrix.php }}-mysql-${{ matrix.mysql.version }}
 
     env:
       extensions: pdo, pdo_mysql
@@ -47,12 +47,14 @@ jobs:
           - 8.5
 
         mysql:
-          - 5.7
-          - latest
+          - version: 5.7
+            image: mysql:5.7@sha256:4bc6bc963e6d8443453676cae56536f4b8156d78bae03c0145cbe47c2aad73bb
+          - version: latest
+            image: mysql:latest@sha256:ad88e1c86cbf12ef52d0a0360cd4b774d22956c5ee9c565645fb019d7aacb6c3
 
     services:
       mysql:
-        image: mysql:${{ matrix.mysql }}
+        image: ${{ matrix.mysql.image }}
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
           MYSQL_DATABASE: data-db-test
