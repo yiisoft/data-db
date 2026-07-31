@@ -1,6 +1,8 @@
+name: mssql
+
 on:
   pull_request:
-    paths:
+    paths: &paths
       - 'src/**'
       - 'tests/**'
       - '.github/workflows/mssql.yml'
@@ -9,14 +11,7 @@ on:
 
   push:
     branches: ['master']
-    paths:
-      - 'src/**'
-      - 'tests/**'
-      - '.github/workflows/mssql.yml'
-      - 'composer.json'
-      - 'phpunit.xml.dist'
-
-name: mssql
+    paths: *paths
 
 permissions:
   contents: read

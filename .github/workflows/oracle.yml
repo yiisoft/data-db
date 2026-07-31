@@ -1,26 +1,17 @@
+name: oracle
+
 on:
   pull_request:
-    paths-ignore:
-      - 'docs/**'
-      - 'README.md'
-      - 'CHANGELOG.md'
-      - '.gitignore'
-      - '.gitattributes'
-      - 'infection.json.dist'
-      - 'psalm.xml'
+    paths: &paths
+      - 'src/**'
+      - 'tests/**'
+      - '.github/workflows/oracle.yml'
+      - 'composer.json'
+      - 'phpunit.xml.dist'
 
   push:
     branches: ['master']
-    paths-ignore:
-      - 'docs/**'
-      - 'README.md'
-      - 'CHANGELOG.md'
-      - '.gitignore'
-      - '.gitattributes'
-      - 'infection.json.dist'
-      - 'psalm.xml'
-
-name: oracle
+    paths: *paths
 
 permissions:
   contents: read
