@@ -1,4 +1,5 @@
 FROM composer/composer:latest-bin AS composer
+FROM ghcr.io/php/pie:bin AS pie
 
 FROM php:8.3-cli-bookworm
 
@@ -6,6 +7,8 @@ FROM php:8.3-cli-bookworm
 
 RUN apt-get update && apt-get install -y \
     unzip \
+    # PIE
+    libtool \
     # PostgreSQL
     libpq-dev \
     # MSSQL
@@ -67,20 +70,15 @@ RUN docker-php-ext-install \
     # For Psalm, to make use of JIT for a 20%+ performance boost.
     opcache
 
-RUN pecl install sqlsrv
-RUN printf "; priority=20\nextension=sqlsrv.so\n" > /usr/local/etc/php/conf.d/php-sqlsrv.ini
+COPY --from=pie /pie /usr/bin/pie
 
-RUN pecl install pdo_sqlsrv
-RUN printf "; priority=30\nextension=pdo_sqlsrv.so\n" > /usr/local/etc/php/conf.d/php-pdo-sqlsrv.ini
-
-RUN echo 'instantclient,/usr/local/instantclient' | pecl install oci8
-RUN echo "extension=oci8.so" > /usr/local/etc/php/conf.d/php-oci8.ini
-
-RUN echo 'instantclient,/usr/local/instantclient' | pecl install pdo_oci
-RUN echo "extension=pdo_oci.so" > /usr/local/etc/php/conf.d/php-pdo-oci.ini
+RUN pie install microsoft/sqlsrv
+RUN pie install microsoft/pdo_sqlsrv
+RUN pie install oci8/oci8 --with-oci8=instantclient,/usr/local/instantclient
+RUN pie install pecl/pdo_oci --with-pdo_oci=instantclient,/usr/local/instantclient
 
 # For code coverage (mutation testing)
-RUN pecl install pcov && docker-php-ext-enable pcov
+RUN pie install pecl/pcov
 
 # Composer
 
