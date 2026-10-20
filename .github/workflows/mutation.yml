@@ -7,6 +7,7 @@ on:
       - 'tests/**'
       - 'phpunit.xml.dist'
       - 'infection.json.dist'
+      - 'tools/infection/composer.json'
       - 'composer.json'
       - '.github/workflows/mutation.yml'
   push:

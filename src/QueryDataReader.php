@@ -39,6 +39,8 @@ use function is_array;
 use function is_string;
 use function sprintf;
 
+use const SORT_ASC;
+
 /**
  * @template TKey as array-key
  * @template TValue as array|object
