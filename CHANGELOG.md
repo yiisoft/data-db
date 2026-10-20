@@ -2,7 +2,7 @@
 
 ## 1.0.1 under development
 
-- no changes in this release.
+- Enh #146: Explicitly import `SORT_ASC` constant in `QueryDataReader` (@vjik)
 
 ## 1.0.0 December 13, 2025
 
