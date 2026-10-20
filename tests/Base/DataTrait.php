@@ -41,9 +41,7 @@ trait DataTrait
     protected function getConnection(): PdoConnectionInterface
     {
         $connectionId = $this->getConnectionId();
-        if (!isset(self::$connection[$connectionId])) {
-            self::$connection[$connectionId] = $this->makeConnection();
-        }
+        self::$connection[$connectionId] ??= $this->makeConnection();
 
         return self::$connection[$connectionId];
     }

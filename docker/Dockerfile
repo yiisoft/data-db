@@ -87,7 +87,7 @@ COPY --from=composer /composer /usr/bin/composer
 # Code
 
 COPY . /code
-RUN rm -f /code/composer.lock
+RUN rm -f /code/composer.lock /code/tools/*/composer.lock
 WORKDIR /code
 
 # PHP packages
