@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Db\Tests\Sqlite\QueryDataReader;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Db\QueryDataReader;
 use Yiisoft\Data\Db\Tests\Base\BaseQueryDataReaderTestCase;
 use Yiisoft\Data\Db\Tests\Sqlite\DatabaseTrait;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Db\Expression\Expression;
 use Yiisoft\Db\Query\Query;
 use Yiisoft\Test\Support\Log\SimpleLogger;
 
@@ -103,6 +105,25 @@ final class QueryDataReaderTest extends BaseQueryDataReaderTestCase
         $this->assertStringContainsString(
             'SELECT COUNT(*) FROM (SELECT * FROM "customer") "c"',
             $messages[0]['message'],
+        );
+    }
+
+    public static function dataSortWithFieldMappedToExpression(): iterable
+    {
+        yield 'asc' => ['asc', 'LOWER(name)'];
+        yield 'desc' => ['desc', 'LOWER(name) DESC'];
+    }
+
+    #[DataProvider('dataSortWithFieldMappedToExpression')]
+    public function testSortWithFieldMappedToExpression(string $direction, string $expectedOrderBy): void
+    {
+        $query = (new Query($this->getConnection()))->from('customer');
+        $dataReader = (new QueryDataReader($query, fieldMapper: ['userName' => new Expression('LOWER(name)')]))
+            ->withSort(Sort::any()->withOrder(['userName' => $direction]));
+
+        $this->assertSame(
+            'SELECT * FROM "customer" ORDER BY ' . $expectedOrderBy,
+            $dataReader->getPreparedQuery()->createCommand()->getRawSql(),
         );
     }
 }

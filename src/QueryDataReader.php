@@ -345,10 +345,9 @@ class QueryDataReader implements QueryDataReaderInterface
             if (is_string($field)) {
                 $result[$field] = $direction;
             } else {
-                $result[] = new CompositeExpression([
-                    $field,
-                    $direction === SORT_ASC ? 'ASC' : 'DESC',
-                ]);
+                $result[] = $direction === SORT_ASC
+                    ? $field
+                    : new CompositeExpression([$field, 'DESC']);
             }
         }
         return $result;
