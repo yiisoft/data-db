@@ -81,6 +81,6 @@
         "test-watch": "phpunit-watcher watch",
         "cs-fix": "php-cs-fixer fix",
         "dependency-analyser": "composer-dependency-analyser",
-        "mutation": "roave-infection-static-analysis-plugin --threads=max --min-covered-msi=100"
+        "mutation": "infection --threads=max --min-covered-msi=100"
     }
 }
