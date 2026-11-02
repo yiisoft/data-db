@@ -231,4 +231,19 @@ final class QueryDataReaderTest extends TestCase
         $dataReader = $dataReader->withOffset(10);
         $this->assertSame(10, $dataReader->getOffset());
     }
+
+    public function testImmutability(): void
+    {
+        $dataReader = new QueryDataReader(
+            TestHelper::createSqliteConnection()->createQuery(),
+        );
+
+        $this->assertNotSame($dataReader, $dataReader->withOffset(1));
+        $this->assertNotSame($dataReader, $dataReader->withLimit(1));
+        $this->assertNotSame($dataReader, $dataReader->withCountParam('DISTINCT id'));
+        $this->assertNotSame($dataReader, $dataReader->withSort(Sort::any()));
+        $this->assertNotSame($dataReader, $dataReader->withFilter(new None()));
+        $this->assertNotSame($dataReader, $dataReader->withHaving(new None()));
+        $this->assertNotSame($dataReader, $dataReader->withBatchSize(1));
+    }
 }

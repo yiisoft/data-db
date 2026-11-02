@@ -56,7 +56,7 @@ psalm: CMD="vendor/bin/psalm --no-cache" ## Run static analysis using Psalm
 psalm: run
 
 mutation: CMD="\
-vendor/bin/roave-infection-static-analysis-plugin \
+vendor/bin/infection \
 --threads=$(shell nproc) \
 --min-msi=0 \
 --min-covered-msi=100 \
